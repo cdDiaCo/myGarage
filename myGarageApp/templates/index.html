@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Home page{% endblock %}
+
+{% block content %}
+  <h1>This is the home page</h1>
+  
+    <strong>Login to MyGarage</strong>
+
+    <form id="login_form" method="post" action="">
+        {% csrf_token %}
+        Username: <input type="text" name="username" value="" size="50" />
+        <br />
+        Password: <input type="password" name="password" value="" size="50" />
+        <br />
+
+        <input type="submit" value="submit" />
+    </form>
+  
+  <hr/>
+  
+   {% if registered %}
+        <strong>thank you for registering!</strong>
+        
+        
+   {% else %}
+        <strong>register here!</strong><br />
+
+        <form id="user_form" method="post" action=""
+                enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ user_form.as_p }}  
+            {{ car_form.as_p }}                      
+            <input type="submit" name="submit" value="Register" />
+        </form>
+    {% endif %}
+
+{% endblock %}

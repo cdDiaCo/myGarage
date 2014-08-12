@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block head %}
+	<script>
+	
+		function loadXMLDoc()
+		{
+		var xmlhttp;
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		  xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		xmlhttp.onreadystatechange=function()
+		  {
+		  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		    {
+		    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+		    document.getElementById("secDiv").innerHTML="The selected car is ";
+		    }
+		  }
+		var e = document.getElementById("selectedCar"); 
+		var strCar = e.options[e.selectedIndex].value; 
+		//alert(strCar);
+		xmlhttp.open("GET","/my_cars/" + strCar + "/",true);
+		xmlhttp.send();
+		}
+		
+	</script>
+{% endblock %}
+
+{% block title %}My cars{% endblock %}
+
+{% block content %}
+    
+	{% if cars %}	
+		<strong> {{ username }}'s car{{ cars|pluralize }}</strong>
+        <select id="selectedCar" onchange="loadXMLDoc()">
+            <option selected="selected">Select a car</option>
+			{% for car in cars %}		        	
+			    <option value="{{ forloop.counter0 }}">{{ car.manufacturer_name }} {{ car.model_name }} {{ year_make }}</option>
+			{% endfor %}
+	    </select>	
+	    <div id="secDiv"></div>	
+        <div id="myDiv"><h2>Let AJAX change this text</h2></div>        
+	{% else %}
+	    {{ username }} <br/>
+	    You have no cars added. 
+	    <a href="/new_car/">Click here to add a new car</a>
+	
+	{% endif %}
+	
+	
+	
+	
+{% endblock %}
+
+

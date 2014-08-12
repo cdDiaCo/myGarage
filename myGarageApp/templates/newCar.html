@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+
+{% block title %}New car{% endblock %}
+
+{% block content %}
+
+    {% if registered %}
+        <strong>You added a new car!</strong>
+        <a href='/'>Go to home page</a>
+        
+     {% else %}
+        <strong>Add a new car!</strong><br />        
+
+		<form id="new_car" method="post" action=""
+	                enctype="multipart/form-data">
+	    	{% csrf_token %}
+	    	{{ newCar.as_p }}    
+	    	<input type="submit" name="submit" value="Add car" />        
+	                
+	     </form>   
+     {% endif %}         
+
+{%  endblock %}

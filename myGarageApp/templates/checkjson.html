@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+<script>
+    function getCookie(name) {
+        var value = "; " + document.cookie,
+            parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+    }
+
+
+
+    function loadXMLDoc()
+    {
+
+    username = document.getElementById("user").value ? document.getElementById("user").value : " " ;
+    password = document.getElementById("pass").value ? document.getElementById("pass").value : " " ;
+
+
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+      {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp=new XMLHttpRequest();
+      }
+    else
+      {// code for IE6, IE5
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+    xmlhttp.onreadystatechange=function()
+      {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+        //document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+        }
+      }
+    xmlhttp.open("POST","/",true);
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    xmlhttp.send(JSON.stringify({username:"" +username+ "", password:"" +password+ ""}));
+    }
+</script>
+
+</head>
+<body>
+
+    username: <input id ="user" type="text" name="username" ><br>
+    password: <input id="pass" type="text" name="password" ><br>
+    <button type="button" onclick="loadXMLDoc()">Login</button>
+
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block head %}
+	  {% load staticfiles %}
+	  <link rel="stylesheet" type="text/css" href={% static "myGarage/css/style.css" %}>	
+	  <script src={% static "myGarage/js/myscripts.js" %}></script>
+{% endblock %}
+
+{% block title %}Home page{% endblock %}
+
+{% block content %}
+    
+    {% if cleanings %}
+    	{% for record in cleanings %}
+    		{{ record.cleaning_date }} | {{ record.cleaning_cost }} | {{ record.cleaning_type }}<br />    	
+    	{% endfor %}
+    
+    {% endif %}
+    
+    {{ request.session.selectedCar }}
+    
+    <ul id="navlist">
+	<li><a href="//">Refuellings</a></li>
+	<li><a href="/cleanings/">Cleanings</a></li>
+	<li><a href="//">Service</a></li>
+	<li><a href="//">Revisions</a></li>
+	<li><a href="//">Taxes</a></li>
+	<li><a href="//">Insurances</a></li>
+	<li><a href="//">Tyres</a></li>	
+	</ul>
+        <br/>
+        <strong> My car{{ cars|pluralize }}</strong>
+        
+        
+        <select id="selectedCar" onchange="loadXMLDoc()"> 
+             {% if firstTime %}
+                	<option selected="selected">Select a car</option>   
+             {% endif %}   	                         
+             {% for car in cars %}	                	        	
+			     <option value="{{ forloop.counter0 }}" 
+			         {% if selectedCarValue and forloop.counter0 == selectedCarValue %} selected="selected" {% endif %}  > 
+			             {{ car.manufacturer_name }} {{ car.model_name }} </option>				    						  	
+			 {% endfor %}				              		
+	    </select>	
+	    
+	    
+	    
+	    <div id="secDiv"></div>		    
+        <div id="myDiv"><h2>Let AJAX change this text</h2></div>          
+    
+        
+    
+    
+    <a href="/add_cleaning/">Click here to add a new cleaning</a> <br />
+    <a href="/logout/">Click here to logout</a>     
+    
+
+{% endblock %}
