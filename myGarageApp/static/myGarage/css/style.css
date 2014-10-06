@@ -1,4 +1,66 @@
 
+
+#header{
+	background-color:#f1f1f1; 
+	position:relative; 
+	top:-30px;
+	width:100%; 
+	height:80px; 
+	margin:0; 
+	padding:0; 	
+}
+
+#appMotto{
+	color:#545453; 
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif; 
+	font-size:35px; 
+	padding:35px 65px 10px;
+}
+
+#base{
+	width:100%; 
+	height:600px; 
+	float:left; 
+	background-color:#f1f1f1; 
+	position:relative; 
+	top: -25px; 
+	padding:0; 
+	margin:0;
+}
+
+#borderDiv{
+	width:90%; 
+	height:450px; 
+	background-color:white; 
+	position:absolute; 
+	top:25px; 
+	padding:20px; 
+	margin:5px 0px 50px 40px; 
+	border: 2px solid; 
+	border-radius: 25px; 
+	border-color: #DEDEDE; 
+	box-shadow: 0px 0px 23px 0px rgba(50, 50, 50, 0.75);
+}
+
+#leftside{
+	float: left; 
+	position:absolute; 
+	top:0; 
+	left:0; 
+	padding:20px; 
+	margin:5px 0px 50px 40px;
+}
+
+#rightside{
+	float:left; 
+	width:500px; 
+	height:400px; 
+	position:absolute; 
+	top:30px; 
+	left:690px;
+	margin:5px 5px 0px 0px;
+}
+
 #navlist{
     width: 220px;
     list-style-type: none;

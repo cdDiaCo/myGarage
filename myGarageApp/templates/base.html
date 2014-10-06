@@ -1,11 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
+<html lang="en" style="margin: 0; padding: 0;">
 <head>
-    {% block head %}{% endblock %} 
+    {% block head %}{% load staticfiles %}{% endblock %} 
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>    
+<body bgcolor="#90c140"  style="margin: 0; padding: 0; top:0px; left:0px;">    
     {% block content %}{% endblock %}
+    
     {% block footer %}
     <hr>
     <p>Thanks for visiting my site.</p>
