@@ -10,51 +10,55 @@
 
 {% block content %}
 <div id="header" >
-	<h2 id="appMotto">Enter your online garage</h2>
+	<h2 id="appMotto">Enter your online garage</h2>	
+	    <div id="login">	    
+		<form id="login_form" method="post" action="">
+	        {% csrf_token %}
+	        <div id="username_login">
+		        Username  
+		        <br/>  
+		        <input type="text" name="username" value="" size="20" style="width:160px;"/> 
+	        </div>
+	        
+	        <div id="password_login">
+		        Password 
+		        <br/>	        
+		        <input type="password" name="password" value="" size="20" style="width:160px;" />
+	        </div>	
+	        <input id="login_button" type="submit" value="Log In" />
+	    </form>		    
+	    </div>    
 </div>	
 
+<hr>
+
+
 <div id="base">
-
-<div id="borderDiv">
-<div id="leftside">
-   
-    <strong>Login to MyGarage</strong>
-
-    <form id="login_form" method="post" action="">
-        {% csrf_token %}
-        Username: <input type="text" name="username" value="" size="50" />
-        <br />
-        Password: <input type="password" name="password" value="" size="50" />
-        <br />
-
-        <input type="submit" value="submit" />
-    </form>
-  
-  <hr/>
-  
-   {% if registered %}
-        <strong>thank you for registering!</strong>
+	<div id="borderDiv">	
+		<div id="leftside">	  
+		   {% if registered %}
+		        <strong>thank you for registering!</strong> 	        
+		   {% else %}
+		        <strong>register here!</strong><br />
+		
+		        <form id="user_form" method="post" action=""
+		                enctype="multipart/form-data">
+		            {% csrf_token %}
+		            {{ user_form.as_p }}  
+		            {{ car_form.as_p }}                      
+		            <input type="submit" name="submit" value="Register" />
+		        </form>
+		    {% endif %}
+		</div>
+		
+		
         
-        
-   {% else %}
-        <strong>register here!</strong><br />
-
-        <form id="user_form" method="post" action=""
-                enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ user_form.as_p }}  
-            {{ car_form.as_p }}                      
-            <input type="submit" name="submit" value="Register" />
-        </form>
-    {% endif %}
+		<div id="rightside" style="background-image: url('{% static "myGarage/img/tires.jpg" %}');">
+			<img src={% static "myGarage/img/transparent.gif" %}  width="100%" height="100%" > 
+		</div>			
+	</div>		
 </div>
 
-<div id="rightside" style="background-image: url('{% static "myGarage/img/tires.jpg" %}');">
-	<img src={% static "myGarage/img/transparent.gif" %}  width="100%" height="100%" >
-</div>
-	
-</div>
-</div>
 {% endblock %}
 
 

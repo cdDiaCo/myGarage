@@ -1,71 +1,127 @@
 
 
-#header{
-	background-color:#f1f1f1; 
-	position:relative; 
-	top:-30px;
-	width:100%; 
-	height:80px; 
-	margin:0; 
-	padding:0; 	
+
+/*CSS RESET*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
+
+/*End RESET - Begin Full Width CSS*/
+
+	
+
+#header{     
+	background-color:#f1f1f1; 
+	height:80px;
+	float:left; 
+	 
+		
+}
+
+#login{    
+    #background-color: blue;    
+    width: 440px;
+    height: 70px;
+    float: right; 
+    margin-right:20px;  
+    margin-left:600px; 
+    margin-top:-40px;
+  
+    
+}
+
+#username_login{
+    #background-color: yellow;
+    width: 180px;
+    position: relative;
+    float: left;
+    top: 20px;
+    
+}
+
+#password_login{
+    #background-color: green;
+    width: 180px;
+	position: relative;
+	float:left;
+	top: 20px;	
+	left:5px;
+}
+
+#login_button{
+	position: relative;
+	top: 38px;
+	left: 10px; 	
+	float:left;	
+}
+
 
 #appMotto{
-	color:#545453; 
+    #background-color:red;
+    width:420px;
+    position: relative;
+    top: 30px;
+    left: 40px;
+    float: left;
+	color: #545453; 
 	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif; 
-	font-size:35px; 
-	padding:35px 65px 10px;
+	font-size: 35px; 
+	
 }
 
-#base{
-	width:100%; 
+
+#base{	
 	height:600px; 
-	float:left; 
-	background-color:#f1f1f1; 
-	position:relative; 
-	top: -25px; 
-	padding:0; 
-	margin:0;
+	background-color:#f1f1f1; ;
+	min-width:1040px;  
+	margin:0 auto;
+	padding:10px;
 }
 
-#borderDiv{
-	width:90%; 
+
+#borderDiv{    
+	min-width: 1000px; 
+	overflow: hidden;
 	height:450px; 
 	background-color:white; 
-	position:absolute; 
-	top:25px; 
-	padding:20px; 
-	margin:5px 0px 50px 40px; 
+	#float: left; 	
+	margin: 10px 30px;	
 	border: 2px solid; 
 	border-radius: 25px; 
 	border-color: #DEDEDE; 
 	box-shadow: 0px 0px 23px 0px rgba(50, 50, 50, 0.75);
 }
 
-#leftside{
-	float: left; 
-	position:absolute; 
-	top:0; 
-	left:0; 
-	padding:20px; 
-	margin:5px 0px 50px 40px;
+#leftside{	 
+	width: 50%;
+	height: 400px;
+	float:left;	
+	padding: 10px; 
+	margin: 10px;
+	#overflow: hidden;
 }
 
-#rightside{
-	float:left; 
-	width:500px; 
-	height:400px; 
-	position:absolute; 
-	top:30px; 
-	left:690px;
-	margin:5px 5px 0px 0px;
+#rightside{	 	 
+	height:400px;
+	width: 40%;
+	float: right;
+	margin: 10px;		 	
+	
+	
 }
 
 #navlist{
     width: 220px;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;    
+    list-style-type: none;   
 }
 
 li a:link, a:visited  {
