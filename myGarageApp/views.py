@@ -17,27 +17,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt, ensure_csrf_cookie
 import json
 
-"""
-#@method_decorator(csrf_exempt)
-#@ensure_csrf_cookie
-def save_events_json(request):
-    print "im a " + request.method
-    if request.method == 'POST':
-        b = request.COOKIES.get("csrftoken", None)
-        print str(b)
-
-        d = json.loads(request.body)
-        print d
-
-
-    #return HttpResponse("OOOOOKKKKK")
-    return render(request, 'checkjson.html', {})
-"""
-
-
-
-
-
 
 def home_page(request):  
     if request.user.is_authenticated():
@@ -45,11 +24,12 @@ def home_page(request):
     
     context = RequestContext(request)    
     registered = False 
+
      
     if request.method == 'POST':
         if 'manufacturer_name' in request.POST:
             #do register
-            user_form = UserCreationForm(data=request.POST)
+            user_form = UserForm(data=request.POST)
             #profile_form = UserProfileForm(data=request.POST)
             car_form = CarForm(data=request.POST)
             
@@ -66,7 +46,7 @@ def home_page(request):
                 print user_form.errors, car_form.errors
         else:
             # do login  
-            username = request.POST['username']
+            username = request.POST['loginUsername']
             password = request.POST['password']
     
             user = authenticate(username=username, password=password)
@@ -80,7 +60,7 @@ def home_page(request):
                 print "Invalid login details: {0}, {1}".format(username, password)
                 return HttpResponse("Invalid login details supplied.")
     else:
-        user_form = UserCreationForm()
+        user_form = UserForm()        
         car_form = CarForm()
         #profile_form = UserProfileForm()          
      

@@ -5,17 +5,31 @@ from django import forms
 
 
 
-class UserForm(UserCreationForm):    
+class UserForm(UserCreationForm): 
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)        
+        self.fields['username'].widget = forms.TextInput(attrs={'placeholder': 'Choose your username'})
+        self.fields['password1'].widget = forms.TextInput(attrs={'placeholder': 'New password'})
+        self.fields['password2'].widget = forms.TextInput(attrs={'placeholder': 'Re-enter new password'}) 
+         
+    password = forms.CharField(widget=forms.PasswordInput())   
+    loginUsername = forms.CharField(label='Username',  max_length=30)
 
+ 
     class Meta:
-        model = User
-        fields = ('username', 'first_name')
+        model = User       
+        fields = ('username', 'loginUsername', 'password', 'first_name')
         
+   
         
 class CarForm(forms.ModelForm):        
     class Meta: 
         model = Car
         fields = ('manufacturer_name', 'model_name')
+        widgets = {
+            'manufacturer_name': forms.TextInput(attrs={'placeholder': 'Car make'}),       
+            'model_name': forms.TextInput(attrs={'placeholder': 'Car model'}),
+        }
 
 
 class UserProfileForm(forms.ModelForm):

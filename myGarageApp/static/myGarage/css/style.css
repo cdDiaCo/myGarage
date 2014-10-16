@@ -19,12 +19,88 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 	
 
+#login_form input[type=text], input[type=password]{
+	width:160px;	
+	height: 20px;
+	
+}
+
+
+
+#register_form input[type=text], #register_form input[type=password]{
+	width:290px;
+	margin:0px 5px 10px 0px;	
+	line-height: 20px;
+	padding: 8px 10px;
+	font-size: 18px;
+	border: 1px solid #bdc7d8;
+
+}
+
+#carRegister input[type=text] {
+	width: 130px;
+
+
+}
+
+
+h2{
+	font-size: 26px;
+	font-weight: bold;
+	line-height: 30px;
+	margin-bottom: 5px;
+}
+
+.errorlist{
+	list-style-type: none;
+	color: red;
+	float: right;	
+	padding:0;
+	margin:0;
+	word-wrap: normal;
+	
+	
+}
+
+
 #header{     
 	background-color:#f1f1f1; 
 	height:80px;
-	float:left; 
-	 
-		
+	float:left; 		
+}
+
+#header_hr{
+	margin:0; 
+	padding:0; 
+	height:2px; 
+	background-color: #f1f1f1; 
+	min-width:1060px; 
+	clear:both; 
+	float:none; 
+	border:none;  
+	background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      right bottom,
+      color-stop(0, rgb(232,242,216)),      
+      color-stop(0.1, rgb(221,236,197)),      
+      color-stop(0.4, rgb(210,230,178)),
+      color-stop(0.5, rgb(199,224,159)),
+      color-stop(0.6, rgb(210,230,178)),     
+      color-stop(0.9, rgb(221,236,197)),           
+      color-stop(1, rgb(232,242,216))
+  );  
+  
+	background-image: -moz-linear-gradient(
+	    left center,
+	    rgb(232,242,216) 0%,
+	    rgb(221,236,197) 10%,
+	    rgb(210,230,178) 40%,
+	    rgb(199,224,159) 50%, 
+	    rgb(210,230,178) 60%,
+	    rgb(221,236,197) 90%,    
+	    rgb(232,242,216) 100%
+	); 
 }
 
 #login{    
@@ -82,7 +158,9 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 #base{	
 	height:600px; 
 	background-color:#f1f1f1; ;
-	min-width:1040px;  
+	min-width:1040px;
+	position: relative;
+	top:0px;  
 	margin:0 auto;
 	padding:10px;
 }
@@ -90,31 +168,30 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 #borderDiv{    
 	min-width: 1000px; 
-	overflow: hidden;
 	height:450px; 
-	background-color:white; 
-	#float: left; 	
-	margin: 10px 30px;	
+	background-color:white;		
+	margin: 20px 30px;	
 	border: 2px solid; 
 	border-radius: 25px; 
 	border-color: #DEDEDE; 
-	box-shadow: 0px 0px 23px 0px rgba(50, 50, 50, 0.75);
+	box-shadow: 0px 0px 25px 0px rgba(50, 50, 50, 0.3);
 }
 
 #leftside{	 
-	width: 50%;
+	width: 60%;
 	height: 400px;
 	float:left;	
 	padding: 10px; 
-	margin: 10px;
-	#overflow: hidden;
+	margin: 20px 0px 10px 30px;
+	
+	
 }
 
 #rightside{	 	 
-	height:400px;
-	width: 40%;
+	height:350px;
+	width: 35%;
 	float: right;
-	margin: 10px;		 	
+	margin:50px 10px 10px 0px;		 	
 	
 	
 }
