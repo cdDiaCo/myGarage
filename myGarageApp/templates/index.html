@@ -2,6 +2,11 @@
 
 {% block head %}
 	  {% load staticfiles %}
+	  
+	  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+      <link href={% static "myGarage/material/css/ripples.min.css" %} rel="stylesheet">
+      <link href={% static "myGarage/material/css/material-wfont.min.css" %} rel="stylesheet">
+      
 	  <link rel="stylesheet" type="text/css" href={% static "myGarage/css/style.css" %}>	
 	  <script src={% static "myGarage/js/myscripts.js" %}></script>
 {% endblock %}
@@ -39,7 +44,7 @@
 		   {% if registered %}
 		        <strong>thank you for registering!</strong> 	        
 		   {% else %}
-		        <h2>Create a new account - it's fast and free </h2><br />
+		        <h2>Sign up - it's fast and free </h2><br />
 		
 		        <form id="register_form" method="post" action=""
 		                enctype="multipart/form-data">
@@ -67,15 +72,21 @@
 		            {{ car_form.model_name.errors }} 
 		            <br>   
 		            </div>               
-		            <input type="submit" name="submit" value="Register" />
+		            <input class="btn btn-material-lightgreen" type="submit" name="submit" value=" Sign up " />
 		        </form>
 		    {% endif %}
 		</div>
 		
 		
-        
+        <!--
 		<div id="rightside" style="background-image: url('{% static "myGarage/img/tires.jpg" %}');">
-			<img src={% static "myGarage/img/transparent.gif" %}  width="100%" height="100%" > 
+		<img src={% static "myGarage/img/transparent.gif" %}  width="100%" height="100%" > 
+		</div>	
+		-->
+		
+		<div id="rightside" >
+			<img src={% static "myGarage/img/facebook_shot.png" %}  width="100%" height="100%" > 
+		<!--<button class="btn btn-material-lime">Deep purple button</button>-->
 		</div>			
 	</div>		
 </div>
@@ -87,3 +98,14 @@
 {% block footer %}
 
 {% endblock %}
+
+
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script src={% static "myGarage/material/js/ripples.min.js" %}></script>
+<script src={% static "material/js/material.min.js" %}></script>
+
+
+
+

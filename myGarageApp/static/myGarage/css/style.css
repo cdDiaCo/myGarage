@@ -45,11 +45,12 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 
 h2{
-	font-size: 26px;
-	font-weight: bold;
+	#font-size: 26px;
+	#font-weight: bold;
 	line-height: 30px;
 	margin-bottom: 5px;
 }
+
 
 .errorlist{
 	list-style-type: none;
@@ -64,7 +65,8 @@ h2{
 
 
 #header{     
-	background-color:#f1f1f1; 
+	#background-color:#f1f1f1; 
+	background-color:#edf0f5;
 	height:80px;
 	float:left; 		
 }
@@ -148,16 +150,21 @@ h2{
     top: 30px;
     left: 40px;
     float: left;
-	color: #545453; 
-	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif; 
-	font-size: 35px; 
+	#color: #545453;
+	#color: #627aac;
+	color: #8b9c6f;
+	#font-family: 'lucida grande', tahoma, verdana, arial, sans-serif; 
+	font-size: 35px;
+	font-weight: bold;
+	 
 	
 }
 
 
 #base{	
 	height:600px; 
-	background-color:#f1f1f1; ;
+	#background-color:#f1f1f1; 
+	background-color:#edf0f5;
 	min-width:1040px;
 	position: relative;
 	top:0px;  
@@ -178,7 +185,7 @@ h2{
 }
 
 #leftside{	 
-	width: 60%;
+	width: 40%;
 	height: 400px;
 	float:left;	
 	padding: 10px; 
@@ -188,10 +195,10 @@ h2{
 }
 
 #rightside{	 	 
-	height:350px;
-	width: 35%;
+	height:300px;
+	width: 45%;
 	float: right;
-	margin:50px 10px 10px 0px;		 	
+	margin:60px 20px 10px 0px;		 	
 	
 	
 }
