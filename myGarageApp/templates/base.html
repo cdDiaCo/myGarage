@@ -1,15 +1,35 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en" style="margin: 0; padding: 0;">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    {% block head %}{% load staticfiles %}{% endblock %} 
+		  {% load staticfiles %}
+		  
+		  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+		  <link href={% static "myGarage/material/css/ripples.min.css" %} rel="stylesheet">
+		  <link href={% static "myGarage/material/css/material-wfont.min.css" %} rel="stylesheet">
+		  
+		  <link rel="stylesheet" type="text/css" href={% static "myGarage/css/style.css" %}>	
+		  <script src={% static "myGarage/js/myscripts.js" %}></script>
+		  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	  
+			
+		  <script src={% static "myGarage/material/js/ripples.min.js" %}></script>
+		  <script src={% static "myGarage/material/js/material.min.js" %}></script>
+
+
+    {% block head %}	  
+    {% endblock %} 
+    
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body bgcolor="#90c140"  style="margin: 0; padding: 0; top:0px; left:0px;">    
+<body>    
     {% block content %}{% endblock %}
     
     {% block footer %}
     <hr>
-    <p>Thanks for visiting my site.</p>
+    <p>Thanks for visiting my site.</p>    
     {% endblock %}
+
+    
+    
 </body>
 </html>

@@ -17,51 +17,50 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 /*End RESET - Begin Full Width CSS*/
 
-	
 
-#login_form input[type=text], input[type=password]{
-	width:160px;	
-	height: 20px;
-	
+/*override material design theme popover*/
+.popover{
+    #color: #C52D08;
+    color: #FFFFFF;
+    #background-color: #ffffb2;
+    background-color: #c45d5b;
+    border-radius: 5px;       
+    font-size: 15px;    
+}
+
+.popover.left .arrow:after,
+.popover.left .tooltip-arrow {
+	border-left-color: #c45d5b;
+}
+
+.popover.right .arrow:after,
+.popover.right .tooltip-arrow {
+	border-right-color: #c45d5b;
+}
+
+.popover.top .arrow:after,
+.popover.top .tooltip-arrow {
+	border-top-color: #c45d5b;
+}
+
+.popover.bottom .arrow:after,
+.popover.bottom .tooltip-arrow  { 	
+ 	border-bottom-color: #c45d5b;
+}
+
+
+body {
+    background-color: #90c140;
 }
 
 
 
-#register_form input[type=text], #register_form input[type=password]{
-	width:290px;
-	margin:0px 5px 10px 0px;	
-	line-height: 20px;
-	padding: 8px 10px;
-	font-size: 18px;
-	border: 1px solid #bdc7d8;
-
-}
-
-#carRegister input[type=text] {
-	width: 130px;
-
-
-}
-
-
-h2{
-	#font-size: 26px;
-	#font-weight: bold;
+h2{	
 	line-height: 30px;
 	margin-bottom: 5px;
 }
 
 
-.errorlist{
-	list-style-type: none;
-	color: red;
-	float: right;	
-	padding:0;
-	margin:0;
-	word-wrap: normal;
-	
-	
-}
 
 
 #header{     
@@ -105,41 +104,47 @@ h2{
 	); 
 }
 
+label {
+	color: #7d8c63;
+}
+
+#login_form input[type=text], input[type=password]{
+	width:160px;	
+	height: 25px;
+	
+}
+
 #login{    
-    #background-color: blue;    
-    width: 440px;
+    #background-color: blue;  
+    width:450px;
     height: 70px;
     float: right; 
-    margin-right:20px;  
-    margin-left:600px; 
-    margin-top:-40px;
-  
-    
+    margin:-40px 20px 0 600px;     
 }
 
 #username_login{
     #background-color: yellow;
     width: 180px;
-    position: relative;
-    float: left;
-    top: 20px;
+    height:25px;
+    margin: 20px 0 0 0;
+    float:left;
     
 }
 
 #password_login{
     #background-color: green;
     width: 180px;
-	position: relative;
+    height:25px;
 	float:left;
-	top: 20px;	
-	left:5px;
+	margin: 20px 0 0 3px;		
 }
 
-#login_button{
-	position: relative;
-	top: 38px;
-	left: 10px; 	
-	float:left;	
+#login_button{	
+	width: 75px;
+	height: 25px;
+	padding: 0;
+	margin: 40px 10px 0 0;		
+		
 }
 
 
@@ -152,12 +157,11 @@ h2{
     float: left;
 	#color: #545453;
 	#color: #627aac;
-	color: #8b9c6f;
+	#color: #8b9c6f;
+	color: #7d8c63;
 	#font-family: 'lucida grande', tahoma, verdana, arial, sans-serif; 
 	font-size: 35px;
-	font-weight: bold;
-	 
-	
+	font-weight: bold;	
 }
 
 
@@ -188,19 +192,61 @@ h2{
 	width: 40%;
 	height: 400px;
 	float:left;	
-	padding: 10px; 
-	margin: 20px 0px 10px 30px;
+	padding: 30px; 
+	#margin: 20px 5px 10px 30px;	
+}
+
+
+.register_form > input[type=text], 
+.register_form > input[type=password], 
+#carRegister input[type=text] {
+	width:290px;
+	height: 40px;
+	margin:0 0 10px 0;	
+	line-height: 20px;
+	padding: 8px 10px;
+	font-size: 18px;	
+	border-radius: 3px;	
+}
+
+input[type=text].validationAlert, input[type=password].validationAlert {
+	border: 1px solid #c45d5b !important;	
+	background-image: url("../img/problemIcon.png");	
+    background-position: 99.99% 25%;
+    background-repeat: no-repeat;
 	
+}
+
+input[type=text].noValidationAlert, input[type=password].noValidationAlert {
+	background-image: none;
+	border: 1px solid #b9c3a8;
+}
+
+
+#carRegister input[type=text] {
+	width: 144px;
+}
+
+#signUpBtn {
+	padding:10px 44px;
+	margin: 30px 0;
 	
+}
+
+.errorlist{
+	list-style-type: none;
+	color: red;
+	float: right;	
+	padding:0;
+	margin:0;
+	word-wrap: normal;	
 }
 
 #rightside{	 	 
 	height:300px;
 	width: 45%;
 	float: right;
-	margin:60px 20px 10px 0px;		 	
-	
-	
+	margin:60px 20px 10px 0px;		
 }
 
 #navlist{

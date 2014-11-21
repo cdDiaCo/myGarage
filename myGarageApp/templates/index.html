@@ -1,14 +1,36 @@
 {% extends "base.html" %}
 
-{% block head %}
-	  {% load staticfiles %}
-	  
-	  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-      <link href={% static "myGarage/material/css/ripples.min.css" %} rel="stylesheet">
-      <link href={% static "myGarage/material/css/material-wfont.min.css" %} rel="stylesheet">
-      
-	  <link rel="stylesheet" type="text/css" href={% static "myGarage/css/style.css" %}>	
-	  <script src={% static "myGarage/js/myscripts.js" %}></script>
+{% block head %}	
+      {% load staticfiles %}
+	  <script type="text/javascript">
+		
+		
+		$(function () { 		  
+		  var elements = document.getElementsByClassName('pop');		  
+		  var index;
+		  for (index = 0; index < elements.length; ++index) {
+		  	if (elements[index].getAttribute("data-content")){
+		  	    elements[index].className = elements[index].className.replace( /(?:^|\s)noValidationAlert(?!\S)/g , '' )
+		  		elements[index].className += " validationAlert";		  				  		
+		  	}		  	
+		  }
+		  
+		  		  	
+		  $(".pop").popover({ trigger: 'focus', html: 'true'});		  
+		  $('.validationAlert').filter(':visible:first').focus();
+		  
+		  //$('#register_form').find('input[type=text],input[type=password]').filter(':visible:first').focus();	  		 
+		  //$(".pop").popover('show');		  
+		});
+		
+		
+		function removeValidationAlert(x) {	
+			//alert($('document.activeElement'));
+			$(x).removeClass('validationAlert'); 
+			$(x).addClass('noValidationAlert'); 
+		}	
+		
+	  </script>
 {% endblock %}
 
 {% block title %}Home page{% endblock %}
@@ -20,18 +42,18 @@
 		<form id="login_form" method="post" action="">
 	        {% csrf_token %}
 	        <div id="username_login">
-		        <label for="id_loginUsername">Username</label>  
-		        <br/>  		        
-		        {{ user_form.loginUsername }} 
+		        <label for="loginUsername">Username</label>  
+		        <br/> 		         
+		         <input class="" id="loginUsername" type="text" name="loginUsername" maxlength=30>
 	        </div>
 	        
 	        <div id="password_login">
-		        <label for="id_password">Password</label> 
-		        <br/>		        
-		        {{ user_form.password }}
+		        <label for="loginPassword">Password</label> 
+		        <br/>	        
+		        <input class="" id="loginPassword" type="password" name="loginPassword" maxlength=30>
 		        
 	        </div>	
-	        <input id="login_button" type="submit" value="Log In" />
+	        <input id="login_button" class="btn btn-material-lightgreen"  type="submit" value="Log In" />
 	    </form>		    
 	    </div>    
 </div>	
@@ -46,43 +68,36 @@
 		   {% else %}
 		        <h2>Sign up - it's fast and free </h2><br />
 		
-		        <form id="register_form" method="post" action=""
+		        <form class="register_form" method="post" action=""
 		                enctype="multipart/form-data">
 		            {% csrf_token %}	            
 		            
 		            {{ user_form.non_field_errors }}
+		            	            
+         
+				    <input class="pop noValidationAlert" type="text" value="{{ tempFields.username }}" data-toggle="popover" data-content="{{ userErrorList.username }}" 
+			            	name="username" placeholder="Choose your username" maxlength=30 onkeypress="removeValidationAlert(this)">	            
+		      		                   
+
+		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password1 }}" data-toggle="popover" data-content="{{ userErrorList.password1 }}" 
+			            	name="password1" placeholder="New password" maxlength=30 onkeypress="removeValidationAlert(this)">	            
+		      		           
+		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password2 }}" data-toggle="popover" data-content="{{ userErrorList.password2 }}" 
+			            	name="password2" placeholder="Re-enter new password" maxlength=30 onkeypress="removeValidationAlert(this)">	            
 		            
-		            {{ user_form.username }}	
-		            {{ user_form.username.errors}}          
-		            </br>		            
-		            
-		            {{ user_form.password1 }}		            
-		            {{ user_form.password1.errors }}		           
-		            </br>		    	            
-		           
-		            {{ user_form.password2 }}		           	
-		            {{ user_form.password2.errors }}            
-		            </br>		            
-		            
-		            <div id=carRegister>
-		            {{ car_form.manufacturer_name }} 
-		            {{ car_form.model_name }}
-		            
-		            {{ car_form.manufacturer_name.errors }}  		            
-		            {{ car_form.model_name.errors }} 
-		            <br>   
-		            </div>               
-		            <input class="btn btn-material-lightgreen" type="submit" name="submit" value=" Sign up " />
+		            <div id=carRegister>	            
+			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carMake }}" data-toggle="popover" data-content="{{ carErrorList.manufacturer_name }}" 
+			            	data-placement="bottom" name="manufacturer_name" placeholder="Car make" maxlength=30 onkeypress="removeValidationAlert(this)">
+			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carModel }}" data-toggle="popover" data-content="{{ carErrorList.model_name }}" 
+			            	name="model_name" placeholder="Car model" maxlength=30 onkeypress="removeValidationAlert(this)">		             		           
+		            </div>      		            
+		                     
+		            <input id="signUpBtn" class="btn btn-material-deeporange" type="submit" name="submit" value=" Sign up " />
 		        </form>
 		    {% endif %}
 		</div>
 		
-		
-        <!--
-		<div id="rightside" style="background-image: url('{% static "myGarage/img/tires.jpg" %}');">
-		<img src={% static "myGarage/img/transparent.gif" %}  width="100%" height="100%" > 
-		</div>	
-		-->
+	    
 		
 		<div id="rightside" >
 			<img src={% static "myGarage/img/facebook_shot.png" %}  width="100%" height="100%" > 
@@ -98,14 +113,4 @@
 {% block footer %}
 
 {% endblock %}
-
-
-<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-<script src={% static "myGarage/material/js/ripples.min.js" %}></script>
-<script src={% static "material/js/material.min.js" %}></script>
-
-
-
 

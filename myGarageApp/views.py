@@ -24,6 +24,12 @@ def home_page(request):
     
     context = RequestContext(request)    
     registered = False 
+    carErrorList = {'manufacturer_name': "", 'model_name': ""}
+    userErrorList = {'username': "", 'password1': "", 'password2': ""}
+    emptyFields = True
+    postMethod = False
+    tempFields = {}
+    
 
      
     if request.method == 'POST':
@@ -32,6 +38,21 @@ def home_page(request):
             user_form = UserForm(data=request.POST)
             #profile_form = UserProfileForm(data=request.POST)
             car_form = CarForm(data=request.POST)
+            
+            tempFields['username'] = request.POST.get("username", "")
+            tempFields['password1'] = request.POST.get("password1", "")
+            tempFields['password2'] = request.POST.get("password2", "")
+            tempFields['carMake'] = request.POST.get("manufacturer_name", "")
+            tempFields['carModel'] = request.POST.get("model_name", "")
+            postMethod = True
+            
+            for fieldValue in tempFields.iterkeys():
+                if tempFields[fieldValue] != "": 
+                    print fieldValue                   
+                    emptyFields = False
+                    break
+                
+            
             
             if user_form.is_valid() and car_form.is_valid():                
                 user = user_form.save()  
@@ -42,12 +63,21 @@ def home_page(request):
                 #profile.user = user              
                 #profile.save()                
                 registered = True    
-            else:
+            else:                
                 print user_form.errors, car_form.errors
+                for key in car_form.getKeys():
+                    if key in car_form.errors:                        
+                        for error in car_form.errors[key]:                                                              		
+                            carErrorList[key] += error+" "
+                            
+                for key in user_form.getRegisterFormKeys():                                       			 
+                    if key in user_form.errors:                        
+                        for error in user_form.errors[key]:                           								 		
+                            userErrorList[key] += error+" "                            
         else:
             # do login  
             username = request.POST['loginUsername']
-            password = request.POST['password']
+            password = request.POST['loginPassword']
     
             user = authenticate(username=username, password=password)
             if user:                
@@ -59,15 +89,20 @@ def home_page(request):
             else:                
                 print "Invalid login details: {0}, {1}".format(username, password)
                 return HttpResponse("Invalid login details supplied.")
+                         
     else:
         user_form = UserForm()        
         car_form = CarForm()
-        #profile_form = UserProfileForm()          
-     
-    
+        #profile_form = UserProfileForm()            
+                             
+        
+        
     return render_to_response(
             'index.html',
-            {'user_form': user_form, 'car_form': car_form, 'registered': registered,},
+            {'user_form': user_form, 'car_form': car_form, 
+             'registered': registered, 'carErrorList': carErrorList, 
+             'userErrorList': userErrorList, 'postMethod': postMethod,
+             'emptyFields': emptyFields, 'tempFields': tempFields,},
             context)  
 
     
