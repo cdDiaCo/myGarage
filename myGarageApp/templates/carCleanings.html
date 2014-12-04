@@ -1,0 +1,49 @@
+{% extends "garage.html" %}
+
+{% block head %}
+	  {% load staticfiles %}
+	   <script type="text/javascript">
+		   $(document).ready(function () {
+		        var hrefValue = "cleanings";
+		        setItemMenuActive(hrefValue);	         
+			    
+		   });
+		   
+		   
+		   
+	   
+	   </script>
+{% endblock %}
+
+
+{% block title %}Cleanings{% endblock %}
+
+
+{% block operations %}	
+	{% if cleanings %}
+			<table class="records">	
+	        <thead>
+	        <th>Refuel date</th>
+	        <th>Sum refuelled </th>
+	        <th>Quantity refuelled</th>  
+	        </thead>    
+    		{% for record in cleanings %}
+    		<tbody>
+    		<tr>
+    			<td>{{ record.cleaning_date }}</td>
+    			<td>{{ record.cleaning_cost }}</td>
+    			<td>{{ record.cleaning_type }}</td>    			 	
+    		</tr>
+    		</tbody>
+    		{% endfor %}  
+    		</table>
+    	{% else %}	
+    		<p>no cleanings for this car</p>   		  
+   		{% endif %}    
+	<div id="submenu"></div>
+{% endblock %}	
+	
+
+
+{% block footer %}
+{% endblock %}

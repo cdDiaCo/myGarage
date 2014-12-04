@@ -1,21 +1,13 @@
 from django.shortcuts import render
-
-# Create your views here.
-import django
-from django.core.context_processors import csrf
-from django.shortcuts import render
-from django.utils.decorators import method_decorator
-from forms import UserProfileForm, CarForm,UserForm, AddNewCar, AddCleaning
-from django.contrib.auth.forms import UserCreationForm
-from models import UserProfile, Car, Cleaning
+from forms import CarForm,UserForm, AddNewCar, AddCleaning
+from models import Car, Cleaning, Refuelling
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect, csrf_exempt, ensure_csrf_cookie
-import json
+
 
 
 def home_page(request):  
@@ -25,12 +17,8 @@ def home_page(request):
     context = RequestContext(request)    
     registered = False 
     carErrorList = {'manufacturer_name': "", 'model_name': ""}
-    userErrorList = {'username': "", 'password1': "", 'password2': ""}
-    emptyFields = True
-    postMethod = False
+    userErrorList = {'username': "", 'password1': "", 'password2': ""}   
     tempFields = {}
-    
-
      
     if request.method == 'POST':
         if 'manufacturer_name' in request.POST:
@@ -43,16 +31,7 @@ def home_page(request):
             tempFields['password1'] = request.POST.get("password1", "")
             tempFields['password2'] = request.POST.get("password2", "")
             tempFields['carMake'] = request.POST.get("manufacturer_name", "")
-            tempFields['carModel'] = request.POST.get("model_name", "")
-            postMethod = True
-            
-            for fieldValue in tempFields.iterkeys():
-                if tempFields[fieldValue] != "": 
-                    print fieldValue                   
-                    emptyFields = False
-                    break
-                
-            
+            tempFields['carModel'] = request.POST.get("model_name", "")                      
             
             if user_form.is_valid() and car_form.is_valid():                
                 user = user_form.save()  
@@ -93,18 +72,13 @@ def home_page(request):
     else:
         user_form = UserForm()        
         car_form = CarForm()
-        #profile_form = UserProfileForm()            
-                             
-        
+        #profile_form = UserProfileForm()        
         
     return render_to_response(
             'index.html',
             {'user_form': user_form, 'car_form': car_form, 
              'registered': registered, 'carErrorList': carErrorList, 
-             'userErrorList': userErrorList, 'postMethod': postMethod,
-             'emptyFields': emptyFields, 'tempFields': tempFields,},
-            context)  
-
+             'userErrorList': userErrorList, 'tempFields': tempFields,}, context)  
     
     
 @login_required
@@ -246,15 +220,30 @@ def addCleaning(request):
         car = False                 
         return render(request, 'newCleaning.html', {'selectedCar' : car} )                
     
-            
+
+          
 @login_required             
-def carCleanings(request):
-        if 'selectedCar' in request.session:
-            selectedCar = request.session['selectedCar']
-            cleanings = Cleaning.objects.filter(car_id=selectedCar['id'])
-            return render(request, 'garage.html', {'cleanings' : cleanings} ) 
+def carCleanings(request):    
+    if 'selectedCar' in request.session:
+        selectedCar = request.session['selectedCar']
+        cleanings = Cleaning.objects.filter(car_id=selectedCar['id'])
+    else:
+        cleanings = False
             
+    return render(request, 'carCleanings.html', {'cleanings' : cleanings}) 
+          
                    
+@login_required             
+def carRefuellings(request): 
+    if 'selectedCar' in request.session:
+        selectedCar = request.session['selectedCar']
+        refuellings = Refuelling.objects.filter(car_id=selectedCar['id'])
+    else:
+        refuellings = False
+    
+    return render(request, 'carRefuellings.html', {'refuellings': refuellings})
+        
+    
     
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required

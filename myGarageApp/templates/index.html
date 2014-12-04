@@ -2,34 +2,12 @@
 
 {% block head %}	
       {% load staticfiles %}
-	  <script type="text/javascript">
-		
-		
-		$(function () { 		  
-		  var elements = document.getElementsByClassName('pop');		  
-		  var index;
-		  for (index = 0; index < elements.length; ++index) {
-		  	if (elements[index].getAttribute("data-content")){
-		  	    elements[index].className = elements[index].className.replace( /(?:^|\s)noValidationAlert(?!\S)/g , '' )
-		  		elements[index].className += " validationAlert";		  				  		
-		  	}		  	
-		  }
-		  
-		  		  	
-		  $(".pop").popover({ trigger: 'focus', html: 'true'});		  
-		  $('.validationAlert').filter(':visible:first').focus();
-		  
-		  //$('#register_form').find('input[type=text],input[type=password]').filter(':visible:first').focus();	  		 
-		  //$(".pop").popover('show');		  
-		});
-		
-		
-		function removeValidationAlert(x) {	
-			//alert($('document.activeElement'));
-			$(x).removeClass('validationAlert'); 
-			$(x).addClass('noValidationAlert'); 
-		}	
-		
+	  <script type="text/javascript">		
+	  		$(document).ready(function () {
+	  			addValidation();
+	  		 });	
+	  					
+			
 	  </script>
 {% endblock %}
 
@@ -61,7 +39,7 @@
 <hr id="header_hr">
 
 <div id="base">
-	<div id="borderDiv">	
+	<div id="borderDiv" class="addBorderShade">	
 		<div id="leftside">	  
 		   {% if registered %}
 		        <strong>thank you for registering!</strong> 	        
@@ -76,15 +54,11 @@
 		            	            
          
 				    <input class="pop noValidationAlert" type="text" value="{{ tempFields.username }}" data-toggle="popover" data-content="{{ userErrorList.username }}" 
-			            	name="username" placeholder="Choose your username" maxlength=30 onkeypress="removeValidationAlert(this)">	            
-		      		                   
-
+			            	name="username" placeholder="Choose your username" maxlength=30 onkeypress="removeValidationAlert(this)">	
 		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password1 }}" data-toggle="popover" data-content="{{ userErrorList.password1 }}" 
-			            	name="password1" placeholder="New password" maxlength=30 onkeypress="removeValidationAlert(this)">	            
-		      		           
+			            	name="password1" placeholder="New password" maxlength=30 onkeypress="removeValidationAlert(this)">			      		           
 		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password2 }}" data-toggle="popover" data-content="{{ userErrorList.password2 }}" 
-			            	name="password2" placeholder="Re-enter new password" maxlength=30 onkeypress="removeValidationAlert(this)">	            
-		            
+			            	name="password2" placeholder="Re-enter new password" maxlength=30 onkeypress="removeValidationAlert(this)">			            
 		            <div id=carRegister>	            
 			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carMake }}" data-toggle="popover" data-content="{{ carErrorList.manufacturer_name }}" 
 			            	data-placement="bottom" name="manufacturer_name" placeholder="Car make" maxlength=30 onkeypress="removeValidationAlert(this)">
@@ -95,9 +69,7 @@
 		            <input id="signUpBtn" class="btn btn-material-deeporange" type="submit" name="submit" value=" Sign up " />
 		        </form>
 		    {% endif %}
-		</div>
-		
-	    
+		</div>	    
 		
 		<div id="rightside" >
 			<img src={% static "myGarage/img/facebook_shot.png" %}  width="100%" height="100%" > 
@@ -107,10 +79,6 @@
 </div>
 
 {% endblock %}
-
-
-
 {% block footer %}
-
 {% endblock %}
 

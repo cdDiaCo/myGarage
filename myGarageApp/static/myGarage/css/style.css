@@ -1,6 +1,3 @@
-
-
-
 /*CSS RESET*/
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -16,7 +13,6 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 }
 
 /*End RESET - Begin Full Width CSS*/
-
 
 /*override material design theme popover*/
 .popover{
@@ -48,26 +44,29 @@ table, caption, tbody, tfoot, thead, tr, th, td {
  	border-bottom-color: #c45d5b;
 }
 
-
 body {
     background-color: #90c140;
 }
-
-
 
 h2{	
 	line-height: 30px;
 	margin-bottom: 5px;
 }
 
-
-
-
 #header{     
 	#background-color:#f1f1f1; 
 	background-color:#edf0f5;
 	height:80px;
+	width:100%;
+	min-width: 1060px;
 	float:left; 		
+}
+
+#carOptions {
+	height: 40px;
+	width: 200px;
+	float: right;	
+	margin: 5px 20px 0 0;	
 }
 
 #header_hr{
@@ -89,9 +88,7 @@ h2{
       color-stop(0.5, rgb(199,224,159)),
       color-stop(0.6, rgb(210,230,178)),     
       color-stop(0.9, rgb(221,236,197)),           
-      color-stop(1, rgb(232,242,216))
-  );  
-  
+      color-stop(1, rgb(232,242,216)));    
 	background-image: -moz-linear-gradient(
 	    left center,
 	    rgb(232,242,216) 0%,
@@ -100,8 +97,7 @@ h2{
 	    rgb(199,224,159) 50%, 
 	    rgb(210,230,178) 60%,
 	    rgb(221,236,197) 90%,    
-	    rgb(232,242,216) 100%
-	); 
+	    rgb(232,242,216) 100%); 
 }
 
 label {
@@ -110,8 +106,7 @@ label {
 
 #login_form input[type=text], input[type=password]{
 	width:160px;	
-	height: 25px;
-	
+	height: 25px;	
 }
 
 #login{    
@@ -119,7 +114,7 @@ label {
     width:450px;
     height: 70px;
     float: right; 
-    margin:-40px 20px 0 600px;     
+    margin:-40px 20px 0 590px;     
 }
 
 #username_login{
@@ -127,8 +122,7 @@ label {
     width: 180px;
     height:25px;
     margin: 20px 0 0 0;
-    float:left;
-    
+    float:left;    
 }
 
 #password_login{
@@ -147,7 +141,6 @@ label {
 		
 }
 
-
 #appMotto{
     #background-color:red;
     width:420px;
@@ -164,28 +157,23 @@ label {
 	font-weight: bold;	
 }
 
-
 #base{	
 	height:600px; 
 	#background-color:#f1f1f1; 
 	background-color:#edf0f5;
-	min-width:1040px;
+	min-width:1060px;
 	position: relative;
 	top:0px;  
 	margin:0 auto;
 	padding:10px;
 }
 
-
 #borderDiv{    
 	min-width: 1000px; 
 	height:450px; 
 	background-color:white;		
 	margin: 20px 30px;	
-	border: 2px solid; 
-	border-radius: 25px; 
-	border-color: #DEDEDE; 
-	box-shadow: 0px 0px 25px 0px rgba(50, 50, 50, 0.3);
+	border-color: #DEDEDE; 	
 }
 
 #leftside{	 
@@ -195,7 +183,6 @@ label {
 	padding: 30px; 
 	#margin: 20px 5px 10px 30px;	
 }
-
 
 .register_form > input[type=text], 
 .register_form > input[type=password], 
@@ -222,15 +209,13 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	border: 1px solid #b9c3a8;
 }
 
-
 #carRegister input[type=text] {
 	width: 144px;
 }
 
 #signUpBtn {
 	padding:10px 44px;
-	margin: 30px 0;
-	
+	margin: 30px 0;	
 }
 
 .errorlist{
@@ -249,36 +234,174 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	margin:60px 20px 10px 0px;		
 }
 
+
+#garageLeft {
+	width: 14%;
+	height: 400px;
+	float:left;	
+	margin: 20px 3% 0px 40px;	
+}
+
+#garageRight {
+	#height:400px;
+	width: 75%;
+	float: left;
+	margin: 20px 0px 0px 10px;	
+	
+}
+
+#submenu {
+    #position: absolute;
+	width: 80%;
+	height: 50px;
+	#background-color: red;	
+	border-radius: 7px;	
+	#float:center;		
+	bottom: 0.1%;
+	margin-left: auto;
+	margin-right: auto;
+	#margin-top: 50%;
+}
+
+#addRecord {
+	background-image: url("../img/addRecord.png");
+	background-color: #7d8c63;
+	background-repeat: no-repeat;
+	background-position: 60% 65%;
+	#background-position: left;
+	padding: 10px 30px 10px 10px;	
+    height: 40px;
+	margin: 5px;
+	border-radius: 3px;
+	border: 2px solid #7d8c63;
+	box-shadow: 3px 3px 4px 1px rgba(50, 50, 50, 0.4);
+	outline:none;
+}
+
+
+#addRecord:hover {
+	background-image: url("../img/addRecord_hover.png");
+}
+
+#addRecord:active {
+	background-color: #7D8863;
+	background-image: url("../img/addRecord_pressed.png");
+	box-shadow: 2px 2px 4px 0.1px rgba(50, 50, 50, 0.3);
+	border: 2px solid #7d8863;
+}
+	
+.tableInput {
+	width:100%;
+	height: 100%;
+	border: none;	
+}
+
+.tableInput:focus {
+	outline: 1px solid #edf0f5;
+}
+
+
+#operations {
+    position: relative;
+	width: 100%;
+	#height: 400px;
+	#background-color: green;
+	float:left;
+	background-color:white;	
+	border-color: #DEDEDE;
+	padding: 30px 30px 10px 30px;		
+}
+
+.records {
+	width: 95%;
+	margin-bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+thead {
+	color: #64704f;
+}
+
+table, th, td {
+	border: 2px solid #7d8c63;		
+}
+
+th, td, th {
+	padding: 5px 5px;
+}
+
+div.addBorderShade {
+	border-radius: 7px; 	 
+	box-shadow: 0px 0px 25px 0px rgba(50, 50, 50, 0.3);
+	border: 2px solid; 
+}
+
 #navlist{
-    width: 220px;
+    width: 200px;
     list-style-type: none;   
+    #color: #7d8c63;
+    
 }
 
 li a:link, a:visited  {
     text-decoration: none;
-    color: #67804F;    
+    color: #7d8c63;        
 }
 
 li a:hover {
     text-decoration: none;
-    color: #67804F;
-    background-color:  #7FBF3D;
+    color: #7d8c63;    
+    #background-color: #E1E3E6; 
+    background-color: #d5d8dc;  
 }
 
 li a:active {
     text-decoration: none;
-    color: #67804F;    
+    color: #7d8c63;           
 }
 
 li a  {   
-    display: block;     
-    font-size: 23px;
-    border-bottom: 1px solid #67804F;
+    display: block;      
+    font-size: 20px;
+    border-bottom: 1px solid #7d8c63;
     width: 160px;
-    padding: 10px 30px;
-    text-align:center;
-    background-color: #87CC41;
+    height: 45px;
+    padding: 7px 30px;
+    text-align:left;    
+    color: #7d8c63;    
 }
+
+.imgListItemBinding {
+	position:relative;
+}
+
+#active a {
+	width:180px;
+	background-color: #7d8c63;	
+	color: white;		
+}
+
+#arrow {
+	width: 0; 
+	height: 0; 
+	border-top: 22.5px solid transparent;
+	border-bottom: 22.5px solid transparent;	
+	border-left: 22.5px solid  #7d8c63;
+	position: absolute;
+	top: 0px;
+	left: 180px;	
+	visibility: hidden;	
+}
+
+
+.menuImgs {
+	position:absolute;
+	left:5px;
+	bottom:10px;
+
+}
+
 
 
 

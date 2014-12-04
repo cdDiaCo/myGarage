@@ -3,22 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-
-
-class UserForm(UserCreationForm):     
-    #password = forms.CharField(widget=forms.PasswordInput())   
-    #loginUsername = forms.CharField(label='Username',  max_length=30)
-
- 
+class UserForm(UserCreationForm):  
     class Meta:
-        model = User       
-        #fields = ('username', 'loginUsername', 'password', 'first_name')
+        model = User  
         fields = ('username', 'first_name')
         
     def getRegisterFormKeys(self):
-        return ('username', 'password1', 'password2')   
-  
-  
+        return ('username', 'password1', 'password2')    
 
         
 class CarForm(forms.ModelForm):            

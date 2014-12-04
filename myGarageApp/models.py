@@ -1,8 +1,5 @@
-
-# Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
-
 
 FUEL_TYPES = (
         ('Gasoline', 'Gasoline'),
@@ -11,7 +8,6 @@ FUEL_TYPES = (
         ('Compressed Natural Gas', 'Compressed Natural Gas'),
         ('Ethanol', 'Ethanol'),
     )
-
 
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
@@ -22,8 +18,7 @@ class UserProfile(models.Model):
 
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
-        return self.user.username  
-   
+        return self.user.username     
     
 class Car(models.Model):
     registration_number = models.CharField(max_length=30, blank=True, null=True)
@@ -38,28 +33,21 @@ class Car(models.Model):
         ('CNG', 'Compressed Natural Gas'),
         ('ETH', 'Ethanol'),
     ) 
-    """      
-
-     
-    fuel_type           = models.CharField(max_length=30, choices=FUEL_TYPES, default='Gasoline', verbose_name='Type of fuel', blank=True)
-    
+    """           
+    fuel_type           = models.CharField(max_length=30, choices=FUEL_TYPES, default='Gasoline', verbose_name='Type of fuel', blank=True)    
     km_purchased        = models.IntegerField(verbose_name='Nr. of km when purchased', null=True, blank=True)
     vin                 = models.IntegerField(blank=True, null=True, verbose_name='Vehicle Identification Number')
     user                = models.ForeignKey(User, related_name='cars')
     
     def __unicode__(self):
-        return self.manufacturer_name + " " + self.model_name        
-        
-        
+        return self.manufacturer_name + " " + self.model_name             
         
 class Refuelling(models.Model):
     refuel_date = models.DateField()
     current_millage = models.IntegerField()
     quantity_refuelled = models.FloatField()
     sum_refuelled = models.FloatField()
-    car = models.ForeignKey(Car)      
-
-
+    car = models.ForeignKey(Car)   
 
 class Cleaning(models.Model):
     cleaning_date = models.DateField()

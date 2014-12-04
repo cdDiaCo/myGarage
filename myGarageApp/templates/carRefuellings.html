@@ -1,0 +1,66 @@
+{% extends "garage.html" %}
+
+{% block head %}
+	  {% load staticfiles %}
+	   <script type="text/javascript">
+		   $(document).ready(function () {
+		        var hrefValue = "refuellings";
+		        setItemMenuActive(hrefValue);
+			    
+		   });
+		   
+		   function addNewRow() {
+		   		$('.records').find('tbody:last').append($('<tr>')
+		   											.append($('<td>')
+		   												.append($('<input>')
+		   													.prop('type', 'text')
+		   													.attr('class', 'tableInput')))
+		   											.append($('<td>')
+		   												.append($('<input>')
+		   													.prop('type', 'text')
+		   													.attr('class', 'tableInput')))
+		   											.append($('<td>')
+		   												.append($('<input>')
+		   													.prop('type', 'text')
+		   													.attr('class', 'tableInput')))
+		   										);
+		   }
+		   
+		   
+	   </script>
+{% endblock %}
+
+
+{% block title %}Refuellings{% endblock %}
+
+{% block operations %}
+	{% if refuellings %}
+	        <table class="records">	
+	        <thead>
+	        <th>Refuel date</th>
+	        <th>Sum refuelled </th>
+	        <th>Quantity refuelled</th>  
+	        </thead>      
+    		{% for record in refuellings %}
+    		<tbody>
+    		<tr>
+    		    <td>{{ record.refuel_date }}</td>
+    			<td>{{ record.sum_refuelled }}</td>
+    			<td>{{ record.quantity_refuelled }}</td>    	
+    		</tr>
+    		</tbody>
+    		{% endfor %}  
+    		</table>
+    	{% else %}	
+    		<p>no refuellings for this car</p>   		  
+   		{% endif %}    
+  		
+	 <div id="submenu">
+	 	<input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record"/>
+	 </div>
+{% endblock %}	
+	
+
+
+{% block footer %}
+{% endblock %}
