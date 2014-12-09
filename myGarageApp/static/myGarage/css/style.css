@@ -173,7 +173,7 @@ label {
 	height:450px; 
 	background-color:white;		
 	margin: 20px 30px;	
-	border-color: #DEDEDE; 	
+	border-color: #f9fafc; 	
 }
 
 #leftside{	 
@@ -283,23 +283,20 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	background-image: url("../img/addRecord_hover.png");
 }
 
+#addRecord:disabled {
+	background-image: url("../img/addRecord_disabled.png");
+	background-color: #b0b0b0;
+	border: 2px solid #b0b0b0;
+	box-shadow: 2px 2px 4px 0.1px rgba(50, 50, 50, 0.3);	
+	#box-shadow: none;
+}
+
 #addRecord:active {
 	background-color: #7D8863;
 	background-image: url("../img/addRecord_pressed.png");
 	box-shadow: 2px 2px 4px 0.1px rgba(50, 50, 50, 0.3);
 	border: 2px solid #7d8863;
 }
-	
-.tableInput {
-	width:100%;
-	height: 100%;
-	border: none;	
-}
-
-.tableInput:focus {
-	outline: 1px solid #edf0f5;
-}
-
 
 #operations {
     position: relative;
@@ -308,8 +305,21 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	#background-color: green;
 	float:left;
 	background-color:white;	
-	border-color: #DEDEDE;
+	border-color: #f9fafc;
 	padding: 30px 30px 10px 30px;		
+}
+
+#newRow {
+	position: absolute;
+	width: 98%;
+	height: 70px;
+	padding: 2px 10px;
+	bottom: 60px;
+	left: 5px;
+	background-color: #ffffff;
+	display: none;	
+	border: 1px solid #DEDEDE;
+	
 }
 
 .records {
@@ -319,22 +329,90 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	margin-right: auto;
 }
 
-thead {
-	color: #64704f;
+.records thead {
+	color: #ffffff;
+	background-color: #8a9772;
 }
 
-table, th, td {
-	border: 2px solid #7d8c63;		
+.records th, 
+.records td {
+	border: 1px solid #8a9772;	
+	padding: 5px 5px;	
 }
 
-th, td, th {
-	padding: 5px 5px;
+.addNewRecordTip {
+	color: #e58700;
+	float: left;
+	margin-left: 10px;
+	font-size: 13px;
+}
+
+#tempTable {    
+	width: 75%;		
+	margin-left: 10px;
+	#margin-top: 5px;
+	float: left;
+	background-color: white;
+}
+
+#tempTable thead {
+	color:  #7d8c63;	
+}
+
+#tempTable th,
+#tempTable td {
+	border: 1px solid #7d8c63;
+	padding: 0px 5px;
+	background-color: white;
+}
+
+.tempInput {	
+	height: 100%;
+	width: 90%;
+	border: none;
+	background-color: white;
+	padding: 0px 5px;	
+}
+
+.tempInput:focus {
+	#outline: 1px solid #edf0f5;
+	outline: 1px solid #a4ae91;
+}
+
+#newRowBtns {
+	float: right;
+	width: 20%;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-right: 15px; 
+	color: white;
+}
+
+.btnNewRow {
+	float: right;
+	width: 60px;
+	background-color: #7d8c63;
+	border: 1px solid #7d8863;
+}
+
+.btnNewRow:hover {
+	color: #e58700;
+} 
+
+#cancelNewRecord {		
+	margin-right: 10px;
 }
 
 div.addBorderShade {
 	border-radius: 7px; 	 
 	box-shadow: 0px 0px 25px 0px rgba(50, 50, 50, 0.3);
-	border: 2px solid; 
+	border: 1px solid; 
+}
+
+div.diminishedBorderShade {
+	border-radius: 7px; 	 
+	box-shadow: 0px 0px 12px 0px rgba(111, 111, 111, 0.3);
+	border: 1px solid; 
 }
 
 #navlist{

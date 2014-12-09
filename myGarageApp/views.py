@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from forms import CarForm,UserForm, AddNewCar, AddCleaning
+from forms import CarForm,UserForm, AddNewCar, AddCleaning, RefuellingForm
 from models import Car, Cleaning, Refuelling
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -234,16 +234,33 @@ def carCleanings(request):
           
                    
 @login_required             
-def carRefuellings(request): 
+def carRefuellings(request):
+    
     if 'selectedCar' in request.session:
         selectedCar = request.session['selectedCar']
+        car = Car.objects.get(id=selectedCar['id'])
         refuellings = Refuelling.objects.filter(car_id=selectedCar['id'])
+    
+    if request.method == 'POST':        
+        refuelling_form = RefuellingForm(data=request.POST)
+        if refuelling_form.is_valid():  
+            refuelling = refuelling_form.save(commit=False)                 
+            refuelling.car = car
+            refuelling.save()    
+        else:
+            print refuelling_form.errors
+        return HttpResponseRedirect('/refuellings/')  
     else:
-        refuellings = False
+        refuelling_form = RefuellingForm()   
     
-    return render(request, 'carRefuellings.html', {'refuellings': refuellings})
+    
+    return render(request, 'carRefuellings.html', {'refuellings': refuellings, 
+               'refuelling_form': refuelling_form})
         
-    
+ 
+     
+        
+  
     
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required

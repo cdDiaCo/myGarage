@@ -1,4 +1,4 @@
-from models import UserProfile, Car, Cleaning
+from models import UserProfile, Car, Cleaning, Refuelling
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -42,4 +42,15 @@ class AddNewCar(forms.ModelForm):
 class AddCleaning(forms.ModelForm):
     class Meta:
         model = Cleaning  
-        fields = ('cleaning_date', 'cleaning_cost', 'cleaning_type')           
+        fields = ('cleaning_date', 'cleaning_cost', 'cleaning_type')   
+        
+        
+        
+class RefuellingForm(forms.ModelForm):
+    class Meta:
+        model = Refuelling
+        fields = ('refuel_date', 'current_millage', 'sum_refuelled', 'quantity_refuelled')  
+          
+          
+          
+                
