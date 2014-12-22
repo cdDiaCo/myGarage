@@ -8,69 +8,9 @@
 		        setItemMenuActive(hrefValue);		        
 		        
 		        $( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );		        
-		        
+		        setColumnsWidth();
 			    
-		   });
-		   
-		   function addNewRow() {		   		
-		   		var tempRow = $("#operations").find('#newRow table').find('tbody:last tr');		   		
-		   		var columnNames = $('.records').find('thead').find("th");
-		   		
-		   		for (i=0; i< columnNames.length; i++) {		   			
-		   			var columnName = $(columnNames[i]).text();
-		   			var inputName = getNameForTableInput(columnName);		   			
-		   			tempRow.append($('<td>')
-		   				   .append($('<input>')		   					
-							   .prop('type', 'text')
-							   .attr('class', 'tempInput')
-							   .attr('name', inputName))); 	
-		   		}
-		   		
-		   		$('#addRecord').attr('disabled', 'disabled');	   		
-		   		diminishMainTableAppearace();		   		  			   		
-		   		$("#operations").find('#newRow').css('display', 'block');	
-		   		
-   										
-		   }
-		   
-		   function closeNewRow() {
-		    	restoreMainTableAppearance();		   	
-		   			
-		   		$("#operations").find('#newRow').css('display', 'none');		   		
-		   		$('#tempTable').find('tbody tr').find('td').remove();
-		   		$('#addRecord').removeAttr('disabled');
-		   }
-		   
-		   function restoreMainTableAppearance() {
-		   		//restore initial css style
-		   		$('#operations').css('background-color', ' #ffffff');
-		   		$('#operations').removeClass('diminishedBorderShade').addClass("addBorderShade");
-		   		$( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );
-		   		$('.records').find('thead').css('background-color', '#8a9772');
-		   		$('.records').find('th').css('border', '1px solid #8a9772');
-		   		$('.records').find('td').css('border', '1px solid #8a9772');
-		   }
-		   
-		   function diminishMainTableAppearace() {
-		   		$('#newRow').attr('class', 'addBorderShade');
-		   		$('#operations').removeClass('addBorderShade').addClass("diminishedBorderShade");
-		   		$('#operations').css('background-color', ' #f9fafc'); 	
-		   		$( "#operations").find("tbody tr:odd" ).css( "background-color", "#f9fafc" );	   		
-		   		$('.records').find('thead').css('background-color', '#a4ae91');
-		   		$('.records').find('th').css('border', '1px solid #a4ae91');
-		   		$('.records').find('td').css('border', '1px solid #a4ae91');
-		   }
-		   
-		   function getNameForTableInput(columnName) {
-		   		var firstLetter = columnName.charAt(0).toLowerCase();		   		
-		   		var tempName = firstLetter + columnName.substring(1);		   		
-		   		var name = tempName.replace(/ /g,"_");			   			
-		   		return name;   
-		   }
-		   
-		   
-		   
-		   
+		   });		   
 	   </script>
 {% endblock %}
 
@@ -78,25 +18,29 @@
 {% block title %}Refuellings{% endblock %}
 
 {% block operations %}
-	{% if refuellings %}
+	{% if refuellings %}			
 	        <table class="records">	
-	        <thead>
-	        <th>Refuel date</th>
-	        <th>Current millage</th>
-	        <th>Sum refuelled</th>
-	        <th>Quantity refuelled</th>  
-	        </thead>      
-    		{% for record in refuellings %}
-    		<tbody>
-    		<tr>
-    		    <td>{{ record.refuel_date }}</td>
-    		    <td>{{ record.current_millage }}</td>
-    			<td>{{ record.sum_refuelled }}</td>
-    			<td>{{ record.quantity_refuelled }}</td>    	
-    		</tr>
-    		</tbody>
-    		{% endfor %}  
-    		</table>
+		        <thead>
+			        <th>Refuel date</th>
+			        <th>Current mileage</th>
+			        <th>Sum refuelled</th>
+			        <th>Quantity refuelled</th>  
+		        </thead>   
+	        </table>   
+	        <div class="tableDiv" >
+		        <table class="records">
+	    		{% for record in refuellings %}
+		    		<tbody>
+			    		<tr>
+			    		    <td>{{ record.refuel_date }}</td>
+			    		    <td>{{ record.current_mileage }}</td>
+			    			<td>{{ record.sum_refuelled }}</td>
+			    			<td>{{ record.quantity_refuelled }}</td>    	
+			    		</tr>
+		    		</tbody>
+	    		{% endfor %}  
+	    		</table>
+    		</div>
     	{% else %}	
     		<p>no refuellings for this car</p>   		  
    		{% endif %}  
@@ -108,7 +52,7 @@
    	 <table id="tempTable">
    	 	<thead>
    	 		<th>Refuel date</th>
-   	 		<th>Current millage</th>
+   	 		<th>Current mileage</th>
 	        <th>Sum refuelled</th>
 	        <th>Quantity refuelled</th> 
    	 	</thead>
@@ -117,16 +61,20 @@
    	 	</tbody>   	 	   	 
    	 </table>
    	 <div id="newRowBtns">
-	   	 <input type="submit" class="btnNewRow" value="Save"/>
+	   	 <input type="submit" class="btnNewRow" value="Add"/>
 	   	 <input type="button" id="cancelNewRecord" class="btnNewRow" value="Cancel" onclick="closeNewRow()">
    	 </div>
    	 </form>
    	 </div>	  
-  		
-	 <div id="submenu">
+   	 
+   	 <div id="submenu">
 	 	<input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record"/>
 	 </div>
+  		
+
 {% endblock %}	
+
+
 	
 
 

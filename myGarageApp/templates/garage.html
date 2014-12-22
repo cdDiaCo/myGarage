@@ -32,7 +32,7 @@
 	
 	<hr id="header_hr">
 	<div id="base">
-		<div id="garageLeft">   
+		<div id="garageLeft" >   
 		    <ul id="navlist">
 			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/gas_station.png" %}><li><a href="/refuellings/">Refuellings</a></li><div id="arrow"></div></div>
 			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/carWash.png" %}><li><a href="/cleanings/">Cleanings</a></li><div id="arrow"></div></div>
@@ -44,16 +44,11 @@
 			</ul>
 		</div>	
 		
-		<div id="garageRight">
-			
-		    
+		<div id="garageRight">		    
     	   <div id="operations" class="addBorderShade">    	       
 	    	   {% block operations %}
 	    	   		detalii despre masina sau statistici generale ale masinii/userului
-	    	   {% endblock %}
-	    	   
-	    	   
-	    	  
+	    	   {% endblock %}	    	  
 		   </div>
     	    
            </br>
@@ -63,9 +58,6 @@
 			</div>
 		</div>
 		
-	    
-        
-	    
 	    
 	    
 

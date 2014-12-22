@@ -44,7 +44,7 @@ class Car(models.Model):
         
 class Refuelling(models.Model):
     refuel_date = models.DateField()
-    current_millage = models.IntegerField()
+    current_mileage = models.IntegerField()
     quantity_refuelled = models.FloatField()
     sum_refuelled = models.FloatField()
     car = models.ForeignKey(Car)   

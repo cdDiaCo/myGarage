@@ -64,3 +64,80 @@ function addValidation() {
 }
 
 
+function addNewRow() {		   		
+	var tempRow = $("#operations").find('#newRow table').find('tbody:last tr');		   		
+	var columnNames = $('.records').find('thead').find("th");
+	
+	for (i=0; i< columnNames.length; i++) {		   			
+		var columnName = $(columnNames[i]).text();
+		var inputName = getNameForTableInput(columnName);		   			
+		tempRow.append($('<td>')
+			   .append($('<input>')		   					
+				   .prop('type', 'text')
+				   .attr('class', 'tempInput')
+				   .attr('name', inputName))); 	
+	}
+
+	$('#addRecord').attr('disabled', 'disabled');	   		
+	diminishMainTableAppearace();		   		  			   		
+	$("#operations").find('#newRow').css('display', 'block');	   										
+}
+
+function setColumnsWidth() {
+	var columnNames = $('.records').find('thead').find("th");
+	var widthValue = 100/(columnNames.length) + "%";
+	$('.records').find('thead').find("th").css('width', widthValue);
+	$('.records').find('tbody').find("td").css('width', widthValue);
+	
+
+}
+
+
+function closeNewRow() {
+	restoreMainTableAppearance();		   	
+		
+	$("#operations").find('#newRow').css('display', 'none');		   		
+	$('#tempTable').find('tbody tr').find('td').remove();
+	$('#addRecord').removeAttr('disabled');
+}
+		   
+		   
+function restoreMainTableAppearance() {
+	//restore initial css style
+	$('#operations').css('background-color', ' #ffffff');
+	$('#operations').removeClass('diminishedBorderShade').addClass("addBorderShade");
+	$( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );
+	$('.records').find('thead').css('background-color', '#8a9772');
+	$('.records').find('th').css('border', '1px solid #8a9772');
+	$('.records').find('td').css('border', '1px solid #8a9772');
+}		   
+		   
+function diminishMainTableAppearace() {
+	$('#newRow').attr('class', 'addBorderShade');
+	$('#operations').removeClass('addBorderShade').addClass("diminishedBorderShade");
+	$('#operations').css('background-color', ' #f9fafc'); 	
+	$( "#operations").find("tbody tr:odd" ).css( "background-color", "#f9fafc" );	   		
+	$('.records').find('thead').css('background-color', '#a4ae91');
+	$('.records').find('th').css('border', '1px solid #a4ae91');
+	$('.records').find('td').css('border', '1px solid #a4ae91');
+}
+
+
+function getNameForTableInput(columnName) {
+	var firstLetter = columnName.charAt(0).toLowerCase();		   		
+	var tempName = firstLetter + columnName.substring(1);		   		
+	var name = tempName.replace(/ /g,"_");			   			
+	return name;   
+}
+		   
+		   
+		   
+		   
+
+		   
+		   
+
+
+
+
+

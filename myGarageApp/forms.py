@@ -49,7 +49,7 @@ class AddCleaning(forms.ModelForm):
 class RefuellingForm(forms.ModelForm):
     class Meta:
         model = Refuelling
-        fields = ('refuel_date', 'current_millage', 'sum_refuelled', 'quantity_refuelled')  
+        fields = ('refuel_date', 'current_mileage', 'sum_refuelled', 'quantity_refuelled')  
           
           
           
