@@ -43,6 +43,86 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 .popover.bottom .tooltip-arrow  { 	
  	border-bottom-color: #c45d5b;
 }
+/* end of popover overriding style */
+
+
+/* override date picker style */
+div.ui-widget-header {
+	background-image: none;
+	background-color: #7d8c63;
+}
+
+
+span.ui-icon {
+	background-image: none;
+	background-color: #7d8c63;
+}
+
+
+
+a.ui-state-hover, 
+div.ui-widget-content a.ui-state-hover, 
+div.ui-widget-header a.ui-state-hover, 
+.ui-state-focus, 
+div.ui-widget-content .ui-state-focus, 
+div.ui-widget-header .ui-state-focus {
+	background-image: none;
+	background-color: #7d8c63;
+	border: none;
+
+}
+
+
+div.ui-widget {
+	font-size: .9em;
+}
+
+div.ui-datepicker table {
+	margin: 0 0;
+}
+
+div.ui-widget-content {
+	background-image: none;
+	background-color: white;
+}
+
+div.ui-datepicker tbody td > a[href="#"] { 
+	background-image: none;
+	background-color: #edf0f5;
+	border: 1px solid #edf0f5;
+}
+
+div.ui-datepicker tbody td > a[href="#"].ui-state-hover { 
+	background-image: none;
+	background-color: white;
+	border: 1px solid white;
+} 
+
+div.ui-datepicker tbody td > a[href="#"].ui-state-highlight { 
+	background-image: none;
+	background-color: #e58700;
+	border: 1px solid #e58700;
+} 
+
+div.ui-datepicker tbody td.ui-datepicker-other-month > a{
+	background-image: none;	
+	background-color: #f2f2f2;
+	border: 1px solid #f2f2f2;
+	
+}
+
+
+
+div.ui-datepicker td span, div.ui-datepicker td a {
+	padding: 0;
+}
+
+
+div.ui-datepicker {
+	width: 13em;
+}
+/* end of datepicker overriding style */
+
 
 body {
     background-color: #90c140;
@@ -376,7 +456,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 #tempTable td {
 	border: 1px solid #7d8c63;
 	padding: 0px 5px;
-	background-color: white;
+	background-coheight: 30px;
 }
 
 .tempInput {	

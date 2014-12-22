@@ -69,14 +69,43 @@ function addNewRow() {
 	var columnNames = $('.records').find('thead').find("th");
 	
 	for (i=0; i< columnNames.length; i++) {		   			
-		var columnName = $(columnNames[i]).text();
-		var inputName = getNameForTableInput(columnName);		   			
+		var columnName = $(columnNames[i]).text();		
+		var inputName = getNameForTableInput(columnName);
+		var newId = "";
+		var cssProperty = "";
+		var cssValue = "";
+	    if(columnName.indexOf("date") > -1) {
+	    	newId = "datepicker";
+	    	cssProperty = "width";
+	    	cssValue = "85%";
+	    }	
+				   			
 		tempRow.append($('<td>')
 			   .append($('<input>')		   					
 				   .prop('type', 'text')
 				   .attr('class', 'tempInput')
-				   .attr('name', inputName))); 	
+				   .css(cssProperty, cssValue)
+				   .attr('name', inputName)	
+				   .attr('id', newId)));
 	}
+	
+	$("#datepicker").datepicker({
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		altField: "#datepicker",
+		altFormat: "dd M. yy",
+		showOn: "both",
+		buttonText: 'Show Date',
+		buttonImageOnly: true,
+		buttonImage: "/myGarageApp/static/myGarage/img/calendar.png",
+		dateFormat: 'yy-mm-dd',
+		constrainInput: true		
+	});
+	
+	
+	 $(".ui-datepicker-trigger").mouseover(function() {
+        $(this).css('cursor', 'pointer');
+    });
 
 	$('#addRecord').attr('disabled', 'disabled');	   		
 	diminishMainTableAppearace();		   		  			   		
