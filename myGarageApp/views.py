@@ -248,7 +248,7 @@ def carRefuellings(request):
             refuelling.car = car
             refuelling.save()    
         else:
-            print refuelling_form.errors
+            print refuelling_form.errors            
         return HttpResponseRedirect('/refuellings/')  
     else:
         refuelling_form = RefuellingForm()   

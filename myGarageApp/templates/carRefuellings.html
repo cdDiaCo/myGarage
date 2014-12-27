@@ -12,10 +12,18 @@
 		        setItemMenuActive(hrefValue);		        
 		        
 		        $( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );		        
-		        setColumnsWidth();  
-		        
+		        setColumnsWidth();  		        
+		              
 			    
-		   });		   
+		   });	
+		   
+		   validationsArray = [];
+		   digitsOnlyValidationArray = ['id_current_mileage', 'id_sum_refuelled', 'id_quantity_refuelled'];
+		   					
+			
+			
+			
+		   	   
 	   </script>
 {% endblock %}
 
@@ -51,9 +59,9 @@
    		{% endif %}  
    		
    	 <div id="newRow">
-   	 <form method="post" action="">
+   	 <form method="post" action="" onsubmit="return validateTempFields()">
    	 {% csrf_token %}
-   	 <span class='addNewRecordTip'>Here you can add a new refuelling record </span>
+   	 <span class='addNewRecordTip'> </span>
    	 <table id="tempTable">
    	 	<thead>
    	 		<th>Refuel date</th>
@@ -68,6 +76,8 @@
    	 <div id="newRowBtns">
 	   	 <input type="submit" class="btnNewRow" value="Add"/>
 	   	 <input type="button" id="cancelNewRecord" class="btnNewRow" value="Cancel" onclick="closeNewRow()">
+	   	 <!-- <input type="button" id="test" class="btnNewRow" value="test" onclick="validateTempFields()">
+	   	 -->
    	 </div>
    	 </form>
    	 </div>	  

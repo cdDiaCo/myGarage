@@ -434,15 +434,17 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 }
 
 .addNewRecordTip {
-	color: #e58700;
-	float: left;
-	margin-left: 10px;
+	color: red;	
+	margin-left: 35%;
 	font-size: 13px;
 }
 
 #tempTable {    
 	width: 75%;		
-	margin-left: 10px;
+	position: absolute;
+	top: 20px;
+	left: 10px;
+	#margin-left: 10px;
 	#margin-top: 5px;
 	float: left;
 	background-color: white;
