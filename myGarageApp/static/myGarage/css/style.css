@@ -125,7 +125,7 @@ div.ui-datepicker {
 
 
 body {
-    background-color: #90c140;
+    background-color: #90c140;    
 }
 
 h2{	
@@ -222,19 +222,17 @@ label {
 }
 
 #appMotto{
-    #background-color:red;
     width:420px;
     position: relative;
     top: 30px;
     left: 40px;
     float: left;
-	#color: #545453;
-	#color: #627aac;
-	#color: #8b9c6f;
-	color: #7d8c63;
-	#font-family: 'lucida grande', tahoma, verdana, arial, sans-serif; 
+	color: #7d8c63;	
+	#color: #005ee5; 
+	#color: #003889;
 	font-size: 35px;
 	font-weight: bold;	
+	text-shadow: 1px 1px black;
 }
 
 #base{	
@@ -250,7 +248,7 @@ label {
 
 #borderDiv{    
 	min-width: 1000px; 
-	height:450px; 
+	height:500px; 
 	background-color:white;		
 	margin: 20px 30px;	
 	border-color: #f9fafc; 	
@@ -260,8 +258,8 @@ label {
 	width: 40%;
 	height: 400px;
 	float:left;	
-	padding: 30px; 
-	#margin: 20px 5px 10px 30px;	
+	#padding: 30px; 
+	margin: 80px 0 30px 50px;	
 }
 
 .register_form > input[type=text], 
@@ -308,12 +306,89 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 }
 
 #rightside{	 	 
-	height:300px;
-	width: 45%;
+	height:95%;
+	width: 55%;
 	float: right;
-	margin:60px 20px 10px 0px;		
+	margin: 0;	
+		
 }
 
+#slideshow {
+	width:550px;
+	height:360px;
+	margin:0;
+	padding:0;
+	position:relative;
+	top:70px;	
+	box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.2);
+}
+
+#slideshowWindow {	
+	margin:0;
+	padding:0;		
+	overflow:hidden;	
+}
+
+.slide {
+	margin:0;
+	padding:0;
+	width:550px; 
+	height:360px;
+	float:left;
+	position:relative
+	
+}
+
+.slide > img {
+	position: relative;
+	float: left;
+	width: 550px;
+	height:360px;
+
+}
+
+.slideText {
+	position:absolute;
+	width:100%;
+	height:40%;
+	top:60%; 
+	left:0;
+	margin:0;
+	padding:20px 30px;
+	background-color: rgba(0, 0, 0, 0.3);	
+	color: white; 	
+	text-shadow: 1px 1px black;
+	font-size: 35px;
+	box-shadow: 1px 1px 90px rgba(0, 0, 0, 0.4);
+
+}
+
+
+.nav {
+	display:block;	
+	position:absolute;
+	cursor:pointer;
+}
+
+#leftNav {    
+	margin-left: 215px;
+	margin-top: 310px;	
+	width:48px;
+	height:36px;
+	background-image:url("../img/previous.gif");
+	background-repeat:no-repeat;
+	z-index:20;
+}
+
+#rightNav {
+	margin-left:285px;
+	margin-top:310px;
+	width:48px;
+	height:36px;
+	background-image:url("../img/next.gif");
+	background-repeat:no-repeat;
+	z-index:20;
+}
 
 #garageLeft {
 	width: 14%;
@@ -345,38 +420,74 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 
 #addRecord {
 	background-image: url("../img/addRecord.png");
+	margin: 5px;
+}
+
+#deleteRecords {
+	background-image: url("../img/deleteRows.png");		
+	margin: 5px;
+	margin-left: 15px;		
+}
+
+#addRecord, #deleteRecords {	
 	background-color: #7d8c63;
 	background-repeat: no-repeat;
-	background-position: 60% 65%;
+	background-position: 50% 55%;
 	#background-position: left;
 	padding: 10px 30px 10px 10px;	
-    height: 40px;
-	margin: 5px;
+    height: 40px;	
 	border-radius: 3px;
 	border: 2px solid #7d8c63;
 	box-shadow: 3px 3px 4px 1px rgba(50, 50, 50, 0.4);
 	outline:none;
-}
-
+}	
 
 #addRecord:hover {
 	background-image: url("../img/addRecord_hover.png");
 }
 
-#addRecord:disabled {
-	background-image: url("../img/addRecord_disabled.png");
-	background-color: #b0b0b0;
-	border: 2px solid #b0b0b0;
-	box-shadow: 2px 2px 4px 0.1px rgba(50, 50, 50, 0.3);	
-	#box-shadow: none;
+#deleteRecords:hover {
+	background-image: url(" ");
 }
 
-#addRecord:active {
+#addRecord:disabled {
+	background-image: url("../img/addRecord_disabled.png");			
+}
+
+#deleteRecords:disabled {
+	background-image: url(" ");
+}
+
+#addRecord:disabled, #deleteRecords:disabled {
+	background-color: #b0b0b0;
+	border: 2px solid #b0b0b0;
+	box-shadow: 2px 2px 4px 0.1px rgba(50, 50, 50, 0.3);
+}
+
+#addRecord:active {	
+	background-image: url("../img/addRecord_pressed.png");	
+}
+
+#deleteRecords:active {
+	background-image: url(" ");
+}
+
+#addRecord:active, #deleteRecords:active {
 	background-color: #7D8863;
-	background-image: url("../img/addRecord_pressed.png");
 	box-shadow: 2px 2px 4px 0.1px rgba(50, 50, 50, 0.3);
 	border: 2px solid #7d8863;
 }
+
+.buttonsAltText {
+	color:#7d8863;
+	font-weight: bold;
+}
+
+.buttonsAltTextDisabled {
+	color:#c6c7c8;
+	font-weight: bold;
+}
+
 
 #operations {
     position: relative;

@@ -20,7 +20,25 @@
 		   validationsArray = [];
 		   digitsOnlyValidationArray = ['id_current_mileage', 'id_sum_refuelled', 'id_quantity_refuelled'];
 		   					
-			
+		   function checkAllRows(currentElement) {				
+				var checkedProp = $(currentElement).prop('checked');
+				
+				if(checkedProp) {
+					//select all rows
+					$('.checkRow').prop('checked', true);
+				}
+				else {
+					//deselect all rows
+					$('.checkRow').prop('checked', false);
+			 	}				
+		   }
+		   
+		   function deleteRows() {
+		   		//get the selected rows
+		   		// send the selected rows to the server in an array
+		   		
+		   		
+		   }
 			
 			
 		   	   
@@ -38,6 +56,7 @@
 			        <th>Current mileage</th>
 			        <th>Sum refuelled</th>
 			        <th>Quantity refuelled</th>  
+			        <th><input type="checkbox" id="checkHead" onclick="checkAllRows(this)" name="checkHead" value="allRows"></th>
 		        </thead>   
 	        </table>   
 	        <div class="tableDiv" >
@@ -48,7 +67,8 @@
 			    		    <td>{{ record.refuel_date }}</td>
 			    		    <td>{{ record.current_mileage }}</td>
 			    			<td>{{ record.sum_refuelled }}</td>
-			    			<td>{{ record.quantity_refuelled }}</td>    	
+			    			<td>{{ record.quantity_refuelled }}</td>    
+			    			<td><input type="checkbox" class="checkRow" name="checkRow" value="selectedRow"></td>	
 			    		</tr>
 		    		</tbody>
 	    		{% endfor %}  
@@ -84,6 +104,10 @@
    	 
    	 <div id="submenu">
 	 	<input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record"/>
+	 	<span class='buttonsAltText'>Add new record</span>
+	 	<input type="button" id="deleteRecords" onclick="deleteRows()" alt="Delete record"/>
+	 	<span class='buttonsAltText'>Delete selected records</span>
+	 	
 	 </div>
   		
 

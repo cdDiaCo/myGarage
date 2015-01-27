@@ -68,7 +68,8 @@ function addNewRow() {
 	var tempRow = $("#operations").find('#newRow table').find('tbody:last tr');		   		
 	var columnNames = $('.records').find('thead').find("th");
 	
-	for (i=0; i< columnNames.length; i++) {		   			
+	for (i=0; i< columnNames.length-1; i++) {	
+		// exclude the last column - the one with the check boxes	   			
 		var columnName = $(columnNames[i]).text();		
 		var inputName = getNameForTableInput(columnName);
 		var newId = "id_";
@@ -125,15 +126,10 @@ function addNewRow() {
 			}	
 			//else if in stringOnlyValidationArray etc			
 		   								
-     });
-     
-     
-    
-     
-     
-     //$('#id_sum_refuelled').keyup(digitsOnlyValidation);
+     });         
 
-	$('#addRecord').attr('disabled', 'disabled');	   		
+	$('#addRecord').attr('disabled', 'disabled');	
+	$('.buttonsAltText').attr('class', 'buttonsAltTextDisabled');   		
 	diminishMainTableAppearace();		   		  			   		
 	$("#operations").find('#newRow').css('display', 'block');	   										
 }
@@ -193,9 +189,17 @@ function addObjToValidationsArray(array, property, value, validationType) {
 
 function setColumnsWidth() {
 	var columnNames = $('.records').find('thead').find("th");
-	var widthValue = 100/(columnNames.length) + "%";
-	$('.records').find('thead').find("th").css('width', widthValue);
-	$('.records').find('tbody').find("td").css('width', widthValue);
+	var widthValue = 100/columnNames.length;
+	var checkBoxColumnWidth = 1/3 * widthValue + "%";
+	widthValue = 2/3 * widthValue + (columnNames.length-1) * widthValue;
+	widthValue = widthValue/(columnNames.length-1) + "%";
+	
+	$('.records').find('thead').find("th:not(:last)").css('width', widthValue);
+	$('.records').find('tbody').find("td:not(:last)").css('width', widthValue);
+	
+	$('.records').find('thead').find("th").last().css('width', checkBoxColumnWidth);
+	$('.records').find('tbody').find("td").last().css('width', checkBoxColumnWidth);
+
 	
 
 }
@@ -207,6 +211,7 @@ function closeNewRow() {
 	$("#operations").find('#newRow').css('display', 'none');		   		
 	$('#tempTable').find('tbody tr').find('td').remove();
 	$('#addRecord').removeAttr('disabled');
+	$('.buttonsAltTextDisabled').attr('class', 'buttonsAltText');
 }
 		   
 		   
@@ -241,14 +246,15 @@ function getNameForTableInput(columnName) {
 
  function validateTempFields(){			   		   			   		
 	//check validationsArray if it has a false value in it		
-	// also check for empty fields   			
+	// also check for empty fields   	
+	var validFields = true;		
 		   					   					        	
 	for (var i=0; i<validationsArray.length; i++) {	
 		for (var key in validationsArray[i]) {	
 			   if (key === "validationTypeKey") {	
 			   		continue;
 			   }				   
-			   else if(!validationsArray[i][key]){										
+			   else if(!validationsArray[i][key]){			   													
 			   		return false;						   										  							 
 			   }
 		}				
@@ -259,11 +265,12 @@ function getNameForTableInput(columnName) {
 		var elemValue = $(element).val();
 		if (elemValue === "") {
 			$('.addNewRecordTip').text('All fields are required!');
-			return false;
+			validFields = false;			
 		}
-	});					
+	});			
 	
-	return true;				
+	if(validFields) {return true;}		
+	else {return false;}						
 }			   
 		   
 function validateTempFieldsByID(id) {
@@ -308,5 +315,60 @@ function validateTempFieldsByType(validationTypeArg) {
 
 
 
+function initializeSlideShow() {
+	var currentPosition = 0;
+	var slideWidth = 550;
+	var slides = $('.slide');
+	var numberOfSlides = slides.length;
+	var slideShowInterval;
+	var speed = 4000;		
+	
+	slideShowInterval = setInterval(changePosition, speed);				
+	slides.wrapAll('<div id="slidesHolder"></div>');				
+	slides.css({ 'float' : 'left' });		
+	$('#slidesHolder').css('width', slideWidth * numberOfSlides);
+	manageNav(currentPosition);	
+	
+
+
+	$('.nav').bind('click', function() {
+				
+		//determine new position
+		currentPosition = ($(this).attr('id')=='rightNav') ? currentPosition+1 : currentPosition-1;
+									
+		//hide/show controls
+		manageNav(currentPosition);
+		clearInterval(slideShowInterval);
+		slideShowInterval = setInterval(changePosition, speed);
+		moveSlide();
+	});
+	
+	function changePosition() {
+		if(currentPosition == numberOfSlides - 1) {
+			currentPosition = 0;
+			manageNav(currentPosition);
+		} else {
+			currentPosition++;
+			manageNav(currentPosition);
+		}
+		moveSlide();
+	}
+	
+	function moveSlide() {						
+			$('#slidesHolder')
+	  			.animate({'marginLeft' : slideWidth*(-currentPosition)});						  						
+	}
+	
+	function manageNav(position) {
+		//hide left arrow if position is first slide
+		if(position==0){ $('#leftNav').hide() }
+		else { $('#leftNav').show() }
+		//hide right arrow is slide position is last slide
+		if(position==numberOfSlides-1){ $('#rightNav').hide() }
+		else { $('#rightNav').show() }
+	} 
+				
+
+}
 
 

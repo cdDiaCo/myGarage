@@ -4,7 +4,10 @@
       {% load staticfiles %}
 	  <script type="text/javascript">		
 	  		$(document).ready(function () {
+				
+				initializeSlideShow();	  		
 	  			addValidation();
+	  			
 	  		 });	
 	  					
 			
@@ -15,7 +18,7 @@
 
 {% block content %}
 <div id="header" >
-	<h2 id="appMotto">Enter your online garage</h2>	
+	<h2 id="appMotto"> Enter your online garage </h2>	
 	    <div id="login">	    
 		<form id="login_form" method="post" action="">
 	        {% csrf_token %}
@@ -72,8 +75,43 @@
 		</div>	    
 		
 		<div id="rightside" >
-			<img src={% static "myGarage/img/facebook_shot.png" %}  width="100%" height="100%" > 
-		<!--<button class="btn btn-material-lime">Deep purple button</button>-->
+			<div id="slideshow"> 
+				<div id="slideshowWindow">
+				    <div class="slide">				
+						<img src="{% static "myGarage/img/auto-info-on-tablet.jpg" %}">
+						 <div class="slideText">                     
+		                     Lorem ipsum dolor sit amet, 		                     
+                     	</div>                 
+					</div>
+					
+					<div class="slide">					
+						<img src="{% static "myGarage/img/man-in-his-car.jpg" %}">
+						<div class="slideText">                     
+		                     Lorem ipsum dolor sit amet, 		                     
+                     	</div>
+					</div>
+					
+					<div class="slide">
+						<img src="{% static "myGarage/img/graphs.jpg" %}">
+						<div class="slideText">                     
+		                     Lorem ipsum dolor sit amet, 		                     
+                     	</div>
+					</div>
+					
+					<div class="slide">
+						<img src="{% static "myGarage/img/auto_competition.jpg" %}">
+						<div class="slideText">                     
+		                     Lorem ipsum dolor sit amet, 		                     
+                     	</div>
+					</div>	
+					<div class="nav" id="leftNav"></div>
+					<div class="nav" id="rightNav"></div>
+					
+				</div>
+				
+			</div>
+			
+		
 		</div>			
 	</div>		
 </div>
