@@ -17,32 +17,36 @@
 {% block title %}Home page{% endblock %}
 
 {% block content %}
-<div id="header" >
-	<h2 id="appMotto"> Enter your online garage </h2>	
-	    <div id="login">	    
-		<form id="login_form" method="post" action="">
-	        {% csrf_token %}
-	        <div id="username_login">
-		        <label for="loginUsername">Username</label>  
-		        <br/> 		         
-		         <input class="" id="loginUsername" type="text" name="loginUsername" maxlength=30>
-	        </div>
-	        
-	        <div id="password_login">
-		        <label for="loginPassword">Password</label> 
-		        <br/>	        
-		        <input class="" id="loginPassword" type="password" name="loginPassword" maxlength=30>
-		        
-	        </div>	
-	        <input id="login_button" class="btn btn-material-lightgreen"  type="submit" value="Log In" />
-	    </form>		    
-	    </div>    
-</div>	
-
-<hr id="header_hr">
-
 <div id="base">
-	<div id="borderDiv" class="addBorderShade">	
+
+	<div id="header" >
+	    <div id="headerContentWrapper">
+		<h2 id="appMotto"> Enter your online garage </h2>	
+		    <div id="login">	    
+			<form id="login_form" method="post" action="">
+		        {% csrf_token %}
+		        <div id="username_login">
+			        <label for="loginUsername">Username</label>  
+			        <br/> 		         
+			         <input class="" id="loginUsername" type="text" name="loginUsername" maxlength=30>
+		        </div>
+		        
+		        <div id="password_login">
+			        <label for="loginPassword">Password</label> 
+			        <br/>	        
+			        <input class="" id="loginPassword" type="password" name="loginPassword" maxlength=30>
+			        
+		        </div>	
+		        <input id="login_button" class="btn btn-material-lightgreen"  type="submit" value="Log In" />
+		    </form>		    
+	    	</div>  
+	    </div>  
+	</div>	
+
+	
+
+
+	<div id="borderDiv" >	
 		<div id="leftside">	  
 		   {% if registered %}
 		        <strong>thank you for registering!</strong> 	        
@@ -78,28 +82,28 @@
 			<div id="slideshow"> 
 				<div id="slideshowWindow">
 				    <div class="slide">				
-						<img src="{% static "myGarage/img/auto-info-on-tablet.jpg" %}">
+						<img src="{% static 'myGarage/img/auto-info-on-tablet.jpg' %}">
 						 <div class="slideText">                     
 		                     Lorem ipsum dolor sit amet, 		                     
                      	</div>                 
 					</div>
 					
 					<div class="slide">					
-						<img src="{% static "myGarage/img/man-in-his-car.jpg" %}">
+						<img src="{% static 'myGarage/img/man-in-his-car.jpg' %}">
 						<div class="slideText">                     
 		                     Lorem ipsum dolor sit amet, 		                     
                      	</div>
 					</div>
 					
 					<div class="slide">
-						<img src="{% static "myGarage/img/graphs.jpg" %}">
+						<img src="{% static 'myGarage/img/graphs.jpg' %}">
 						<div class="slideText">                     
 		                     Lorem ipsum dolor sit amet, 		                     
                      	</div>
 					</div>
 					
 					<div class="slide">
-						<img src="{% static "myGarage/img/auto_competition.jpg" %}">
+						<img src="{% static 'myGarage/img/auto_competition.jpg' %}"/>
 						<div class="slideText">                     
 		                     Lorem ipsum dolor sit amet, 		                     
                      	</div>
@@ -113,6 +117,9 @@
 			
 		
 		</div>			
+	</div>
+	<div id="footer">
+	
 	</div>		
 </div>
 

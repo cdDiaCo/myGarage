@@ -26,7 +26,7 @@ function setItemMenuActive(hrefValue) {
 	if(window.location.href.indexOf(hrefValue) > -1) {			       
        var selectedItemDiv = $('.imgListItemBinding').has('a[href="/'+hrefValue+'/"]');			       
        $(selectedItemDiv).attr('id', 'active');
-       $(selectedItemDiv).find('#arrow').css("visibility", "visible");			       
+       $(selectedItemDiv).find('.arrow').css("visibility", "visible");
        $(selectedItemDiv).prev().find('li a').css( "border-bottom", "none" );
        
        addOrangeImages();			       
@@ -53,19 +53,93 @@ function addValidation() {
 	var elements = document.getElementsByClassName('pop');		  
     var index;
     for (index = 0; index < elements.length; ++index) {
+
   	  if (elements[index].getAttribute("data-content")){
   	      elements[index].className = elements[index].className.replace( /(?:^|\s)noValidationAlert(?!\S)/g , '' )
-  		  elements[index].className += " validationAlert";		  				  		
+  		  elements[index].className += " validationAlert";
+
   	  }		  	
     }		  
   		  	
-    $(".pop").popover({ trigger: 'focus', html: 'true'});		  
+    $(".pop").popover({ trigger: 'click', html: 'true'});
     $('.validationAlert').filter(':visible:first').focus();	
 }
 
 
-function addNewRow() {		   		
-	var tempRow = $("#operations").find('#newRow table').find('tbody:last tr');		   		
+function addNewRow() {
+    var columnNames = $('.records').find('thead').find("th");
+    $('.records tbody').append($('<tr>'));
+
+    var newRowForm = $('.records tbody').find('tr:last()');
+
+    for (i=0; i< columnNames.length-1; i++) {
+
+        var columnName = $(columnNames[i]).text();
+		var inputName = getNameForTableInput(columnName);
+		var newClass = "tempInput recordsTextInput ";
+		var newId = "";
+		var cssProperty = "";
+		var cssValue = "";
+		var onKeypress = "";
+	    if(columnName.indexOf("date") > -1) {
+	    	newClass =  newClass + "datepicker ";
+	    	cssProperty = "width";
+	    	cssValue = "85%";
+	    	inputName = inputName + '_userOnly';
+	    }
+	    else {
+	    	newId = "id_" + inputName;
+	    	onKeypress = "";
+	    }
+
+
+        //generate the tempFields
+        newRowForm.append($('<td>')
+                  .append($('<input>')
+                       .prop('type', 'text')
+                       .addClass(newClass)
+                       .css(cssProperty, cssValue)
+                       .attr('name', inputName)
+                       .attr('id', newId)
+                       .attr("onkeypress", onKeypress )
+                  ));
+    }
+
+    newRowForm.find('td').first().append($('<input>')
+               .prop('type', 'hidden')
+               .attr('name', 'refuel_date')
+               .attr('class', 'altDateField tempInput'));
+
+
+    // append the option buttons td
+     newRowForm.append($('<td>')
+                        .append($('.rowOptions').first().clone().attr("tabindex",-1)
+                                                                .css('outline', 'none')));
+
+    newRowForm.find('.tempInput, .rowOptions').on("focus", function(){
+        unmarkPreviousSelectedRow(true);
+        markSelectedRow($('.records tbody').find('tr:last()'));
+    });
+
+    $('.tempInput:first()').focus();
+
+
+     // for every tempField bind the appropriate validation
+     $('.tempInput ').not(".datepicker").each(function(index, element) {
+     		var elementID = $(element).attr('id');
+     		if( digitsOnlyValidationArray.indexOf(elementID) > -1) {
+					$('#' + elementID).keyup(digitsOnlyValidation);
+			}
+			//else if in stringOnlyValidationArray etc
+
+     });
+
+    $('#addRecord').attr('disabled', 'disabled');
+
+}
+
+function addNewRow2() {
+	var tempRow = $('#newRow table').find('tbody:last tr');
 	var columnNames = $('.records').find('thead').find("th");
 	
 	for (i=0; i< columnNames.length-1; i++) {	
@@ -101,7 +175,7 @@ function addNewRow() {
 				   .attr('name', 'refuel_date')
 				   .attr('id', 'altDateField'));
 	
-	$("#id_datepicker").datepicker({
+	$(".datepicker").datepicker({
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		dateFormat: 'dd M. yy',
@@ -119,7 +193,7 @@ function addNewRow() {
     });
     
     // for every tempField bind the appropriate validation 
-     $('.tempInput ').not("#id_datepicker").each(function(index, element) {
+     $('.tempInput ').not(".datepicker").each(function(index, element) {
      		var elementID = $(element).attr('id');     		    		
      		if( digitsOnlyValidationArray.indexOf(elementID) > -1) {     								
 					$('#' + elementID).keyup(digitsOnlyValidation);					
@@ -130,14 +204,25 @@ function addNewRow() {
 
 	$('#addRecord').attr('disabled', 'disabled');	
 	$('.buttonsAltText').attr('class', 'buttonsAltTextDisabled');   		
-	diminishMainTableAppearace();		   		  			   		
-	$("#operations").find('#newRow').css('display', 'block');	   										
+
+	$('#newRow').css('display', 'block');
+}
+
+function showValidationTip(elementID) {
+    $('#' + elementID + '_tip').css('visibility', 'visible');
+    var position = $('#' + elementID).position();
+    $('#' + elementID + '_tip').css('left', (position.left + 20) + 'px');
+    $('#' + elementID + '_tip' ).css('top', (position.top - 30) + 'px');
+}
+
+function closeValidationTip(elem) {
+    $(elem).css('visibility', 'hidden');
 }
 
 function digitsOnlyValidation() { 	      
 	var inputValue = $(this).val();	
-	var elementID = $(this).attr('id');	
-	var isnum = /^\d+$/.test(inputValue); 
+	var elementID = $(this).attr('id');
+	var isnum = /^\d+\.?\d*$/.test(inputValue);
 	if (inputValue === "") {
 		isnum = true;
 	}	
@@ -146,17 +231,20 @@ function digitsOnlyValidation() {
 	
 	if(!isnum ) {	
 		var name =  getNameFromId(elementID);			
-		$('.addNewRecordTip').text('Only numbers allowed for '+ name +' !');
-		$('#' + elementID).css('outline', '1px solid red');			
+		$('#' + elementID + '_tip').text('Only numbers allowed !');
+		$('#' + elementID).css('outline', '1px solid #bd4a48');
+		showValidationTip(elementID);
 	} 				
 	else {		
-		$('.addNewRecordTip').text('');
-		$('#' + elementID).css('outline', '');	
+		$('#' + elementID + '_tip').text('');
+		$('#' + elementID).css('outline', '');
+		closeValidationTip('#' + elementID + '_tip');
 			
 		if(falseDigitsOnlyArray.length > 0) {			
 			var lastElem = falseDigitsOnlyArray[falseDigitsOnlyArray.length-1];
 			var name = getNameFromId(lastElem);
-			$('.addNewRecordTip').text('Only numbers allowed for '+ name +' !');		
+			$('#' + elementID + '_tip').text('Only numbers allowed !');
+			//showValidationTip(elementID);
 		} 				
 	}  	
 }
@@ -205,37 +293,6 @@ function setColumnsWidth() {
 }
 
 
-function closeNewRow() {
-	restoreMainTableAppearance();		   	
-		
-	$("#operations").find('#newRow').css('display', 'none');		   		
-	$('#tempTable').find('tbody tr').find('td').remove();
-	$('#addRecord').removeAttr('disabled');
-	$('.buttonsAltTextDisabled').attr('class', 'buttonsAltText');
-}
-		   
-		   
-function restoreMainTableAppearance() {
-	//restore initial css style
-	$('#operations').css('background-color', ' #ffffff');
-	$('#operations').removeClass('diminishedBorderShade').addClass("addBorderShade");
-	$( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );
-	$('.records').find('thead').css('background-color', '#8a9772');
-	$('.records').find('th').css('border', '1px solid #8a9772');
-	$('.records').find('td').css('border', '1px solid #8a9772');
-}		   
-		   
-function diminishMainTableAppearace() {
-	$('#newRow').attr('class', 'addBorderShade');
-	$('#operations').removeClass('addBorderShade').addClass("diminishedBorderShade");
-	$('#operations').css('background-color', ' #f9fafc'); 	
-	$( "#operations").find("tbody tr:odd" ).css( "background-color", "#f9fafc" );	   		
-	$('.records').find('thead').css('background-color', '#a4ae91');
-	$('.records').find('th').css('border', '1px solid #a4ae91');
-	$('.records').find('td').css('border', '1px solid #a4ae91');
-}
-
-
 function getNameForTableInput(columnName) {
 	var firstLetter = columnName.charAt(0).toLowerCase();		   		
 	var tempName = firstLetter + columnName.substring(1);		   		
@@ -265,12 +322,13 @@ function getNameForTableInput(columnName) {
 		var elemValue = $(element).val();
 		if (elemValue === "") {
 			$('.addNewRecordTip').text('All fields are required!');
-			validFields = false;			
+			validFields = false;
+
 		}
 	});			
 	
 	if(validFields) {return true;}		
-	else {return false;}						
+	else {alert('All fields are required!'); return false;}
 }			   
 		   
 function validateTempFieldsByID(id) {

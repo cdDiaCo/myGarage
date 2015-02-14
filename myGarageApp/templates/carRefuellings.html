@@ -8,40 +8,123 @@
       
 	   <script type="text/javascript">
 		   $(document).ready(function () {
+
 		        var hrefValue = "refuellings";
-		        setItemMenuActive(hrefValue);		        
-		        
-		        $( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );		        
-		        setColumnsWidth();  		        
-		              
+		        setItemMenuActive(hrefValue);
+		        setColumnsWidth();
+		        selectRow();
+
+
 			    
 		   });	
 		   
 		   validationsArray = [];
 		   digitsOnlyValidationArray = ['id_current_mileage', 'id_sum_refuelled', 'id_quantity_refuelled'];
-		   					
-		   function checkAllRows(currentElement) {				
-				var checkedProp = $(currentElement).prop('checked');
-				
-				if(checkedProp) {
-					//select all rows
-					$('.checkRow').prop('checked', true);
-				}
-				else {
-					//deselect all rows
-					$('.checkRow').prop('checked', false);
-			 	}				
+
+		   //when row is selected show the trash, save and date icons
+		   //the input boxes from the selected row have ids
+		   function selectRow() {
+                var rows = $('tr');
+                rows.on('click', function(e){
+                    var row = $(this);
+                    var columns = $(this).find('td:not(:last)');
+
+                    for(var i=0; i<columns.length; i++){
+                        $(columns[i]).find('input').removeAttr('readonly');
+                    }
+
+                    unmarkPreviousSelectedRow();
+                    markSelectedRow(row);
+
+                });
+
+                $(document).bind('selectstart dragstart', function(e) {
+                    e.preventDefault(); return false;
+                });
 		   }
-		   
-		   function deleteRows() {
-		   		//get the selected rows
-		   		// send the selected rows to the server in an array
-		   		
-		   		
+
+           function unmarkPreviousSelectedRow(tempRow) {
+                rows = $('.records tbody').find('tr');
+                rows.removeAttr('id');
+                rows.find('.deleteRowBtn').css('visibility', 'hidden');
+                rows.find('.saveRowBtn').css('visibility', 'hidden');
+
+                if(tempRow) {
+                    rows.find('td').children().not('.tempInput').each(function(index, element) {
+                        $(element).attr('id', '');
+                    });
+                }else {
+                    rows.find('td').children().each(function(index, element) {
+                        $(element).attr('id', '');
+                    });
+                }
+
+                $('.ui-datepicker-trigger').css('visibility', 'hidden');
+           }
+
+		   function markSelectedRow(row) {
+		        row.attr('id', 'selectedRow');
+                row.find('.deleteRowBtn').css('visibility', 'visible');
+                row.find('.saveRowBtn').css('visibility', 'visible');
+
+                $('#selectedRow').find('.ui-datepicker-trigger').css('visibility', 'visible');
+                $('#selectedRow').find(".datepicker").datepicker({
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    dateFormat: 'dd M. yy',
+                    altField: ".altDateField",
+                    altFormat: "yy-mm-dd",
+                    showOn: "button",
+                    buttonText: 'Show Date',
+                    buttonImageOnly: true,
+                    buttonImage: "/myGarageApp/static/myGarage/img/calendar.png"
+                });
+
+
+                 $(".ui-datepicker-trigger").mouseover(function() {
+                    $(this).css('cursor', 'pointer');
+                 });
+
+                 row.find('td:not(:last())').children().not('.hasDatepicker, .ui-datepicker-trigger, .altDateField')
+                                                            .each(function(index, element) {
+                                                                var elemName = $(element).attr('name');
+                                                                console.log(elemName);
+                                                                var elemID = "id_" + elemName;
+                                                                $(element).attr('id', elemID);
+
+                                                                if( digitsOnlyValidationArray.indexOf(elemID) > -1) {
+                                                                        $('#' + elemID).keyup(digitsOnlyValidation);
+                                                                }
+
+                                                            });
+
 		   }
-			
-			
-		   	   
+
+
+		   function deleteRowFunction(e) {
+                e.stopPropagation();
+                alert('this row will be deleted');
+           }
+
+
+           // clone the original inputs into a display:none form and submit
+           // before cloning remove possible previous inputs
+           function saveRowFunction(e) {
+                e.stopPropagation();
+
+                var noRemove = $('#newRefuellingForm').find('.addNewRecordTip, input[name=csrfmiddlewaretoken], input[name=pk_refuelling]');
+                $('#newRefuellingForm').empty();
+                $('#newRefuellingForm').html(noRemove);
+
+               var newValues = $('#selectedRow').find('td:not(:last())').clone();
+               for(var i=0; i<newValues.length; i++) {
+                    var children = $(newValues[i]).children().not('.ui-datepicker-trigger, .hasDatepicker');
+                    children.attr('id', '');
+                    $('#newRefuellingForm').append(children);
+               }
+               $('#newRefuellingForm').submit();
+           }
+
 	   </script>
 {% endblock %}
 
@@ -49,72 +132,60 @@
 {% block title %}Refuellings{% endblock %}
 
 {% block operations %}
+    <input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record" value="Add new row"/>
+
 	{% if refuellings %}			
 	        <table class="records">	
 		        <thead>
-			        <th>Refuel date</th>
-			        <th>Current mileage</th>
-			        <th>Sum refuelled</th>
-			        <th>Quantity refuelled</th>  
-			        <th><input type="checkbox" id="checkHead" onclick="checkAllRows(this)" name="checkHead" value="allRows"></th>
-		        </thead>   
+                    <tr>
+                        <th>Refuel date</th>
+                        <th>Current mileage</th>
+                        <th>Sum refuelled</th>
+                        <th>Quantity refuelled</th>
+                        <th></th>
+                    </tr>
+                </thead>
 	        </table>   
 	        <div class="tableDiv" >
 		        <table class="records">
-	    		{% for record in refuellings %}
-		    		<tbody>
+                    <tbody>
+	    		    {% for record in refuellings %}
 			    		<tr>
-			    		    <td>{{ record.refuel_date }}</td>
-			    		    <td>{{ record.current_mileage }}</td>
-			    			<td>{{ record.sum_refuelled }}</td>
-			    			<td>{{ record.quantity_refuelled }}</td>    
-			    			<td><input type="checkbox" class="checkRow" name="checkRow" value="selectedRow"></td>	
+			    		    <td>
+                                <input class="recordsTextInput datepicker" type="text" value="{{ record.refuel_date }}" readonly style=" width: 85%;">
+                                <input class="altDateField" type="hidden" name="refuel_date">
+                                <input class="" type="hidden" name="pk_refuelling" value="{{ record.id }}">
+                            </td>
+			    		    <td><input class="recordsTextInput" type="text" name="current_mileage" value="{{ record.current_mileage }}" readonly></td>
+			    			<td><input  class="recordsTextInput" type="text" name="sum_refuelled" value="{{ record.sum_refuelled }}" readonly></td>
+			    			<td><input  class="recordsTextInput" type="text" name="quantity_refuelled" value="{{ record.quantity_refuelled }}" readonly></td>
+			    			<td>
+                                <div class="rowOptions">
+                                    <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
+                                    <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
+                                </div>
+                            </td>
 			    		</tr>
-		    		</tbody>
-	    		{% endfor %}  
+	    		    {% endfor %}
+                    </tbody>
 	    		</table>
     		</div>
     	{% else %}	
     		<p>no refuellings for this car</p>   		  
-   		{% endif %}  
-   		
-   	 <div id="newRow">
-   	 <form method="post" action="" onsubmit="return validateTempFields()">
-   	 {% csrf_token %}
-   	 <span class='addNewRecordTip'> </span>
-   	 <table id="tempTable">
-   	 	<thead>
-   	 		<th>Refuel date</th>
-   	 		<th>Current mileage</th>
-	        <th>Sum refuelled</th>
-	        <th>Quantity refuelled</th> 
-   	 	</thead>
-   	 	<tbody>
-   	 		<tr></tr>
-   	 	</tbody>   	 	   	 
-   	 </table>
-   	 <div id="newRowBtns">
-	   	 <input type="submit" class="btnNewRow" value="Add"/>
-	   	 <input type="button" id="cancelNewRecord" class="btnNewRow" value="Cancel" onclick="closeNewRow()">
-	   	 <!-- <input type="button" id="test" class="btnNewRow" value="test" onclick="validateTempFields()">
-	   	 -->
-   	 </div>
-   	 </form>
-   	 </div>	  
-   	 
-   	 <div id="submenu">
-	 	<input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record"/>
-	 	<span class='buttonsAltText'>Add new record</span>
-	 	<input type="button" id="deleteRecords" onclick="deleteRows()" alt="Delete record"/>
-	 	<span class='buttonsAltText'>Delete selected records</span>
-	 	
-	 </div>
-  		
+   		{% endif %}
 
+
+    <form id="newRefuellingForm" method="post" action="" onsubmit="return validateTempFields()">
+        {% csrf_token %}
+        <span id="id_current_mileage_tip" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+        <span id="id_sum_refuelled_tip" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+        <span id="id_quantity_refuelled_tip" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+
+    </form>
 {% endblock %}	
 
 
-	
+
 
 
 {% block footer %}

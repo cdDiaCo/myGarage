@@ -4,7 +4,7 @@
 
 {% block content %}
     {% if selectedCar %}   
-		<strong> the selected car is <strong> {{ selectedCar.manufacturer_name }} 
+		<strong> the selected car is </strong> {{ selectedCar.manufacturer_name }} 
 		<br />	    		
 			
 		{% if registered %}
@@ -14,8 +14,7 @@
 	     {% else %}	
 	     	<strong>Add a new cleaning!</strong><br />        
 	
-			<form id="new_cleaning" method="post" action=""
-		                enctype="multipart/form-data">
+			<form id="new_cleaning" method="post" action="" enctype="multipart/form-data">
 		    	{% csrf_token %}
 		    	{{ newCleaning.as_p }}  
 		   <p style="color:red">{{ newCleaning.cleaning_date.label }} {{ newCleaning.cleaning_date }}</p> 	  

@@ -11,53 +11,88 @@
 {% block title %}Garage{% endblock %}
 
 {% block content %}
-	<div id="header">	 
-	 <div id="carOptions">
-	 	<a href="/logout/">Click here to logout</a> 
-	 	</br>
-	 	<strong> My car{{ cars|pluralize }}</strong>        
-        
-        <select id="selectedCar" onchange="loadXMLDoc()"> 
-             {% if firstTime %}
-                	<option selected="selected">Select a car</option>   
-             {% endif %}   	                         
-             {% for car in cars %}	                	        	
-			     <option value="{{ forloop.counter0 }}" 
-			         {% if selectedCarValue and forloop.counter0 == selectedCarValue %} selected="selected" {% endif %}  > 
-			             {{ car.manufacturer_name }} {{ car.model_name }} </option>				    						  	
-			 {% endfor %}				              		
-	    </select>		  
-	 </div>
-	</div>
+
 	
-	<hr id="header_hr">
+	
 	<div id="base">
-		<div id="garageLeft" >   
-		    <ul id="navlist">
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/gas_station.png" %}><li><a href="/refuellings/">Refuellings</a></li><div id="arrow"></div></div>
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/carWash.png" %}><li><a href="/cleanings/">Cleanings</a></li><div id="arrow"></div></div>
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/wrench.png" %}><li><a href="//">Service</a></li><div id="arrow"></div></div>
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/revision.png" %}><li><a href="//">Revisions</a></li><div id="arrow"></div></div>
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/taxes.png" %}><li><a href="//">Taxes</a></li><div id="arrow"></div></div>
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/umbrella.png" %}><li><a href="//">Insurances</a></li><div id="arrow"></div></div>
-			<div class="imgListItemBinding"><img class="menuImgs" src={% static "myGarage/img/wheel.png" %}><li><a href="//">Tyres</a></li><div id="arrow"></div></div>	
-			</ul>
-		</div>	
-		
-		<div id="garageRight">		    
-    	   <div id="operations" class="addBorderShade">    	       
-	    	   {% block operations %}
-	    	   		detalii despre masina sau statistici generale ale masinii/userului
-	    	   {% endblock %}	    	  
-		   </div>
-    	    
-           </br>
-			<div id="secDiv"></div>		    
-       			<div id="myDiv"><h2>Let AJAX change this text</h2></div>     
-	    		<a href="/add_cleaning/">Click here to add a new cleaning</a> <br />	       
-			</div>
-		</div>
-		
+         <div id="header">
+             <div id="carOptions">
+                <a href="/logout/" style="color:white;">Click here to logout</a>
+                <br>
+                <strong> My car{{ cars|pluralize }}</strong>
+
+                <select id="selectedCar" onchange="loadXMLDoc()">
+                     {% if firstTime %}
+                            <option selected="selected">Select a car</option>
+                     {% endif %}
+                     {% for car in cars %}
+                         <option value="{{ forloop.counter0 }}"
+                             {% if selectedCarValue and forloop.counter0 == selectedCarValue %} selected="selected" {% endif %}  >
+                                 {{ car.manufacturer_name }} {{ car.model_name }} </option>
+                     {% endfor %}
+                </select>
+             </div>
+	     </div>
+
+        <div id="borderDiv">
+            <div id="garageLeft" >
+                <ul id="navlist">
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/gas_station.png' %}">
+                        <li><a href="/refuellings/">Refuellings</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/carWash.png' %}">
+                        <li><a href="/cleanings/">Cleanings</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/wrench.png' %}">
+                        <li><a href="//">Service</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/revision.png' %}">
+                        <li><a href="//">Revisions</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/taxes.png' %}">
+                        <li><a href="//">Taxes</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/umbrella.png' %}">
+                        <li><a href="//">Insurances</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                    <div class="imgListItemBinding">
+                        <img class="menuImgs" src="{% static 'myGarage/img/wheel.png' %}">
+                        <li><a href="//">Tyres</a></li>
+                        <div class="arrow"></div>
+                    </div>
+
+                </ul>
+            </div>
+
+            <div id="garageRight">
+               <div id="operations">
+                   {% block operations %}
+                        detalii despre masina sau statistici generale ale masinii/userului
+                   {% endblock %}
+               </div>
+
+            </div>
+        </div>
+	</div>
 	    
 	    
 
