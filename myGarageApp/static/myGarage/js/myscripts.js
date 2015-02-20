@@ -110,10 +110,9 @@ function addNewRow() {
                .attr('name', 'refuel_date')
                .attr('class', 'altDateField tempInput'));
 
-
     // append the option buttons td
      newRowForm.append($('<td>')
-                        .append($('.rowOptions').first().clone().attr("tabindex",-1)
+                        .append($('.rowOptions').first().find('.saveRowBtn').clone().attr("tabindex",-1)
                                                                 .css('outline', 'none')));
 
     newRowForm.find('.tempInput, .rowOptions').on("focus", function(){
@@ -318,7 +317,7 @@ function getNameForTableInput(columnName) {
 	}
 	
 	// check for empty fields
-	$('.tempInput ').each(function(index, element) {
+	$('#selectedRow').each(function(index, element) {
 		var elemValue = $(element).val();
 		if (elemValue === "") {
 			$('.addNewRecordTip').text('All fields are required!');

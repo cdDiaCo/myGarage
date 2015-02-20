@@ -240,6 +240,7 @@ def carRefuellings(request):
         selectedCar = request.session['selectedCar']
         car = Car.objects.get(id=selectedCar['id'])
         refuellings = Refuelling.objects.filter(car_id=selectedCar['id'])
+        deleteMsg = ""
 
 
     if request.method == 'POST':
@@ -256,13 +257,25 @@ def carRefuellings(request):
             refuelling = refuelling_form.save(commit=False)
             refuelling.car = car
             refuelling.save()
+            return HttpResponseRedirect('/refuellings/')
         else:
             print refuelling_form.errors
             return HttpResponseRedirect('/refuellings/')
+    elif request.method == 'DELETE':
+         index = request.body.find('=')
+         id = request.body[index+1:]
+         try:
+            instance = Refuelling.objects.get(pk=id)
+         except:
+             deleteMsg = "instance not found"
+         else:
+            instance.delete()
+            deleteMsg = "instance deleted"
+         print 'bla'
     else:
         refuelling_form = RefuellingForm()
     
-    return render(request, 'carRefuellings.html', {'refuellings': refuellings })
+    return render(request, 'carRefuellings.html', {'refuellings': refuellings, 'deleteMsg': deleteMsg, })
         
  
      
