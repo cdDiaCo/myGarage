@@ -137,76 +137,6 @@ function addNewRow() {
 
 }
 
-function addNewRow2() {
-	var tempRow = $('#newRow table').find('tbody:last tr');
-	var columnNames = $('.records').find('thead').find("th");
-	
-	for (i=0; i< columnNames.length-1; i++) {	
-		// exclude the last column - the one with the check boxes	   			
-		var columnName = $(columnNames[i]).text();		
-		var inputName = getNameForTableInput(columnName);
-		var newId = "id_";
-		var cssProperty = "";
-		var cssValue = "";
-	    if(columnName.indexOf("date") > -1) {
-	    	newId = newId + "datepicker";	    	
-	    	cssProperty = "width";
-	    	cssValue = "85%";
-	    	inputName = inputName + '_userOnly';
-	    }	
-	    else {
-	    	newId = newId + "" + inputName;
-	    }
-				
-		//generate the tempFields		   			
-		tempRow.append($('<td>')
-			   .append($('<input>')		   					
-				   .prop('type', 'text')
-				   .attr('class', 'tempInput')
-				   .css(cssProperty, cssValue)
-				   .attr('name', inputName)
-				   .attr('id', newId)));  
-				   
-	}
-	
-	tempRow.find('td').first().append($('<input>')		   					
-				   .prop('type', 'hidden')			   
-				   .attr('name', 'refuel_date')
-				   .attr('id', 'altDateField'));
-	
-	$(".datepicker").datepicker({
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		dateFormat: 'dd M. yy',
-		altField: "#altDateField",
-		altFormat: "yy-mm-dd",
-		showOn: "both",
-		buttonText: 'Show Date',
-		buttonImageOnly: true,
-		buttonImage: "/myGarageApp/static/myGarage/img/calendar.png"						
-	});
-	
-	
-	 $(".ui-datepicker-trigger").mouseover(function() {
-        $(this).css('cursor', 'pointer');
-    });
-    
-    // for every tempField bind the appropriate validation 
-     $('.tempInput ').not(".datepicker").each(function(index, element) {
-     		var elementID = $(element).attr('id');     		    		
-     		if( digitsOnlyValidationArray.indexOf(elementID) > -1) {     								
-					$('#' + elementID).keyup(digitsOnlyValidation);					
-			}	
-			//else if in stringOnlyValidationArray etc			
-		   								
-     });         
-
-	$('#addRecord').attr('disabled', 'disabled');	
-	$('.buttonsAltText').attr('class', 'buttonsAltTextDisabled');   		
-
-	$('#newRow').css('display', 'block');
-}
-
 function showValidationTip(elementID) {
     $('#' + elementID + '_tip').css('visibility', 'visible');
     var position = $('#' + elementID).position();
@@ -432,3 +362,152 @@ function initializeSlideShow() {
 }
 
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+//when row is selected show the trash, save and date icons
+//the input boxes from the selected row have ids
+function selectRow() {
+    var rows = $('tr');
+    rows.on('click', function(e){
+        var row = $(this);
+        var columns = $(this).find('td:not(:last)');
+
+        for(var i=0; i<columns.length; i++){
+            $(columns[i]).find('input').removeAttr('readonly');
+        }
+
+        unmarkPreviousSelectedRow();
+        markSelectedRow(row);
+
+    });
+
+    $(document).bind('selectstart dragstart', function(e) {
+        e.preventDefault(); return false;
+    });
+}
+
+function unmarkPreviousSelectedRow(tempRow) {
+    rows = $('.records tbody').find('tr');
+    rows.removeAttr('id');
+    rows.find('.deleteRowBtn').css('visibility', 'hidden');
+    rows.find('.saveRowBtn').css('visibility', 'hidden');
+
+    if(tempRow) {
+        rows.find('td').children().not('.tempInput').each(function(index, element) {
+            $(element).attr('id', '');
+        });
+    }else {
+        rows.find('td').children().each(function(index, element) {
+            $(element).attr('id', '');
+        });
+    }
+
+    $('.ui-datepicker-trigger').css('visibility', 'hidden');
+}
+
+function markSelectedRow(row) {
+    row.attr('id', 'selectedRow');
+    row.find('.deleteRowBtn').css('visibility', 'visible');
+    row.find('.saveRowBtn').css('visibility', 'visible');
+
+    row.find('td:not(:last())').children().not('.ui-datepicker-trigger')
+                                                .each(function(index, element) {
+                                                    var elemName = $(element).attr('name');
+                                                    var elemID = "id_" + elemName;
+                                                    $(element).attr('id', elemID);
+
+                                                    if( digitsOnlyValidationArray.indexOf(elemID) > -1) {
+                                                            $('#' + elemID).keyup(digitsOnlyValidation);
+                                                    }
+
+                                                });
+
+    $('#selectedRow').find('.ui-datepicker-trigger').css('visibility', 'visible');
+    $('#selectedRow').find("#id_datepicker").datepicker({
+        setDate: new Date(),
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        dateFormat: 'dd M. yy',
+        altField: "#id_refuel_date",
+        altFormat: "yy-mm-dd",
+        showOn: "button",
+        buttonText: 'Show Date',
+        buttonImageOnly: true,
+        buttonImage: "/myGarageApp/static/myGarage/img/calendar.png"
+    });
+
+
+     $(".ui-datepicker-trigger").mouseover(function() {
+        $(this).css('cursor', 'pointer');
+     });
+
+}
+
+
+function deleteRowFunction(e) {
+    e.stopPropagation();
+
+    var csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    });
+
+    recordIDValue = $('#selectedRow input[name=pk_refuelling]');
+    recordIDValue = recordIDValue.val().trim();
+     if (confirm("Are you sure you want to delete this record?") == true) {
+        $.ajax({
+            url: '/refuellings/',
+            type: 'DELETE',
+            data: {recordID: ''+recordIDValue },
+            success: function(result) {
+                $('#selectedRow').remove();
+                alert('deletion was successful');
+
+            },
+            error: function() {
+                alert('could not be deleted');
+            }
+        });
+     }
+
+}
+
+
+// clone the original inputs into a display:none form and submit
+// before cloning remove possible previous inputs
+function saveRowFunction(e) {
+    e.stopPropagation();
+
+    if (confirm("Are you sure you want to save this record?") == true) {
+        var noRemove = $('#newRefuellingForm').find('.addNewRecordTip, input[name=csrfmiddlewaretoken], input[name=pk_refuelling]');
+        $('#newRefuellingForm').empty();
+        $('#newRefuellingForm').html(noRemove);
+
+       var newValues = $('#selectedRow').find('td:not(:last())').clone();
+       for(var i=0; i<newValues.length; i++) {
+            var children = $(newValues[i]).children().not('.ui-datepicker-trigger, .hasDatepicker');
+            children.attr('id', '');
+            $('#newRefuellingForm').append(children);
+       }
+       var existingDate = $('#selectedRow .datepicker').val();
+       $('#newRefuellingForm input[name=refuel_date]').val(moment(new Date(existingDate)).format('YYYY-MM-DD'));
+
+       $('#newRefuellingForm').submit();
+    }
+}
