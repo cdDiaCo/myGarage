@@ -317,8 +317,11 @@ function getNameForTableInput(columnName) {
 	}
 	
 	// check for empty fields
-	$('#selectedRow').each(function(index, element) {
+	var fields = $('#selectedRow').children().not('td:first, td:last').children();
+
+	fields.each(function(index, element) {
 		var elemValue = $(element).val();
+		console.log(element);
 		if (elemValue === "") {
 			$('.addNewRecordTip').text('All fields are required!');
 			validFields = false;
