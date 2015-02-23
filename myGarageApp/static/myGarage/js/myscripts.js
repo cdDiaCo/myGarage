@@ -80,18 +80,18 @@ function addNewRow() {
 		var newId = "";
 		var cssProperty = "";
 		var cssValue = "";
-		var onKeypress = "";
+
 	    if(columnName.indexOf("date") > -1) {
-	    	newClass =  newClass + "datepicker ";
+	        newClass = newClass + " datepicker ";
+	    	newId = "id_datepicker";
 	    	cssProperty = "width";
 	    	cssValue = "85%";
-	    	inputName = inputName + '_userOnly';
+	    	inputName = "datepicker";
 	    }
 	    else {
 	    	newId = "id_" + inputName;
-	    	onKeypress = "";
-	    }
 
+	    }
 
         //generate the tempFields
         newRowForm.append($('<td>')
@@ -101,14 +101,14 @@ function addNewRow() {
                        .css(cssProperty, cssValue)
                        .attr('name', inputName)
                        .attr('id', newId)
-                       .attr("onkeypress", onKeypress )
                   ));
     }
 
     newRowForm.find('td').first().append($('<input>')
                .prop('type', 'hidden')
                .attr('name', 'refuel_date')
-               .attr('class', 'altDateField tempInput'));
+               .attr('class', 'tempInput altDateField')
+               .attr('id', 'id_refuel_date'));
 
     // append the option buttons td
      newRowForm.append($('<td>')
@@ -317,11 +317,11 @@ function getNameForTableInput(columnName) {
 	}
 	
 	// check for empty fields
-	var fields = $('#selectedRow').children().not('td:first, td:last').children();
+	var fields = $('#selectedRow').children().not('td:last').children().not('.ui-datepicker-trigger, .altDateField');
 
 	fields.each(function(index, element) {
 		var elemValue = $(element).val();
-		console.log(element);
+		//console.log(element);
 		if (elemValue === "") {
 			$('.addNewRecordTip').text('All fields are required!');
 			validFields = false;
@@ -329,7 +329,7 @@ function getNameForTableInput(columnName) {
 		}
 	});			
 	
-	if(validFields) {return true;}		
+	if(validFields) {return true;}
 	else {alert('All fields are required!'); return false;}
 }			   
 		   

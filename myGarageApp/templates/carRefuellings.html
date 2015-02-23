@@ -84,13 +84,25 @@
                 row.find('.deleteRowBtn').css('visibility', 'visible');
                 row.find('.saveRowBtn').css('visibility', 'visible');
 
+                row.find('td:not(:last())').children().not('.ui-datepicker-trigger')
+                                                            .each(function(index, element) {
+                                                                var elemName = $(element).attr('name');
+                                                                var elemID = "id_" + elemName;
+                                                                $(element).attr('id', elemID);
+
+                                                                if( digitsOnlyValidationArray.indexOf(elemID) > -1) {
+                                                                        $('#' + elemID).keyup(digitsOnlyValidation);
+                                                                }
+
+                                                            });
+
                 $('#selectedRow').find('.ui-datepicker-trigger').css('visibility', 'visible');
-                $('#selectedRow').find(".datepicker").datepicker({
+                $('#selectedRow').find("#id_datepicker").datepicker({
                     setDate: new Date(),
                     showOtherMonths: true,
                     selectOtherMonths: true,
                     dateFormat: 'dd M. yy',
-                    altField: ".altDateField",
+                    altField: "#id_refuel_date",
                     altFormat: "yy-mm-dd",
                     showOn: "button",
                     buttonText: 'Show Date',
@@ -102,18 +114,6 @@
                  $(".ui-datepicker-trigger").mouseover(function() {
                     $(this).css('cursor', 'pointer');
                  });
-
-                 row.find('td:not(:last())').children().not('.hasDatepicker, .ui-datepicker-trigger, .altDateField')
-                                                            .each(function(index, element) {
-                                                                var elemName = $(element).attr('name');
-                                                                var elemID = "id_" + elemName;
-                                                                $(element).attr('id', elemID);
-
-                                                                if( digitsOnlyValidationArray.indexOf(elemID) > -1) {
-                                                                        $('#' + elemID).keyup(digitsOnlyValidation);
-                                                                }
-
-                                                            });
 
 		   }
 
@@ -199,7 +199,7 @@
 	    		    {% for record in refuellings %}
 			    		<tr>
 			    		    <td>
-                                <input class="recordsTextInput datepicker" type="text" value="{{ record.refuel_date }}" readonly style=" width: 85%;">
+                                <input class="recordsTextInput datepicker" type="text" value="{{ record.refuel_date }}" name="datepicker" readonly style=" width: 85%;">
                                 <input class="altDateField" type="hidden" name="refuel_date">
                                 <input class="" type="hidden" name="pk_refuelling" value="{{ record.id }}">
                             </td>
