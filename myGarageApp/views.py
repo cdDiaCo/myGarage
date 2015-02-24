@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from forms import CarForm,UserForm, AddNewCar, AddCleaning, RefuellingForm
+from forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm
 from models import Car, Cleaning, Refuelling
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -192,45 +192,49 @@ def addNewCar(request):
     return render(request, 'newCar.html', {'newCar': newCar_form, 'registered': registered, 'user_id': request.user.id} )                
 
 
-@login_required
-def addCleaning(request):
-    #check if the user has added a car...    
+@login_required             
+def carCleanings(request):
+
     if 'selectedCar' in request.session:
         selectedCar = request.session['selectedCar']
         car = Car.objects.get(id=selectedCar['id'])
-    
-        registered = False        
-        if request.method == 'POST':
-            newCleaning_form = AddCleaning(data=request.POST)
-            
-            if newCleaning_form.is_valid():
-                newCleaning = newCleaning_form.save(commit=False)            
-                newCleaning.car = car
-                newCleaning.save()
-                
-                registered = True
-            else:
-                print newCleaning_form.errors
-        else:
-            newCleaning_form = AddCleaning()
-            
-        return render(request, 'newCleaning.html', {'newCleaning': newCleaning_form, 'registered': registered, 
-        'selectedCar' : car} ) 
-    else:    
-        car = False                 
-        return render(request, 'newCleaning.html', {'selectedCar' : car} )                
-    
-
-          
-@login_required             
-def carCleanings(request):    
-    if 'selectedCar' in request.session:
-        selectedCar = request.session['selectedCar']
         cleanings = Cleaning.objects.filter(car_id=selectedCar['id'])
+        deleteMsg = ""
+
+    if request.method == 'POST':
+        cleaningID = request.POST.get('pk_cleaning', 0)
+
+        try:
+            instance = Cleaning.objects.get(pk=cleaningID)
+        except:
+            cleaning_form = CleaningForm(data=request.POST)
+        else:
+            cleaning_form = CleaningForm(data=request.POST, instance=instance)
+
+        if cleaning_form.is_valid():
+            cleaning = cleaning_form.save(commit=False)
+            cleaning.car = car
+            cleaning.save()
+            return HttpResponseRedirect('/cleanings/')
+        else:
+            print cleaning_form.errors
+            return HttpResponseRedirect('/cleanings/')
+    elif request.method == 'DELETE':
+         index = request.body.find('=')
+         id = request.body[index+1:]
+         try:
+            instance = Cleaning.objects.get(pk=id)
+         except:
+             deleteMsg = "instance not found"
+             print deleteMsg
+         else:
+            instance.delete()
+            deleteMsg = "instance deleted"
+            print deleteMsg
     else:
-        cleanings = False
-            
-    return render(request, 'carCleanings.html', {'cleanings' : cleanings}) 
+        cleaning_form = CleaningForm()
+
+    return render(request, 'carCleanings.html', {'cleanings': cleanings, 'deleteMsg': deleteMsg, })
           
                    
 @login_required             
@@ -271,7 +275,6 @@ def carRefuellings(request):
          else:
             instance.delete()
             deleteMsg = "instance deleted"
-         print 'bla'
     else:
         refuelling_form = RefuellingForm()
     

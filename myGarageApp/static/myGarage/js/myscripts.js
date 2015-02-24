@@ -104,11 +104,11 @@ function addNewRow() {
                   ));
     }
 
+
+
     newRowForm.find('td').first().append($('<input>')
                .prop('type', 'hidden')
-               .attr('name', 'refuel_date')
-               .attr('class', 'tempInput altDateField')
-               .attr('id', 'id_refuel_date'));
+               .attr('class', 'tempInput altDateField'));
 
     // append the option buttons td
      newRowForm.append($('<td>')
@@ -129,6 +129,9 @@ function addNewRow() {
      		if( digitsOnlyValidationArray.indexOf(elementID) > -1) {
 					$('#' + elementID).keyup(digitsOnlyValidation);
 			}
+			else if(lettersOnlyValidationArray.indexOf(elementID) > -1) {
+			        $('#' + elementID).keyup(lettersOnlyValidation);
+			}
 			//else if in stringOnlyValidationArray etc
 
      });
@@ -146,6 +149,38 @@ function showValidationTip(elementID) {
 
 function closeValidationTip(elem) {
     $(elem).css('visibility', 'hidden');
+}
+
+
+function lettersOnlyValidation() {
+    var inputValue = $(this).val();
+	var elementID = $(this).attr('id');
+	var isString = /^[a-zA-Z\s]*$/.test(inputValue);
+	if (inputValue === "") {
+		isString = true;
+	}
+
+	addObjToValidationsArray(validationsArray, elementID, isString, 'lettersOnly');
+	var falseLettersOnlyArray = validateTempFieldsByType('lettersOnly');
+
+	if(!isString ) {
+		var name =  getNameFromId(elementID);
+		$('#' + elementID + '_tip').text('Only letters allowed !');
+		$('#' + elementID).css('outline', '1px solid #bd4a48');
+		showValidationTip(elementID);
+	}
+	else {
+		$('#' + elementID + '_tip').text('');
+		$('#' + elementID).css('outline', '');
+		closeValidationTip('#' + elementID + '_tip');
+
+		if(falseLettersOnlyArray.length > 0) {
+			var lastElem = falseLettersOnlyArray[falseLettersOnlyArray.length-1];
+			var name = getNameFromId(lastElem);
+			$('#' + elementID + '_tip').text('Only letters allowed !');
+		}
+	}
+
 }
 
 function digitsOnlyValidation() { 	      
@@ -424,25 +459,43 @@ function markSelectedRow(row) {
     row.find('.deleteRowBtn').css('visibility', 'visible');
     row.find('.saveRowBtn').css('visibility', 'visible');
 
+    var urlPath = window.location.pathname;
+    var name = "";
+    switch (urlPath) {
+        case "/refuellings/":
+            name = "refuel_date";
+            break;
+        case "/cleanings/":
+            name = "cleaning_date";
+            break;
+    }
+
+    $('#selectedRow .altDateField').attr('name', name);
+
     row.find('td:not(:last())').children().not('.ui-datepicker-trigger')
                                                 .each(function(index, element) {
                                                     var elemName = $(element).attr('name');
                                                     var elemID = "id_" + elemName;
+                                                    //console.log(elemID);
                                                     $(element).attr('id', elemID);
 
                                                     if( digitsOnlyValidationArray.indexOf(elemID) > -1) {
                                                             $('#' + elemID).keyup(digitsOnlyValidation);
                                                     }
+                                                    else if(lettersOnlyValidationArray.indexOf(elemID) > -1) {
+                                                            $('#' + elemID).keyup(lettersOnlyValidation);
+                                                    }
 
                                                 });
+    var altFieldID = $('#selectedRow .altDateField').attr('id');
+    //console.log(altFieldID);
 
-    $('#selectedRow').find('.ui-datepicker-trigger').css('visibility', 'visible');
     $('#selectedRow').find("#id_datepicker").datepicker({
         setDate: new Date(),
         showOtherMonths: true,
         selectOtherMonths: true,
         dateFormat: 'dd M. yy',
-        altField: "#id_refuel_date",
+        altField: "#"+altFieldID,
         altFormat: "yy-mm-dd",
         showOn: "button",
         buttonText: 'Show Date',
@@ -450,16 +503,19 @@ function markSelectedRow(row) {
         buttonImage: "/myGarageApp/static/myGarage/img/calendar.png"
     });
 
-
-     $(".ui-datepicker-trigger").mouseover(function() {
+    $(".ui-datepicker-trigger").mouseover(function() {
         $(this).css('cursor', 'pointer');
-     });
+    });
+
+    $('#selectedRow').find('.ui-datepicker-trigger').css('visibility', 'visible');
 
 }
 
 
 function deleteRowFunction(e) {
     e.stopPropagation();
+
+    var urlPath = window.location.pathname;
 
     var csrftoken = getCookie('csrftoken');
     $.ajaxSetup({
@@ -468,11 +524,11 @@ function deleteRowFunction(e) {
         }
     });
 
-    recordIDValue = $('#selectedRow input[name=pk_refuelling]');
+    recordIDValue = $('#selectedRow .pk');
     recordIDValue = recordIDValue.val().trim();
      if (confirm("Are you sure you want to delete this record?") == true) {
         $.ajax({
-            url: '/refuellings/',
+            url: ''+urlPath,
             type: 'DELETE',
             data: {recordID: ''+recordIDValue },
             success: function(result) {
@@ -495,19 +551,23 @@ function saveRowFunction(e) {
     e.stopPropagation();
 
     if (confirm("Are you sure you want to save this record?") == true) {
-        var noRemove = $('#newRefuellingForm').find('.addNewRecordTip, input[name=csrfmiddlewaretoken], input[name=pk_refuelling]');
-        $('#newRefuellingForm').empty();
-        $('#newRefuellingForm').html(noRemove);
+        var noRemove = $('#newForm').find('.addNewRecordTip, input[name=csrfmiddlewaretoken], .pk');
+        //console.log(noRemove);
+        $('#newForm').empty();
+        $('#newForm').html(noRemove);
 
        var newValues = $('#selectedRow').find('td:not(:last())').clone();
+       //console.log(newValues);
        for(var i=0; i<newValues.length; i++) {
+            //console.log(newValues[i]);
             var children = $(newValues[i]).children().not('.ui-datepicker-trigger, .hasDatepicker');
             children.attr('id', '');
-            $('#newRefuellingForm').append(children);
+            $('#newForm').append(children);
        }
        var existingDate = $('#selectedRow .datepicker').val();
-       $('#newRefuellingForm input[name=refuel_date]').val(moment(new Date(existingDate)).format('YYYY-MM-DD'));
+       $('#newForm .altDateField').val(moment(new Date(existingDate)).format('YYYY-MM-DD'));
 
-       $('#newRefuellingForm').submit();
+
+       $('#newForm').submit();
     }
 }

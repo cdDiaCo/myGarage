@@ -1,17 +1,20 @@
 {% extends "garage.html" %}
 
 {% block head %}
-	  {% load staticfiles %}
 	   <script type="text/javascript">
 		   $(document).ready(function () {
-		        var hrefValue = "cleanings";
-		        setItemMenuActive(hrefValue);	
-		        
-		        $( "tbody tr:odd" ).css( "background-color", "#F0FFD6" );		        
-		        setColumnsWidth();         
+                var hrefValue = "cleanings";
+		        setItemMenuActive(hrefValue);
+		        setColumnsWidth();
+		        selectRow();
 			    
 		   });	   
-	   
+
+	       validationsArray = [];
+		   digitsOnlyValidationArray = ['id_cleaning_cost'];
+		   lettersOnlyValidationArray = ['id_cleaning_type'];
+
+
 	   </script>
 {% endblock %}
 
@@ -19,35 +22,53 @@
 {% block title %}Cleanings{% endblock %}
 
 
-{% block operations %}	
+{% block operations %}
+    <input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record" value="Add new row"/>
+
 	{% if cleanings %}
 			<table class="records">	
 		        <thead>
-			        <th>Refuel date</th>
-			        <th>Sum refuelled </th>
-			        <th>Quantity refuelled</th>  
+                    <tr>
+                        <th>Cleaning date</th>
+                        <th>Cleaning cost</th>
+                        <th>Cleaning type</th>
+                        <th></th>
+                    </tr>
 		        </thead>   
 	        </table>
 	        <div class="tableDiv" >
-		        <table class="records"> 
+		        <table class="records">
+                    <tbody>
 		    		{% for record in cleanings %}
-		    		<tbody>
 			    		<tr>
-			    			<td>{{ record.cleaning_date }}</td>
-			    			<td>{{ record.cleaning_cost }}</td>
-			    			<td>{{ record.cleaning_type }}</td>    			 	
+			    			<td>
+                                <input class="recordsTextInput datepicker" type="text" value="{{ record.cleaning_date }}" name="datepicker" readonly style=" width: 85%;">
+                                <input class="altDateField" type="hidden" name="cleaning_date">
+                                <input class="pk" type="hidden" name="pk_cleaning" value="{{ record.id }}">
+                            </td>
+			    			<td><input class="recordsTextInput" type="text" name="cleaning_cost" value="{{ record.cleaning_cost }}" readonly></td>
+			    			<td><input class="recordsTextInput" type="text" name="cleaning_type" value="{{ record.cleaning_type }}" readonly></td>
+                            <td>
+                                <div class="rowOptions">
+                                    <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
+                                    <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
+                                </div>
+                            </td>
 			    		</tr>
-		    		</tbody>
-		    		{% endfor %}  
+		    		{% endfor %}
+                    </tbody>
     		    </table>
     		</div>
     	{% else %}	
     		<p>no cleanings for this car</p>   		  
-   		{% endif %}    
-	<div id="submenu"></div>
+   		{% endif %}
+
+    <form id="newForm" method="post" action="" onsubmit="return validateTempFields()">
+        {% csrf_token %}
+        <span id="id_cleaning_cost_tip" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+        <span id="id_cleaning_type_tip" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+    </form>
 {% endblock %}	
 	
 
 
-{% block footer %}
-{% endblock %}

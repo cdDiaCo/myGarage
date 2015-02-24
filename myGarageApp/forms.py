@@ -39,12 +39,6 @@ class AddNewCar(forms.ModelForm):
                      'km_purchased', 'registration_number', 'vin'
                  )
         
-class AddCleaning(forms.ModelForm):
-    class Meta:
-        model = Cleaning  
-        fields = ('cleaning_date', 'cleaning_cost', 'cleaning_type')   
-        
-        
         
 class RefuellingForm(forms.ModelForm):
     class Meta:
@@ -52,5 +46,7 @@ class RefuellingForm(forms.ModelForm):
         fields = ('refuel_date', 'current_mileage', 'sum_refuelled', 'quantity_refuelled')  
           
           
-          
-                
+class CleaningForm(forms.ModelForm):
+    class Meta:
+        model = Cleaning
+        fields = ('cleaning_date', 'cleaning_cost', 'cleaning_type')

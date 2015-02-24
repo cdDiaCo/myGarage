@@ -290,6 +290,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	margin: 20px 0;	
 	border-radius:3px;
 	border: 1px solid #b76c00;
+	background-color: #E58700;
 }
 
 .errorlist{
@@ -473,7 +474,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	border-color: #f9fafc;
 }
 
-#newRefuellingForm {
+#newForm {
     margin:0;
     #background-color:red;
 	visibility: hidden;
@@ -499,9 +500,10 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 
 }
 
-.recordsTextInput {
+input.recordsTextInput {
     border: none;
     background-color: inherit;
+    width: 95%;
 }
 
 .recordsTextInput:focus {
@@ -636,5 +638,9 @@ div.arrow {
 	position:  relative;
 	box-shadow: 0 -1px 2px #7d8c63;
 	
+}
+
+input:-webkit-autofill {
+    background-color: white !;
 }
 
