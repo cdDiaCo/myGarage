@@ -1,4 +1,4 @@
-from models import UserProfile, Car, Cleaning, Refuelling
+from models import UserProfile, Car, Cleaning, Refuelling, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -50,3 +50,34 @@ class CleaningForm(forms.ModelForm):
     class Meta:
         model = Cleaning
         fields = ('cleaning_date', 'cleaning_cost', 'cleaning_type')
+
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ('service_date', 'description', 'service_cost')
+
+class RevisionForm(forms.ModelForm):
+    class Meta:
+        model = Revision
+        fields = ('revision_date', 'observations', 'auto_service_name', 'revision_cost', 'itp')
+
+class TaxForm(forms.ModelForm):
+    class Meta:
+        model = Tax
+        fields = ('tax_begin_date', 'tax_end_date', 'tax_sum', 'vignete')
+
+class InsuranceForm(forms.ModelForm):
+    class Meta:
+        model = Insurance
+        fields = ('insurance_begin_date', 'insurance_end_date', 'insurance_company', 'insurance_type', 'insurance_cost', 'acquisition_place')
+
+class TyreForm(forms.ModelForm):
+    class Meta:
+        model = Tyre
+        fields = ('manufacturer', 'model', 'type', 'quantity', 'acquisition_date', 'acquisition_price', 'state', )
+
+
+
+
+

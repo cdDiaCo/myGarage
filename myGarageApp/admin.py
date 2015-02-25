@@ -1,7 +1,7 @@
 
 # Register your models here.
 from django.contrib import admin
-from models import Car, Refuelling, Cleaning
+from models import Car, Refuelling, Cleaning, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
@@ -22,3 +22,8 @@ admin.site.register(User, UserAdminExtended)
 admin.site.register(Car, CarAdmin)
 admin.site.register(Refuelling)
 admin.site.register(Cleaning)
+admin.site.register(Service)
+admin.site.register(Revision)
+admin.site.register(Tax)
+admin.site.register(Insurance)
+admin.site.register(Tyre)
