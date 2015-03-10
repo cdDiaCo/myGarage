@@ -36,10 +36,11 @@ function setItemMenuActive(hrefValue) {
 function addOrangeImages() {		    
 	var initialSrc = $('#active').find('img').attr('src');	   		
 	var n = initialSrc.lastIndexOf("/");
-	var shortPath = initialSrc.substring(n+1);	   		
-	var newShortPath = "orange_" + shortPath;
+	var m = initialSrc.lastIndexOf(".");
+	var shortPath = initialSrc.substring(n+1, m);
+	var newShortPath = "orange_" + shortPath + ".gif";
 	var newSrc = initialSrc.substring(0, n+1) + newShortPath;
-	//alert(newSrc);	   		
+	//alert(newSrc);
 	$('#active').find('img').attr('src', newSrc);	   		
 }	  
 	   
@@ -68,6 +69,8 @@ function addValidation() {
 
 function addNewRow() {
     var columnNames = $('.records').find('thead').find("th");
+    console.log(columnNames);
+    $('.records tbody').find('.noRecords').remove();
     $('.records tbody').append($('<tr>'));
 
     var newRowForm = $('.records tbody').find('tr:last()');
@@ -104,16 +107,26 @@ function addNewRow() {
                   ));
     }
 
-
-
     newRowForm.find('td').first().append($('<input>')
                .prop('type', 'hidden')
                .attr('class', 'tempInput altDateField'));
 
-    // append the option buttons td
-     newRowForm.append($('<td>')
-                        .append($('.rowOptions').first().find('.saveRowBtn').clone().attr("tabindex",-1)
-                                                                .css('outline', 'none')));
+
+    // if there are no records
+    newRowForm.append($('<td>').append($('<div>')
+                                .addClass('rowOptions')
+                                    .append($('<input>')
+                                        .prop('type', 'button')
+                                        .addClass('saveRowBtn')
+                                        .css('outline', 'none')
+                                        .attr("tabindex",-1)
+                                        .on( "click", function() {
+                                            saveRowFunction(event);
+                                        })
+                                    )
+                                ));
+
+    console.log(newRowForm.find('.tempInput, .rowOptions'));
 
     newRowForm.find('.tempInput, .rowOptions').on("focus", function(){
         unmarkPreviousSelectedRow(true);
@@ -416,7 +429,7 @@ function getCookie(name) {
 //when row is selected show the trash, save and date icons
 //the input boxes from the selected row have ids
 function selectRow() {
-    var rows = $('tr');
+    var rows = $('tbody tr');
     rows.on('click', function(e){
         var row = $(this);
         var columns = $(this).find('td:not(:last)');
@@ -441,15 +454,17 @@ function unmarkPreviousSelectedRow(tempRow) {
     rows.find('.deleteRowBtn').css('visibility', 'hidden');
     rows.find('.saveRowBtn').css('visibility', 'hidden');
 
+/*
     if(tempRow) {
         rows.find('td').children().not('.tempInput').each(function(index, element) {
             $(element).attr('id', '');
         });
     }else {
+    */
         rows.find('td').children().each(function(index, element) {
             $(element).attr('id', '');
         });
-    }
+    //}
 
     $('.ui-datepicker-trigger').css('visibility', 'hidden');
 }
@@ -467,6 +482,9 @@ function markSelectedRow(row) {
             break;
         case "/cleanings/":
             name = "cleaning_date";
+            break;
+        case "/service/":
+            name = "service_date";
             break;
     }
 

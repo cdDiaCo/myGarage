@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm
-from models import Car, Cleaning, Refuelling
+from forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm
+from models import Car, Cleaning, Refuelling, Service
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -279,10 +279,50 @@ def carRefuellings(request):
         refuelling_form = RefuellingForm()
     
     return render(request, 'carRefuellings.html', {'refuellings': refuellings, 'deleteMsg': deleteMsg, })
-        
- 
-     
-        
+
+
+@login_required
+def carServices(request):
+
+    if 'selectedCar' in request.session:
+        selectedCar = request.session['selectedCar']
+        car = Car.objects.get(id=selectedCar['id'])
+        services = Service.objects.filter(car_id=selectedCar['id'])
+        deleteMsg = ""
+
+    if request.method == 'POST':
+        serviceID = request.POST.get('pk_service', 0)
+
+        try:
+            instance = Service.objects.get(pk=serviceID)
+        except:
+            service_form = ServiceForm(data=request.POST)
+        else:
+            service_form = ServiceForm(data=request.POST, instance=instance)
+
+        if service_form.is_valid():
+            service = service_form.save(commit=False)
+            service.car = car
+            service.save()
+            return HttpResponseRedirect('/service/')
+        else:
+            print service_form.errors
+            return HttpResponseRedirect('/service/')
+    elif request.method == 'DELETE':
+         index = request.body.find('=')
+         id = request.body[index+1:]
+         try:
+            instance = Service.objects.get(pk=id)
+         except:
+             deleteMsg = "instance not found"
+         else:
+            instance.delete()
+            deleteMsg = "instance deleted"
+    else:
+        service_form = ServiceForm()
+
+    return render(request, 'carServices.html', {'services': services, 'deleteMsg': deleteMsg, })
+
   
     
 # Use the login_required() decorator to ensure only those logged in can access the view.
