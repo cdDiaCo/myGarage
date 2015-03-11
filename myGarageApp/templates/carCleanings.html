@@ -25,43 +25,45 @@
 {% block operations %}
     <input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record" value="Add new row"/>
 
-	{% if cleanings %}
-			<table class="records">	
-		        <thead>
+
+    <table class="records">
+        <thead>
+            <tr>
+                <th>Cleaning date</th>
+                <th>Cleaning cost</th>
+                <th>Cleaning type</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+    <div class="tableDiv" >
+        <table class="records">
+            <tbody>
+            {% if cleanings %}
+                {% for record in cleanings %}
                     <tr>
-                        <th>Cleaning date</th>
-                        <th>Cleaning cost</th>
-                        <th>Cleaning type</th>
-                        <th></th>
+                        <td>
+                            <input class="recordsTextInput datepicker" type="text" value="{{ record.cleaning_date }}" name="datepicker" readonly style=" width: 85%;">
+                            <input class="altDateField" type="hidden" name="cleaning_date">
+                            <input class="pk" type="hidden" name="pk_cleaning" value="{{ record.id }}">
+                        </td>
+                        <td><input class="recordsTextInput" type="text" name="cleaning_cost" value="{{ record.cleaning_cost }}" readonly></td>
+                        <td><input class="recordsTextInput" type="text" name="cleaning_type" value="{{ record.cleaning_type }}" readonly></td>
+                        <td>
+                            <div class="rowOptions">
+                                <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
+                                <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
+                            </div>
+                        </td>
                     </tr>
-		        </thead>   
-	        </table>
-	        <div class="tableDiv" >
-		        <table class="records">
-                    <tbody>
-		    		{% for record in cleanings %}
-			    		<tr>
-			    			<td>
-                                <input class="recordsTextInput datepicker" type="text" value="{{ record.cleaning_date }}" name="datepicker" readonly style=" width: 85%;">
-                                <input class="altDateField" type="hidden" name="cleaning_date">
-                                <input class="pk" type="hidden" name="pk_cleaning" value="{{ record.id }}">
-                            </td>
-			    			<td><input class="recordsTextInput" type="text" name="cleaning_cost" value="{{ record.cleaning_cost }}" readonly></td>
-			    			<td><input class="recordsTextInput" type="text" name="cleaning_type" value="{{ record.cleaning_type }}" readonly></td>
-                            <td>
-                                <div class="rowOptions">
-                                    <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
-                                    <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
-                                </div>
-                            </td>
-			    		</tr>
-		    		{% endfor %}
-                    </tbody>
-    		    </table>
-    		</div>
-    	{% else %}	
-    		<p>no cleanings for this car</p>   		  
-   		{% endif %}
+                {% endfor %}
+            {% else %}
+                <tr class="noRecords"><td>there are no cleanings added for this car</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
 
     <form id="newForm" method="post" action="" onsubmit="return validateTempFields()">
         {% csrf_token %}

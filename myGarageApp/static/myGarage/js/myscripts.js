@@ -69,12 +69,10 @@ function addValidation() {
 
 function addNewRow() {
     var columnNames = $('.records').find('thead').find("th");
-    console.log(columnNames);
     $('.records tbody').find('.noRecords').remove();
     $('.records tbody').append($('<tr>'));
 
     var newRowForm = $('.records tbody').find('tr:last()');
-
     for (i=0; i< columnNames.length-1; i++) {
 
         var columnName = $(columnNames[i]).text();
@@ -96,15 +94,32 @@ function addNewRow() {
 
 	    }
 
-        //generate the tempFields
-        newRowForm.append($('<td>')
-                  .append($('<input>')
-                       .prop('type', 'text')
-                       .addClass(newClass)
-                       .css(cssProperty, cssValue)
+
+        if(columnName == "Itp") {
+            //special case
+            newRowForm.append($('<td>')
+                  .append($('<select>')
+                       .append($("<option>")
+                            .attr('value', 'yes').text('yes'))
+                       .append($("<option>")
+                            .attr('value', 'no').text('no'))
+                       .addClass(newClass+' selectList')
                        .attr('name', inputName)
                        .attr('id', newId)
-                  ));
+                  )
+                  .css('width', '80px'));
+        }
+        else {
+            //generate the tempFields
+            newRowForm.append($('<td>')
+                      .append($('<input>')
+                           .prop('type', 'text')
+                           .addClass(newClass)
+                           .css(cssProperty, cssValue)
+                           .attr('name', inputName)
+                           .attr('id', newId)
+                      ));
+        }
     }
 
     newRowForm.find('td').first().append($('<input>')
@@ -126,13 +141,11 @@ function addNewRow() {
                                     )
                                 ));
 
-    console.log(newRowForm.find('.tempInput, .rowOptions'));
 
     newRowForm.find('.tempInput, .rowOptions').on("focus", function(){
         unmarkPreviousSelectedRow(true);
         markSelectedRow($('.records tbody').find('tr:last()'));
     });
-
     $('.tempInput:first()').focus();
 
 
@@ -450,7 +463,9 @@ function selectRow() {
 
 function unmarkPreviousSelectedRow(tempRow) {
     rows = $('.records tbody').find('tr');
-    rows.removeAttr('id');
+    rows.each(function(index, element) {
+        $(element).removeAttr('id');
+    });
     rows.find('.deleteRowBtn').css('visibility', 'hidden');
     rows.find('.saveRowBtn').css('visibility', 'hidden');
 
@@ -465,7 +480,6 @@ function unmarkPreviousSelectedRow(tempRow) {
             $(element).attr('id', '');
         });
     //}
-
     $('.ui-datepicker-trigger').css('visibility', 'hidden');
 }
 
@@ -485,6 +499,9 @@ function markSelectedRow(row) {
             break;
         case "/service/":
             name = "service_date";
+            break;
+        case "/revisions/":
+            name = "revision_date";
             break;
     }
 
@@ -570,21 +587,31 @@ function saveRowFunction(e) {
 
     if (confirm("Are you sure you want to save this record?") == true) {
         var noRemove = $('#newForm').find('.addNewRecordTip, input[name=csrfmiddlewaretoken], .pk');
-        //console.log(noRemove);
         $('#newForm').empty();
         $('#newForm').html(noRemove);
 
-       var newValues = $('#selectedRow').find('td:not(:last())').clone();
-       //console.log(newValues);
+       var newValues = $('#selectedRow').find('td:not(:last())').children().not('.selectList').clone();
+       var selectedOption = $('#selectedRow').find("option:selected", ".selectList").text();
+
        for(var i=0; i<newValues.length; i++) {
-            //console.log(newValues[i]);
-            var children = $(newValues[i]).children().not('.ui-datepicker-trigger, .hasDatepicker');
+            var children = $(newValues[i]).not('.ui-datepicker-trigger, .hasDatepicker');
             children.attr('id', '');
             $('#newForm').append(children);
        }
+
+       if(selectedOption) {
+            $('#newForm').append($("<input>")
+                                .prop('type', 'text')
+                                .attr('name', 'itp')
+                                .val(selectedOption));
+       } else {
+            console.log('there is no select');
+       }
+
        var existingDate = $('#selectedRow .datepicker').val();
        $('#newForm .altDateField').val(moment(new Date(existingDate)).format('YYYY-MM-DD'));
 
+       console.log($('#newForm'));
 
        $('#newForm').submit();
     }

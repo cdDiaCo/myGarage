@@ -6,15 +6,15 @@
 
 		        var hrefValue = "service";
 		        setItemMenuActive(hrefValue);
-		        //setColumnsWidth();
+		        setColumnsWidth();
 		        selectRow();
 
 		   });
 
 
 		   validationsArray = [];
-		   digitsOnlyValidationArray = [];
-		   lettersOnlyValidationArray = [];
+		   digitsOnlyValidationArray = ['id_service_cost'];
+		   lettersOnlyValidationArray = ['id_description'];
 
 	   </script>
 {% endblock %}
@@ -36,27 +36,26 @@
             </tr>
         </thead>
     </table>
-
     <div class="tableDiv">
         <table class="records">
             <tbody>
             {% if services %}
                 {% for record in services %}
-                <tr>
-                    <td>
-                        <input class="recordsTextInput datepicker" type="text" value="{{ record.service_date }}" name="datepicker" readonly style=" width: 85%;">
-                        <input class="altDateField" type="hidden" name="service_date">
-                        <input class="pk" type="hidden" name="pk_service" value="{{ record.id }}">
-                    </td>
-                    <td><input class="recordsTextInput" type="text" name="description" value="{{ record.description }}" readonly></td>
-                    <td><input  class="recordsTextInput" type="text" name="service_cost" value="{{ record.service_cost }}" readonly></td>
-                    <td>
-                        <div class="rowOptions">
-                            <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
-                            <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <input class="recordsTextInput datepicker" type="text" value="{{ record.service_date }}" name="datepicker" readonly style=" width: 85%;">
+                            <input class="altDateField" type="hidden" name="service_date">
+                            <input class="pk" type="hidden" name="pk_service" value="{{ record.id }}">
+                        </td>
+                        <td><input class="recordsTextInput" type="text" name="description" value="{{ record.description }}" readonly></td>
+                        <td><input  class="recordsTextInput" type="text" name="service_cost" value="{{ record.service_cost }}" readonly></td>
+                        <td>
+                            <div class="rowOptions">
+                                <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
+                                <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
+                            </div>
+                        </td>
+                    </tr>
                 {% endfor %}
             {% else %}
                 <tr class="noRecords"><td>there are no services added for this car</td></tr>

@@ -25,45 +25,47 @@
 {% block operations %}
     <input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record" value="Add new row"/>
 
-	{% if refuellings %}			
-	        <table class="records">	
-		        <thead>
+
+    <table class="records">
+        <thead>
+            <tr>
+                <th>Refuel date</th>
+                <th>Current mileage</th>
+                <th>Sum refuelled</th>
+                <th>Quantity refuelled</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+    <div class="tableDiv" >
+        <table class="records">
+            <tbody>
+            {% if refuellings %}
+                {% for record in refuellings %}
                     <tr>
-                        <th>Refuel date</th>
-                        <th>Current mileage</th>
-                        <th>Sum refuelled</th>
-                        <th>Quantity refuelled</th>
-                        <th></th>
+                        <td>
+                            <input class="recordsTextInput datepicker" type="text" value="{{ record.refuel_date }}" name="datepicker" readonly style=" width: 85%;">
+                            <input class="altDateField" type="hidden" name="refuel_date">
+                            <input class="pk" type="hidden" name="pk_refuelling" value="{{ record.id }}">
+                        </td>
+                        <td><input class="recordsTextInput" type="text" name="current_mileage" value="{{ record.current_mileage }}" readonly></td>
+                        <td><input  class="recordsTextInput" type="text" name="sum_refuelled" value="{{ record.sum_refuelled }}" readonly></td>
+                        <td><input  class="recordsTextInput" type="text" name="quantity_refuelled" value="{{ record.quantity_refuelled }}" readonly></td>
+                        <td>
+                            <div class="rowOptions">
+                                <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
+                                <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
+                            </div>
+                        </td>
                     </tr>
-                </thead>
-	        </table>   
-	        <div class="tableDiv" >
-		        <table class="records">
-                    <tbody>
-	    		    {% for record in refuellings %}
-			    		<tr>
-			    		    <td>
-                                <input class="recordsTextInput datepicker" type="text" value="{{ record.refuel_date }}" name="datepicker" readonly style=" width: 85%;">
-                                <input class="altDateField" type="hidden" name="refuel_date">
-                                <input class="pk" type="hidden" name="pk_refuelling" value="{{ record.id }}">
-                            </td>
-			    		    <td><input class="recordsTextInput" type="text" name="current_mileage" value="{{ record.current_mileage }}" readonly></td>
-			    			<td><input  class="recordsTextInput" type="text" name="sum_refuelled" value="{{ record.sum_refuelled }}" readonly></td>
-			    			<td><input  class="recordsTextInput" type="text" name="quantity_refuelled" value="{{ record.quantity_refuelled }}" readonly></td>
-			    			<td>
-                                <div class="rowOptions">
-                                    <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
-                                    <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
-                                </div>
-                            </td>
-			    		</tr>
-	    		    {% endfor %}
-                    </tbody>
-	    		</table>
-    		</div>
-    	{% else %}	
-    		<p>no refuellings for this car</p>   		  
-   		{% endif %}
+                {% endfor %}
+            {% else %}
+                <tr class="noRecords"><td>there are no cleanings added for this car</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
 
 
     <form id="newForm" method="post" action="" onsubmit="return validateTempFields()">

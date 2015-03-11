@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm
-from models import Car, Cleaning, Refuelling, Service
+from forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm
+from models import Car, Cleaning, Refuelling, Service, Revision
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -279,6 +279,52 @@ def carRefuellings(request):
         refuelling_form = RefuellingForm()
     
     return render(request, 'carRefuellings.html', {'refuellings': refuellings, 'deleteMsg': deleteMsg, })
+
+
+
+@login_required
+def carRevisions(request):
+    if 'selectedCar' in request.session:
+        selectedCar = request.session['selectedCar']
+        car = Car.objects.get(id=selectedCar['id'])
+        revisions = Revision.objects.filter(car_id=selectedCar['id'])
+        deleteMsg = ""
+
+    if request.method == 'POST':
+        revisionID = request.POST.get('pk_revision', 0)
+
+        try:
+            instance = Revision.objects.get(pk=revisionID)
+        except:
+            revision_form = RevisionForm(data=request.POST)
+        else:
+            revision_form = RevisionForm(data=request.POST, instance=instance)
+
+        if revision_form.is_valid():
+            revision = revision_form.save(commit=False)
+            revision.car = car
+            revision.save()
+            return HttpResponseRedirect('/revisions/')
+        else:
+            print revision_form.errors
+            return HttpResponseRedirect('/revisions/')
+    elif request.method == 'DELETE':
+         index = request.body.find('=')
+         id = request.body[index+1:]
+         try:
+            instance = Revision.objects.get(pk=id)
+         except:
+             deleteMsg = "instance not found"
+         else:
+            instance.delete()
+            deleteMsg = "instance deleted"
+    else:
+        revision_form = RevisionForm()
+
+    return render(request, 'carRevisions.html', {'revisions': revisions, 'deleteMsg': deleteMsg, })
+
+
+
 
 
 @login_required
