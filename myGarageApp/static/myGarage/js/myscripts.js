@@ -589,39 +589,40 @@ function deleteRowFunction(e) {
 
 }
 
-
-// clone the original inputs into a display:none form and submit
-// before cloning remove possible previous inputs
+// because we can't put a form element inside a table or tr
+// we clone the original inputs into a display:none form every time the save btn is pushed
+// this is also the time when the overall validation takes place
+// we need to remove any clones remained from the last failed validation before cloning the new -adjusted by user- values
 function saveRowFunction(e) {
     e.stopPropagation();
 
     if (confirm("Are you sure you want to save this record?") == true) {
         var noRemove = $('#newForm').find('.addNewRecordTip, input[name=csrfmiddlewaretoken], .pk');
-        $('#newForm').empty();
-        $('#newForm').html(noRemove);
+        $('#newForm').empty(); //remove any possible failed validation clones
+        $('#newForm').html(noRemove); // except for the elements that are not clones and are needed in the form
 
-       var newValues = $('#selectedRow').find('td:not(:last())').children().not('.selectList').clone();
        var selectedOption = $('#selectedRow').find("option:selected", ".selectList").text();
 
+       var newValues = $('#selectedRow').find('td:not(:last())').children().not('.selectList, .ui-datepicker-trigger, .hasDatepicker').clone();
+
        for(var i=0; i<newValues.length; i++) {
-            var children = $(newValues[i]).not('.ui-datepicker-trigger, .hasDatepicker');
-            children.attr('id', '');
-            $('#newForm').append(children);
+            $(newValues[i]).attr('id', ''); // remove the ids of clones because the originals already have them (id is unique in a page)
        }
 
+       $('#newForm').append(newValues); //add the clones to form
+
+        //make a new input text to hold the selected option of itp select list
+        // -- could not figure out another way of sending the selected option to server --
        if(selectedOption) {
             $('#newForm').append($("<input>")
                                 .prop('type', 'text')
                                 .attr('name', 'itp')
                                 .val(selectedOption));
-       } else {
-            console.log('there is no select');
        }
 
+       // when editing the row if the user doesn't select a different date, use the existing one
        var existingDate = $('#selectedRow .datepicker').val();
        $('#newForm .altDateField').val(moment(new Date(existingDate)).format('YYYY-MM-DD'));
-
-       console.log($('#newForm'));
 
        $('#newForm').submit();
     }
