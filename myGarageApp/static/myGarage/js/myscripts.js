@@ -68,13 +68,15 @@ function addValidation() {
 
 
 function addNewRow() {
-    var columnNames = $('.records').find('thead').find("th");
+    //if the car has no records, remove the no records message and add a new row
     $('.records tbody').find('.noRecords').remove();
     $('.records tbody').append($('<tr>'));
 
+    //get the table's column names and use them later to name the newly generated input fields
+    var columnNames = $('.records').find('thead').find("th");
     var newRowForm = $('.records tbody').find('tr:last()');
-    for (i=0; i< columnNames.length-1; i++) {
 
+    for (i=0; i< columnNames.length-1; i++) {
         var columnName = $(columnNames[i]).text();
 		var inputName = getNameForTableInput(columnName);
 		var newClass = "tempInput recordsTextInput ";
@@ -83,6 +85,7 @@ function addNewRow() {
 		var cssValue = "";
 
 	    if(columnName.indexOf("date") > -1) {
+	        //this is the case for date column
 	        newClass = newClass + " datepicker ";
 	    	newId = "id_datepicker";
 	    	cssProperty = "width";
@@ -91,12 +94,11 @@ function addNewRow() {
 	    }
 	    else {
 	    	newId = "id_" + inputName;
-
 	    }
 
 
         if(columnName == "Itp") {
-            //special case
+            //this is a special case because itp field needs select list instead of input text
             newRowForm.append($('<td>')
                   .append($('<select>')
                        .append($("<option>")
@@ -110,7 +112,7 @@ function addNewRow() {
                   .css('width', '80px'));
         }
         else {
-            //generate the tempFields
+            //generate the rest of the fields
             newRowForm.append($('<td>')
                       .append($('<input>')
                            .prop('type', 'text')
@@ -120,37 +122,47 @@ function addNewRow() {
                            .attr('id', newId)
                       ));
         }
-    }
+    } //end for
 
+    // add the hidden input of date that gets sent to server in the correct format
     newRowForm.find('td').first().append($('<input>')
                .prop('type', 'hidden')
                .attr('class', 'tempInput altDateField'));
 
 
-    // if there are no records
+    // add the save btn for the new row
     newRowForm.append($('<td>').append($('<div>')
                                 .addClass('rowOptions')
                                     .append($('<input>')
                                         .prop('type', 'button')
                                         .addClass('saveRowBtn')
                                         .css('outline', 'none')
-                                        .attr("tabindex",-1)
+                                        //.attr("tabindex",-1)
                                         .on( "click", function() {
                                             saveRowFunction(event);
                                         })
                                     )
                                 ));
 
-
-    newRowForm.find('.tempInput, .rowOptions').on("focus", function(){
+    // the focus event is usually applicable to a limited set of elements, such as form elements (<input>, <select>, etc.)
+    newRowForm.find("input").on("focus", function() {
         unmarkPreviousSelectedRow(true);
-        markSelectedRow($('.records tbody').find('tr:last()'));
+        markSelectedRow(newRowForm);
     });
-    $('.tempInput:first()').focus();
+
+    newRowForm.on("click", function() {
+        unmarkPreviousSelectedRow(true);
+        markSelectedRow(newRowForm);
+    });
+
+    // bear in mind that the new row is added at the bottom of the table
+    // so we need to automatically scroll down the table to it
+    newRowForm.find("input").focus();
 
 
-     // for every tempField bind the appropriate validation
-     $('.tempInput ').not(".datepicker").each(function(index, element) {
+     // for every field of the new row bind the appropriate validation
+     //exeption does the date field and the select list field
+     $('.tempInput ').not(".datepicker, .selectList").each(function(index, element) {
      		var elementID = $(element).attr('id');
      		if( digitsOnlyValidationArray.indexOf(elementID) > -1) {
 					$('#' + elementID).keyup(digitsOnlyValidation);
@@ -158,11 +170,9 @@ function addNewRow() {
 			else if(lettersOnlyValidationArray.indexOf(elementID) > -1) {
 			        $('#' + elementID).keyup(lettersOnlyValidation);
 			}
-			//else if in stringOnlyValidationArray etc
-
      });
 
-    $('#addRecord').attr('disabled', 'disabled');
+    $('#addRecord').attr('disabled', 'disabled'); // temporarily disable the "Add new row" button
 
 }
 
