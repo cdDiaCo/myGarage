@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm
-from models import Car, Cleaning, Refuelling, Service, Revision
+from myGarageApp.forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm
+from myGarageApp.models import Car, Cleaning, Refuelling, Service, Revision
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -43,7 +43,7 @@ def home_page(request):
                 #profile.save()                
                 registered = True    
             else:                
-                print user_form.errors, car_form.errors
+                print(user_form.errors, car_form.errors)
                 for key in car_form.getKeys():
                     if key in car_form.errors:                        
                         for error in car_form.errors[key]:                                                              		
@@ -66,7 +66,7 @@ def home_page(request):
                 else:                    
                     return HttpResponse("Your account is disabled.")
             else:                
-                print "Invalid login details: {0}, {1}".format(username, password)
+                print("Invalid login details: {0}, {1}".format(username, password))
                 return HttpResponse("Invalid login details supplied.")
                          
     else:
@@ -185,7 +185,7 @@ def addNewCar(request):
             
             registered = True
         else:
-            print newCar_form.errors
+            print(newCar_form.errors)
     else:
         newCar_form = AddNewCar()
         
@@ -217,7 +217,7 @@ def carCleanings(request):
             cleaning.save()
             return HttpResponseRedirect('/cleanings/')
         else:
-            print cleaning_form.errors
+            print(cleaning_form.errors)
             return HttpResponseRedirect('/cleanings/')
     elif request.method == 'DELETE':
          index = request.body.find('=')
@@ -226,11 +226,11 @@ def carCleanings(request):
             instance = Cleaning.objects.get(pk=id)
          except:
              deleteMsg = "instance not found"
-             print deleteMsg
+             print(deleteMsg)
          else:
             instance.delete()
             deleteMsg = "instance deleted"
-            print deleteMsg
+            print(deleteMsg)
     else:
         cleaning_form = CleaningForm()
 
@@ -263,7 +263,7 @@ def carRefuellings(request):
             refuelling.save()
             return HttpResponseRedirect('/refuellings/')
         else:
-            print refuelling_form.errors
+            print(refuelling_form.errors)
             return HttpResponseRedirect('/refuellings/')
     elif request.method == 'DELETE':
          index = request.body.find('=')
@@ -306,7 +306,7 @@ def carRevisions(request):
             revision.save()
             return HttpResponseRedirect('/revisions/')
         else:
-            print revision_form.errors
+            print(revision_form.errors)
             return HttpResponseRedirect('/revisions/')
     elif request.method == 'DELETE':
          index = request.body.find('=')
@@ -352,7 +352,7 @@ def carServices(request):
             service.save()
             return HttpResponseRedirect('/service/')
         else:
-            print service_form.errors
+            print(service_form.errors)
             return HttpResponseRedirect('/service/')
     elif request.method == 'DELETE':
          index = request.body.find('=')
