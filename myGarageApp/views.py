@@ -372,6 +372,7 @@ def carServices(request):
 
 @login_required
 def carTaxes(request):
+    print("bla")
     if 'selectedCar' in request.session:
         selectedCar = request.session['selectedCar']
         car = Car.objects.get(id=selectedCar['id'])
