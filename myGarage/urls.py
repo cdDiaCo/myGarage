@@ -1,5 +1,5 @@
 from myGarageApp.views import user_logout, home_page, addNewCar, garageView, carCleanings, carRefuellings, carServices, \
-    carRevisions, carTaxes
+    carRevisions, carTaxes, ajaxView, carInsurances
 from django.contrib import admin
 from django.conf.urls import patterns, url, include
 from myGarageApp import views
@@ -24,6 +24,8 @@ urlpatterns = patterns('',
     url(r'^service/$', carServices),
     url(r'^revisions/$', carRevisions),
     url(r'^taxes/$', carTaxes),
+    url(r'^insurances', carInsurances),
+    url(r'^ajaxView', ajaxView),
     url(r'^garage/$', garageView),
     url(r'^garage/(\d{1})/$', garageView),    
     url(r'^$', home_page),

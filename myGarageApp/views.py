@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 
@@ -413,7 +414,20 @@ def carTaxes(request):
     return render(request, 'carTaxes.html', {'taxes': taxes, 'deleteMsg': deleteMsg, })
 
 
-    
+def carInsurances(request):
+    return render_to_response('carInsurances.html', {},
+                          context_instance=RequestContext(request))
+
+def ajaxView(request):
+    if request.is_ajax():
+        message = "this is ajax"
+    else:
+        message = "this is not ajax"
+
+    #return HttpResponse(message)
+    return JsonResponse({'foo':'bar'})
+
+
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
 def user_logout(request):
