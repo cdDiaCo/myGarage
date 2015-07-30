@@ -45,7 +45,7 @@ class Car(models.Model):
     registration_number = models.CharField(max_length=30, blank=True, null=True)
     manufacturer_name   = models.CharField(max_length=30, verbose_name='Make')
     model_name          = models.CharField(max_length=30, verbose_name='Model') 
-    year_make           = models.IntegerField(max_length=4, verbose_name='Year of fabrication', null=True, blank=True)
+    year_make           = models.IntegerField(verbose_name='Year of fabrication', null=True, blank=True)
 
     fuel_type           = models.CharField(max_length=30, choices=FUEL_TYPES, default='Gasoline', verbose_name='Type of fuel', blank=True)    
     km_purchased        = models.IntegerField(verbose_name='Nr. of km when purchased', null=True, blank=True)

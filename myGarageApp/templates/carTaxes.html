@@ -1,0 +1,86 @@
+{% extends "garage.html" %}
+
+{% block head %}
+	   <script type="text/javascript">
+		   $(document).ready(function () {
+
+		        var hrefValue = "taxes";
+		        setItemMenuActive(hrefValue);
+		        setColumnsWidth();
+		        selectRow();
+
+		   });
+
+
+		   validationsArray = [];
+		   //digitsOnlyValidationArray = ['id_revision_cost'];
+		   //lettersOnlyValidationArray = ['id_observations', 'id_auto_service_name', 'id_itp'];
+
+	   </script>
+{% endblock %}
+
+{% block title %}Taxes{% endblock %}
+
+{% block operations %}
+    <input type="button" id="addRecord" onclick="addNewRow()" alt="Add new record" value="Add new row"/>
+
+
+    <table class="records">
+        <thead>
+            <tr>
+                <th>Tax begin date</th>
+                <th>Tax end date</th>
+                <th>Tax sum</th>
+                <th>Vignete</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+    <div class="tableDiv">
+        <table class="records">
+            <tbody>
+            {% if taxes %}
+                {% for record in taxes %}
+                    <tr>
+                        <td>
+                            <input class="recordsTextInput datepicker" type="text" value="{{ record.tax_begin_date }}" name="datepicker" readonly style=" width: 85%;">
+                            <input class="altDateField" type="hidden" name="revision_date">
+                            <input class="pk" type="hidden" name="pk_tax" value="{{ record.id }}">
+                        </td>
+                        <td><input class="recordsTextInput" type="text" name="tax_sum" value="{{ record.tax_sum }}" readonly></td>
+                        <td><input  class="recordsTextInput" type="text" name="vignete" value="{{ record.vignete }}" readonly></td>
+                        <td style="width:80px;">
+                            {% if record.itp == "yes" %}
+                                <select name="itp" class="recordsTextInput selectList">
+                                    <option value="yes" selected>yes</option>
+                                    <option value="no">no</option>
+                                </select>
+                            {% else %}
+                                <select name="itp" class="recordsTextInput selectList">
+                                    <option value="yes">yes</option>
+                                    <option value="no" selected>no</option>
+                                </select>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="rowOptions">
+                                <input type="button" class="saveRowBtn" onclick="saveRowFunction(event)" alt="Save record"/>
+                                <input type="button" class="deleteRowBtn" onclick="deleteRowFunction(event)" alt="Delete record"/>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr class="noRecords"><td>there are no taxes added for this car</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <form id="newForm" method="post" action="" onsubmit="return validateTempFields()">
+        {% csrf_token %}
+        <span id="id_tax_sum" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+        <span id="id_vignete" class='addNewRecordTip' onclick="closeValidationTip(this)"></span>
+    </form>
+{% endblock %}

@@ -23,6 +23,7 @@ function loadXMLDoc() {
 
 
 function setItemMenuActive(hrefValue) {
+    alert("in set active");
 	if(window.location.href.indexOf(hrefValue) > -1) {			       
        var selectedItemDiv = $('.imgListItemBinding').has('a[href="/'+hrefValue+'/"]');			       
        $(selectedItemDiv).attr('id', 'active');

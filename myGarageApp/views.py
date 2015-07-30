@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from myGarageApp.forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm
-from myGarageApp.models import Car, Cleaning, Refuelling, Service, Revision
+from myGarageApp.forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm, TaxForm
+from myGarageApp.models import Car, Cleaning, Refuelling, Service, Revision, Tax
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -369,7 +369,49 @@ def carServices(request):
 
     return render(request, 'carServices.html', {'services': services, 'deleteMsg': deleteMsg, })
 
-  
+
+@login_required
+def carTaxes(request):
+    if 'selectedCar' in request.session:
+        selectedCar = request.session['selectedCar']
+        car = Car.objects.get(id=selectedCar['id'])
+        taxes = Tax.objects.filter(car_id=selectedCar['id'])
+        deleteMsg = ""
+
+    if request.method == 'POST':
+        taxID = request.POST.get('pk_tax', 0)
+
+        try:
+            instance = Tax.objects.get(pk=taxID)
+        except:
+            tax_form = TaxForm(data=request.POST)
+        else:
+            tax_form = TaxForm(data=request.POST, instance=instance)
+
+        if tax_form.is_valid():
+            tax = tax_form.save(commit=False)
+            tax.car = car
+            tax.save()
+            return HttpResponseRedirect('/taxes/')
+        else:
+            print(tax_form.errors)
+            return HttpResponseRedirect('/taxes/')
+    elif request.method == 'DELETE':
+         index = request.body.find('=')
+         id = request.body[index+1:]
+         try:
+            instance = Tax.objects.get(pk=id)
+         except:
+             deleteMsg = "instance not found"
+         else:
+            instance.delete()
+            deleteMsg = "instance deleted"
+    else:
+        tax_form = TaxForm()
+
+    return render(request, 'carTaxes.html', {'taxes': taxes, 'deleteMsg': deleteMsg, })
+
+
     
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
