@@ -17,7 +17,7 @@
 {% block title %}Home page{% endblock %}
 
 {% block content %}
-<div id="base">
+
 
 	<div id="header" >
 	    <div id="headerContentWrapper">
@@ -46,12 +46,14 @@
 	
 
 
-	<div id="borderDiv" >	
+	<div id="borderDiv" >
+        <div id="curtain">
 		<div id="leftside">	  
 		   {% if registered %}
 		        <strong>thank you for registering!</strong> 	        
 		   {% else %}
-		        <h2>Sign up - it's fast and free </h2><br />
+		        <h2 style="text-align: center;">Sign up</h2>
+                <h3 style="text-align: center;">it's fast and free</h3><br>
 		
 		        <form class="register_form" method="post" action=""
 		                enctype="multipart/form-data">
@@ -76,9 +78,11 @@
 		            <input id="signUpBtn" type="submit" name="submit" value=" Sign up " />
 		        </form>
 		    {% endif %}
+            </div>
 		</div>	    
 		
 		<div id="rightside" >
+            <!--
 			<div id="slideshow"> 
 				<div id="slideshowWindow">
 				    <div class="slide">				
@@ -113,15 +117,15 @@
 					
 				</div>
 				
-			</div>
-			
-		
+			</div> -->
 		</div>			
 	</div>
+
+
 	<div id="footer">
 	
-	</div>		
-</div>
+	</div>
+
 
 {% endblock %}
 {% block footer %}
