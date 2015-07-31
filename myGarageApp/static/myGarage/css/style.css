@@ -136,10 +136,10 @@ h2{
 #header{
 	#background-color :red;
 	#background-color: #0f212c;
-	height:65px;
+	height:75px;
 	width: 100%;
 	margin: 0 auto 0;
-	box-shadow: 0 1px 1px #57636b;
+	#box-shadow: 0 1px 1px #57636b;
 	color: white;
 	padding: 5px 0 0;
 }
@@ -192,7 +192,7 @@ label {
     #background-color: yellow;
     width: 180px;
     height:25px;
-    margin: 0px 0 0 0;
+    margin: 20px 0 0 0;
     float:left;    
     
 }
@@ -202,7 +202,7 @@ label {
     width: 180px;
     height:25px;
 	float:left;
-	margin: 0px 0 0 3px;		
+	margin: 20px 0 0 3px;
 }
 
 #login_button{	
@@ -224,7 +224,7 @@ label {
     left: 0;
     float: left;
 	#color: #7d8c63;	
-	color: white;
+	color: #E58700;
 	font-size: 35px;
 	font-weight: bold;	
 	text-shadow: 2px 2px black;
@@ -232,7 +232,7 @@ label {
 
 #base{	
 	height:680px;
-	background-color: green;
+	#background-color: green;
 	#background-color: #0f212c;
 	min-width:1200px;
 	position: relative;
@@ -241,13 +241,15 @@ label {
 }
 
 #borderDiv{    
-	width: 1213px;
-	height:500px;
-	#background-color:white;
-	margin: 10px auto 0;
+	width: 100%;
+	min-width : 1280px;
+	height:560px;
+	background-color:white;
+	margin: 0 auto 0;
 	#border-color: #f9fafc;
-	background-image: url("../img/new_colaj.png");
+	background-image: url("../img/new_colaj2.png");
 	background-repeat:no-repeat;
+	background-position: center;
 }
 
 #curtain {
@@ -256,13 +258,14 @@ label {
     background-color: rgba(15,33,44, 0.8);
 }
 
-#leftside{
+#registrationDiv{
     background-color: #f3f5f7;
 	width: 410px;
 	height: 390px;
-	float:left;	
 	padding: 25px 55px;
-	margin: 50px 0 30px 0;
+	position: relative;
+	top: 60px;
+	left: 35%;
 }
 
 .register_form > input[type=text], 
@@ -275,7 +278,7 @@ label {
 	padding: 8px 10px;
 	font-size: 18px;	
 	border-radius: 3px;	
-	box-shadow: 0px 0px 1px #7d8c63;
+	box-shadow: 0px 0px 1px #9fa6aa;
 }
 
 input[type=text].validationAlert, input[type=password].validationAlert {
@@ -288,7 +291,7 @@ input[type=text].validationAlert, input[type=password].validationAlert {
 
 input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	background-image: none;
-	border: 1px solid #b9c3a8;
+	border: 1px solid #9fa6aa;
 }
 
 #carRegister input[type=text] {
@@ -312,13 +315,6 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	word-wrap: normal;	
 }
 
-#rightside{	 
-    position: relative;	 
-	height:95%;
-	width: 560px;
-	float: right;
-	margin: 0;		
-}
 
 #slideshow {
 	width:550px;
@@ -640,16 +636,20 @@ div.arrow {
 
 
 #footer {
-	#background-color: blue;
-	#background-color: #0f212c;
+	color:white;
 	width: 100%;
-	height:80px;
-	position:  relative;
-	box-shadow: 0 -1px 1px #57636b;
-	
+	height:30px;
+	#box-shadow: 0 -1px 1px #57636b;
+	text-align: center;
 }
 
 
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+
+#copyright_span {
+    position:relative;
+    top: 10px;
 }
