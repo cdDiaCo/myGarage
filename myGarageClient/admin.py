@@ -1,7 +1,7 @@
 
 # Register your models here.
 from django.contrib import admin
-from myGarageApp.models import Car, Refuelling, Cleaning, Service, Revision, Tax, Insurance, Tyre
+from myGarageClient.models import Car, Refuelling, Cleaning, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 

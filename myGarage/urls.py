@@ -1,8 +1,8 @@
-from myGarageApp.views import user_logout, home_page, addNewCar, garageView, carCleanings, carRefuellings, carServices, \
+from myGarageClient.views import user_logout, home_page, addNewCar, garageView, carCleanings, carRefuellings, carServices, \
     carRevisions, carTaxes, ajaxView, carInsurances
 from django.contrib import admin
 from django.conf.urls import patterns, url, include
-from myGarageApp import views
+from myGarageClient import views
 from django.conf.urls import include
 admin.autodiscover()
 

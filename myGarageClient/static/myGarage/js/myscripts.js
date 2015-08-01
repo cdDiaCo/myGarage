@@ -63,10 +63,23 @@ function addValidation() {
   	  }		  	
     }		  
   		  	
-    $(".pop").popover({ trigger: 'click', html: 'true'});
+    $('pop').click(popover(elements));
     $('.validationAlert').filter(':visible:first').focus();	
 }
 
+
+function popover(elements){
+    console.log("in popover");
+    for (index = 0; index < elements.length; ++index) {
+        var popoverDiv = document.createElement("div");
+        popoverDiv.style.backgroundColor = "pink";
+        var position = elements[index].getBoundingClientRect();
+        popoverDiv.style.left = (position.left + 20) + 'px';
+        popoverDiv.style.top = (position.top - 30) + 'px';
+        document.getElementById("registrationDiv").appendChild(popoverDiv);
+    }
+
+}
 
 function addNewRow() {
     //if the car has no records, remove the no records message and add a new row

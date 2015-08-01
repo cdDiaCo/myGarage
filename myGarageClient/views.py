@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from myGarageApp.forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm, TaxForm
-from myGarageApp.models import Car, Cleaning, Refuelling, Service, Revision, Tax
+from myGarageClient.forms import CarForm,UserForm, AddNewCar, RefuellingForm, CleaningForm, ServiceForm, RevisionForm, TaxForm
+from myGarageClient.models import Car, Cleaning, Refuelling, Service, Revision, Tax
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login

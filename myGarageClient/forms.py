@@ -1,4 +1,4 @@
-from myGarageApp.models import UserProfile, Car, Cleaning, Refuelling, Service, Revision, Tax, Insurance, Tyre
+from myGarageClient.models import UserProfile, Car, Cleaning, Refuelling, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
