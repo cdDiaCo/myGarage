@@ -2,8 +2,28 @@
 
 {% block head %}
 	  {% load staticfiles %}
-	   <script type="text/javascript">   
-	   
+	   <script type="text/javascript">
+           var userID = {{ userID }}
+           console.log('User ID = ' + userID);
+           var userCars;
+
+          $(document).ready(function () {
+                var carNum = 0;
+                $.get("/cars/user/" + userID + "/", function (result) {
+                    //console.log(JSON.stringify(result));
+                    var options = $('#userCars');
+                    $.each(result, function() {
+                        carNum ++;
+                        options.append($("<option />").val(this.carID).text(this.manufacturer_name+" "+this.model_name));
+                    });
+                    if(carNum > 1){
+                        $('#carNum').text('My cars');
+                    }
+                    else {
+                        $('#carNum').text('My car');
+                    }
+                });
+          });
 	   
 	   </script>	 
 {% endblock %}
@@ -14,47 +34,23 @@
 
 	
 	
-	<div id="base">
+
          <div id="header">
              <div id="carOptions">
-                <a href="/logout/" style="color:white;">Click here to logout</a>
-                <br>
-                <strong> My car{{ cars|pluralize }}</strong>
-
-                <select id="selectedCar" onchange="loadXMLDoc()">
-                     {% if firstTime %}
-                            <option selected="selected">Select a car</option>
-                     {% endif %}
-                     {% for car in cars %}
-                         <option value="{{ forloop.counter0 }}"
-                             {% if selectedCarValue and forloop.counter0 == selectedCarValue %} selected="selected" {% endif %}  >
-                                 {{ car.manufacturer_name }} {{ car.model_name }} </option>
-                     {% endfor %}
+                <a href="/logout/">Click here to logout</a><br>
+                <span id="carNum"></span>
+                <select id="userCars" style="color:black;">
                 </select>
              </div>
 	     </div>
 
         <div id="borderDiv">
             <div id="garageLeft" >
-                <ul id="navlist">
+                <div id="navlist">
 
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/gas_station.png' %}">
-                        <li><a href="/refuellings/">Refuellings</a></li>
-                        <div class="arrow"></div>
-                    </div>
-
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/carWash.png' %}">
-                        <li><a href="/cleanings/">Cleanings</a></li>
-                        <div class="arrow"></div>
-                    </div>
-
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/wrench.png' %}">
-                        <li><a href="/service/">Service</a></li>
-                        <div class="arrow"></div>
-                    </div>
+                    <button type="button" id="refuellingsButton" class="sectionsButton">Refuellings</button>
+                    <button type="button" id="cleaningsButton" class="sectionsButton">Cleanings</button>
+                    <button type="button" id="serviceButton" class="sectionsButton">Service</button>
 
                     <div class="imgListItemBinding">
                         <img class="menuImgs" src="{% static 'myGarage/img/revision.png' %}">
@@ -80,23 +76,21 @@
                         <div class="arrow"></div>
                     </div>
 
-                </ul>
+                </div>
             </div>
 
             <div id="garageRight">
                <div id="operations">
-                   {% block operations %}
                         detalii despre masina sau statistici generale ale masinii/userului
-                   {% endblock %}
                </div>
-
             </div>
+
         </div>
 
         <div id="footer">
             {% block footer %} {% endblock %}
         </div>
-	</div>
+
 	    
 	    
 

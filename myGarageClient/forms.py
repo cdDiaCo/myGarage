@@ -1,28 +1,28 @@
-# from myGarageClient.models import UserProfile, Car, Cleaning, Refuelling, Service, Revision, Tax, Insurance, Tyre
-# from django.contrib.auth.models import User
-# from django.contrib.auth.forms import UserCreationForm
-# from django import forms
+from myGarageApi.models import Car
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 #
-# class UserForm(UserCreationForm):
-#     class Meta:
-#         model = User
-#         fields = ('username', 'first_name')
-#
-#     def getRegisterFormKeys(self):
-#         return ('username', 'password1', 'password2')
-#
-#
-# class CarForm(forms.ModelForm):
-#     class Meta:
-#         model = Car
-#         fields = ('manufacturer_name', 'model_name')
-#         widgets = {
-#             'manufacturer_name': forms.TextInput(attrs={'placeholder': 'Car make'}),
-#             'model_name': forms.TextInput(attrs={'placeholder': 'Car model'}),
-#         }
-#
-#     def getKeys(self):
-#         return ('manufacturer_name', 'model_name')
+class UserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name')
+
+    def getRegisterFormKeys(self):
+        return ('username', 'password1', 'password2')
+
+
+class CarForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = ('manufacturer_name', 'model_name')
+        widgets = {
+            'manufacturer_name': forms.TextInput(attrs={'placeholder': 'Car make'}),
+            'model_name': forms.TextInput(attrs={'placeholder': 'Car model'}),
+        }
+
+    def getKeys(self):
+        return ('manufacturer_name', 'model_name')
 #
 #
 # class UserProfileForm(forms.ModelForm):
