@@ -10,8 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 
-
-def home_page(request):  
+def first_page(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect("/garage/")
     
@@ -84,6 +83,8 @@ def home_page(request):
     
 @login_required
 def garageView(request, offset=False):
+
+    """
     user = request.user    
     selectedCarValue = False
     firstTime = True
@@ -118,13 +119,15 @@ def garageView(request, offset=False):
                 'vin': cars[x].vin
             }              
         request.session['user_cars'] = userCars      
-                
+
     return render(request, 'garage.html', {
         'user': user, 
         'cars': cars, 
         'selectedCarValue': selectedCarValue, 
         'firstTime': firstTime
     })
+"""
+    return render(request, 'garage.html', {'userID': request.user.id })
         
             
         
@@ -418,14 +421,17 @@ def carInsurances(request):
     return render_to_response('carInsurances.html', {},
                           context_instance=RequestContext(request))
 
-def ajaxView(request):
+
+def getCars(request, offset=False):
     if request.is_ajax():
         message = "this is ajax"
     else:
         message = "this is not ajax"
 
-    #return HttpResponse(message)
-    return JsonResponse({'foo':'bar'})
+    response = {}
+    response['firstCar'] = {'carID': '1', 'registration_number': '1233', 'manufacturer_name': 'Dacia', 'model_name': 'Logan'}
+    response['secCar'] = {'carID': '2', 'registration_number': '444', 'manufacturer_name': 'Dacia', 'model_name': 'Duster'}
+    return JsonResponse(response)
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
