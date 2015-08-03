@@ -575,45 +575,11 @@ div.diminishedBorderShade {
 
 #navlist{
     width: 200px;
-    list-style-type: none;   
-    #color: #7d8c63;
     margin-left: 50px;
     margin-top: 20px;
-    
+    position: relative;
 }
 
-li a:link, a:visited  {
-    text-decoration: none;
-    color: #7d8c63;        
-}
-
-li a:hover {
-    text-decoration: none;
-    #color: #7d8c63;
-    color: #e58700;
-    #background-color: #E1E3E6; 
-    #background-color: #d5d8dc;
-}
-
-li a:active {
-    text-decoration: none;
-    color: #7d8c63;           
-}
-
-li a  {   
-    display: block;      
-    font-size: 20px;
-    border-bottom: 1px solid #7d8c63;
-    width: 160px;
-    height: 45px;
-    padding: 7px 30px;
-    text-align:left;    
-    color: #7d8c63;    
-}
-
-.imgListItemBinding {
-	position:relative;
-}
 
 #active a {
 	width:180px;
@@ -625,12 +591,13 @@ div.arrow {
 	width: 0; 
 	height: 0; 
 	border-top: 22.5px solid transparent;
-	border-bottom: 22.5px solid transparent;	
-	border-left: 22.5px solid  #41535E;
+	border-bottom: 22.5px solid transparent;
+	border-left: 22.5px solid  #24343E;
 	position: absolute;
-	top: 0px;
-	left: 180px;	
-	visibility: hidden;	
+	top: 2px;
+	left: 200px;
+	visibility: hidden;
+	z-index: 20;
 }
 
 
@@ -672,19 +639,79 @@ input:-webkit-autofill {
     #border: 1px solid #24343E;
     outline: none;
     text-align: left;
-    padding-left: 25px;
+    padding-left: 48px;
     font-size: 20px;
     color: #24343E;
+    #position: relative;
+}
+
+.sectionsButton:hover {
+    color: #e58700;
+}
+
+.sectionsButton.active {
+    color: white;
+    border-right: none;
 }
 
 #refuellingsButton {
-    background: transparent url('../img/gas_station.png') no-repeat left center;
+    background: transparent url('../img/fuel.gif') no-repeat left center;
+}
+
+#refuellingsButton.active {
+    background:  #24343E url('../img/fuel.gif') no-repeat left center;
 }
 
 #cleaningsButton {
-    background: transparent url('../img/carWash.png') no-repeat left center;
+    background: transparent url('../img/wash2.png') no-repeat left center;
+}
+
+#cleaningsButton.active {
+    background: #24343E url('../img/wash2.png') no-repeat left center;
 }
 
 #serviceButton {
     background: transparent url('../img/wrench.png') no-repeat left center;
+}
+
+#serviceButton.active {
+    background: #24343E url('../img/wrench.png') no-repeat left center;
+}
+
+#revisionsButton {
+    background: transparent url('../img/revision.png') no-repeat left center;
+}
+
+#revisionsButton.active {
+    background: #24343E url('../img/revision.png') no-repeat left center;
+}
+
+#taxesButton {
+    background: transparent url('../img/color_dollar.png') no-repeat left center;
+}
+
+#taxesButton.active {
+    background: #24343E url('../img/color_dollar.png') no-repeat left center;
+}
+
+#insurancesButton  {
+    background: transparent url('../img/color_umbrella.png') no-repeat left center;
+}
+
+
+#insurancesButton.active {
+    background: #24343E url('../img/color_umbrella.png') no-repeat left center;
+}
+
+
+#tyresButton {
+    background: transparent url('../img/tyre.png') no-repeat left center;
+}
+
+#tyresButton.active {
+    background: #24343E url('../img/tyre.png') no-repeat left center;
+}
+
+.arrowBtnBinding {
+    position:relative;
 }

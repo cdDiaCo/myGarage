@@ -8,6 +8,7 @@
            var userCars;
 
           $(document).ready(function () {
+          /*
                 var carNum = 0;
                 $.get("/cars/user/" + userID + "/", function (result) {
                     //console.log(JSON.stringify(result));
@@ -23,7 +24,69 @@
                         $('#carNum').text('My car');
                     }
                 });
+          */
+
+                getUserCars();
+
+                function getUserCars() {
+                    var carNum = 0;
+                    $.ajax({type:"GET", url: "/api/v1/cars/"})
+                        .fail(function(resp){
+                            console.log('bad credentials.');
+                        })
+                        .done(function(resp){
+                            //console.log(resp.count);
+                            //console.log(resp.results);
+                            carNum = resp.count;
+                            var options = $('#userCars');
+                            $.each(resp.results, function() {
+                                //console.log(this);
+                                options.append($("<option />").val(this.pk).text(this.manufacturer_name+" "+this.model_name));
+                            });
+                            if(carNum>1) {
+                                $('#carNum').text('My cars');
+                            } else {
+                                $('#carNum').text('My car');
+                            }
+                        });
+                }
+
           });
+
+
+
+
+
+
+          function setButtonActive(elem) {
+                deactivateButtons();
+                $(elem).addClass('active');
+                var elemID = $(elem).attr('id');
+                $('.arrow.' + elemID).css('visibility', 'visible');
+          }
+
+          function deactivateButtons() {
+                var buttons  = $('.sectionsButton');
+                var arrows = $('.arrow');
+                var id;
+                //console.log(buttons);
+                $.each(buttons, function(){
+                    if($(this).hasClass("active")) {
+                        //console.log(this);
+                        $(this).removeClass("active");
+                        id = $(this).attr('id');
+                        return;
+                    }
+                });
+
+                $.each(arrows, function(){
+                    if($(this).hasClass(""+id)){
+                        //console.log(this);
+                        $(this).css('visibility', 'hidden');;
+                        return;
+                    }
+                });
+          }
 	   
 	   </script>	 
 {% endblock %}
@@ -47,33 +110,39 @@
         <div id="borderDiv">
             <div id="garageLeft" >
                 <div id="navlist">
-
-                    <button type="button" id="refuellingsButton" class="sectionsButton">Refuellings</button>
-                    <button type="button" id="cleaningsButton" class="sectionsButton">Cleanings</button>
-                    <button type="button" id="serviceButton" class="sectionsButton">Service</button>
-
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/revision.png' %}">
-                        <li><a href="/revisions/">Revisions</a></li>
-                        <div class="arrow"></div>
+                    <div class="arowBtnBinding">
+                        <button type="button" id="refuellingsButton" class="sectionsButton" onclick="setButtonActive(this);">Refuellings</button>
+                        <div class="arrow refuellingsButton"></div>
                     </div>
 
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/taxes.png' %}">
-                        <li><a href="/taxes/">Taxes</a></li>
-                        <div class="arrow"></div>
+                    <div class="arrowBtnBinding">
+                        <button type="button" id="cleaningsButton" class="sectionsButton" onclick="setButtonActive(this);">Cleanings</button>
+                        <div class="arrow cleaningsButton"></div>
                     </div>
 
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/umbrella.png' %}">
-                        <li><a href="/insurances/">Insurances</a></li>
-                        <div class="arrow"></div>
+                    <div class="arrowBtnBinding">
+                        <button type="button" id="serviceButton" class="sectionsButton" onclick="setButtonActive(this);">Service</button>
+                        <div class="arrow serviceButton"></div>
                     </div>
 
-                    <div class="imgListItemBinding">
-                        <img class="menuImgs" src="{% static 'myGarage/img/wheel.png' %}">
-                        <li><a href="//">Tyres</a></li>
-                        <div class="arrow"></div>
+                    <div class="arrowBtnBinding">
+                        <button type="button" id="revisionsButton" class="sectionsButton" onclick="setButtonActive(this);">Revisions</button>
+                        <div class="arrow revisionsButton"></div>
+                    </div>
+
+                    <div class="arrowBtnBinding">
+                        <button type="button" id="taxesButton" class="sectionsButton" onclick="setButtonActive(this);">Taxes</button>
+                        <div class="arrow taxesButton"></div>
+                    </div>
+
+                    <div class="arrowBtnBinding">
+                        <button type="button" id="insurancesButton" class="sectionsButton" onclick="setButtonActive(this);">Insurances</button>
+                        <div class="arrow insurancesButton"></div>
+                    </div>
+
+                    <div class="arrowBtnBinding">
+                        <button type="button" id="tyresButton" class="sectionsButton" onclick="setButtonActive(this);">Tyres</button>
+                        <div class="arrow tyresButton"></div>
                     </div>
 
                 </div>
