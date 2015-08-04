@@ -449,15 +449,17 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	margin: 0px;
 }
 
-#garageRight {
+#garageContent {
 	height:400px;
-	width: 930px;
-	float: left;
-	position: relative;
-	margin: 20px 0px 0px 10px;
-	padding:0;
+	width: 990px;
 	background-color: white;
-	
+}
+
+#garageContentContainer {
+    background-color: yellow;
+    height: 400px;
+    width: 990px;
+    margin: -20px auto 0;
 }
 
 .deleteRowBtn {
@@ -677,16 +679,17 @@ input:-webkit-autofill {
 }
 
 .sectionsButton {
-    width: 200px;
-    height: 40px;
-    #border: 1px solid #24343E;
+    #background-color:  #E9EAEB;
+    width: 135px;
+    height: 60px;
     outline: none;
     text-align: left;
     padding-left: 35px;
     font-size: 20px;
     color: #24343E;
-    #position: relative;
-    border: none;
+    border: 1px solid #babbbc;
+    border-radius: 3px;
+    margin:0;
 }
 
 .sectionsButton:hover {
@@ -699,7 +702,7 @@ input:-webkit-autofill {
 }
 
 #refuellingsButton {
-    background: transparent url('../img/refueling2.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/refueling2.png') no-repeat 9px 9px;
 }
 
 #refuellingsButton.active, #refuellingsButton:hover {
@@ -707,7 +710,7 @@ input:-webkit-autofill {
 }
 
 #cleaningsButton {
-    background: transparent url('../img/wash2.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/wash2.png') no-repeat 9px 9px;
 }
 
 #cleaningsButton.active, #cleaningsButton:hover {
@@ -715,7 +718,7 @@ input:-webkit-autofill {
 }
 
 #serviceButton {
-    background: transparent url('../img/service2.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/service2.png') no-repeat 9px 9px;
 }
 
 #serviceButton.active, #serviceButton:hover {
@@ -723,7 +726,7 @@ input:-webkit-autofill {
 }
 
 #revisionsButton {
-    background: transparent url('../img/revisions2.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/revisions2.png') no-repeat 9px 9px;
 }
 
 #revisionsButton.active {
@@ -731,7 +734,7 @@ input:-webkit-autofill {
 }
 
 #taxesButton {
-    background: transparent url('../img/dollar3.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/dollar3.png') no-repeat 9px 9px;
 }
 
 #taxesButton.active {
@@ -739,7 +742,7 @@ input:-webkit-autofill {
 }
 
 #insurancesButton  {
-    background: transparent url('../img/umbrella2.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/umbrella2.png') no-repeat 9px 9px;
 }
 
 
@@ -749,7 +752,7 @@ input:-webkit-autofill {
 
 
 #tyresButton {
-    background: transparent url('../img/tyre2.png') no-repeat 9px 9px;
+    background:  #E9EAEB url('../img/tyre2.png') no-repeat 9px 9px;
 }
 
 #tyresButton.active {
@@ -839,4 +842,23 @@ input:-webkit-autofill {
     top: 0px;
     padding-top: 15px;
     font-size: 0.9em;
+}
+
+#buttonsMenu {
+    width: 975px;
+    height: 60px;
+    #background-color: #E9EAEB;
+    position: relative;
+    top: 10px;
+    margin: 10px auto 0;
+    padding:0;
+
+}
+
+#bottonsMenuContainer {
+    background-color: white;
+    width: 990px;
+    height: 80px;
+    margin: 10px auto 0;
+
 }
