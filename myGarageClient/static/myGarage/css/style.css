@@ -1,15 +1,51 @@
 /*CSS RESET*/
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
+del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 /*End RESET - Begin Full Width CSS*/
@@ -127,6 +163,8 @@ html {
 
 body {
     height: 100%;
+    font-family: "Times New Roman", Times, serif;
+    background-color: #e9eaeb;
 }
 
 h2{	
@@ -149,8 +187,9 @@ h2{
 
 
 #headerContentWrapper {
-	width: 1120px;
+	width: 800px;
 	height:70px;
+	position:relative;
 	margin: 0 auto;
 	padding:0;
 	#background-color:red;
@@ -158,10 +197,12 @@ h2{
 }
 
 #carOptions  {
-	height: 40px;
-	width: 200px;
-	float: right;	
-	margin: 5px 20px 0 0;
+	height: 50px;
+	width: 215px;
+	position: absolute;
+	right:0px;
+	top: 15px;
+	#margin: 5px 20px 0 0;
     color: white;
 }
 
@@ -412,6 +453,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	height:400px;
 	width: 930px;
 	float: left;
+	position: relative;
 	margin: 20px 0px 0px 10px;
 	padding:0;
 	background-color: white;
@@ -575,8 +617,8 @@ div.diminishedBorderShade {
 
 #navlist{
     width: 200px;
-    margin-left: 50px;
-    margin-top: 20px;
+    left: 50px;
+    top: 20px;
     position: relative;
 }
 
@@ -587,19 +629,20 @@ div.diminishedBorderShade {
 	color: white;
 }
 
+/*
 div.arrow {
 	width: 0; 
 	height: 0; 
 	border-top: 22.5px solid transparent;
 	border-bottom: 22.5px solid transparent;
-	border-left: 22.5px solid  #24343E;
+	border-left: 22.5px solid  #a7adb1;
 	position: absolute;
 	top: 2px;
 	left: 200px;
 	visibility: hidden;
 	z-index: 20;
 }
-
+*/
 
 .menuImgs {
 	position:absolute;
@@ -635,83 +678,165 @@ input:-webkit-autofill {
 
 .sectionsButton {
     width: 200px;
-    height: 45px;
+    height: 40px;
     #border: 1px solid #24343E;
     outline: none;
     text-align: left;
-    padding-left: 48px;
+    padding-left: 35px;
     font-size: 20px;
     color: #24343E;
     #position: relative;
+    border: none;
 }
 
 .sectionsButton:hover {
-    color: #e58700;
+    #color: #e58700;
 }
 
 .sectionsButton.active {
-    color: white;
-    border-right: none;
+     border-style: inset;
+     border-width: 2px;
 }
 
 #refuellingsButton {
-    background: transparent url('../img/fuel.gif') no-repeat left center;
+    background: transparent url('../img/refueling2.png') no-repeat 9px 9px;
 }
 
-#refuellingsButton.active {
-    background:  #24343E url('../img/fuel.gif') no-repeat left center;
+#refuellingsButton.active, #refuellingsButton:hover {
+    background: #e2e2e2 url('../img/refueling2.png') no-repeat 9px 9px;
 }
 
 #cleaningsButton {
-    background: transparent url('../img/wash2.png') no-repeat left center;
+    background: transparent url('../img/wash2.png') no-repeat 9px 9px;
 }
 
-#cleaningsButton.active {
-    background: #24343E url('../img/wash2.png') no-repeat left center;
+#cleaningsButton.active, #cleaningsButton:hover {
+    background: #e2e2e2 url('../img/wash2.png') no-repeat 9px 9px;
 }
 
 #serviceButton {
-    background: transparent url('../img/wrench.png') no-repeat left center;
+    background: transparent url('../img/service2.png') no-repeat 9px 9px;
 }
 
-#serviceButton.active {
-    background: #24343E url('../img/wrench.png') no-repeat left center;
+#serviceButton.active, #serviceButton:hover {
+    background: #e2e2e2 url('../img/service2.png') no-repeat 9px 9px;
 }
 
 #revisionsButton {
-    background: transparent url('../img/revision.png') no-repeat left center;
+    background: transparent url('../img/revisions2.png') no-repeat 9px 9px;
 }
 
 #revisionsButton.active {
-    background: #24343E url('../img/revision.png') no-repeat left center;
+    background: #a7adb1 url('../img/revisions2.png') no-repeat 9px 9px;
 }
 
 #taxesButton {
-    background: transparent url('../img/color_dollar.png') no-repeat left center;
+    background: transparent url('../img/dollar3.png') no-repeat 9px 9px;
 }
 
 #taxesButton.active {
-    background: #24343E url('../img/color_dollar.png') no-repeat left center;
+    background: #a7adb1 url('../img/dollar3.png') no-repeat 9px 9px;
 }
 
 #insurancesButton  {
-    background: transparent url('../img/color_umbrella.png') no-repeat left center;
+    background: transparent url('../img/umbrella2.png') no-repeat 9px 9px;
 }
 
 
 #insurancesButton.active {
-    background: #24343E url('../img/color_umbrella.png') no-repeat left center;
+    background: #a7adb1 url('../img/umbrella2.png') no-repeat 9px 9px;
 }
 
 
 #tyresButton {
-    background: transparent url('../img/tyre.png') no-repeat left center;
+    background: transparent url('../img/tyre2.png') no-repeat 9px 9px;
 }
 
 #tyresButton.active {
-    background: #24343E url('../img/tyre.png') no-repeat left center;
+    background: #a7adb1 url('../img/tyre2.png') no-repeat 9px 9px;
 }
 
 .arrowBtnBinding {
     position:relative;
+}
+
+#headerContentWrapper_garage {
+    width: 990px;
+	height:70px;
+	position:relative;
+	margin: 0 auto;
+	padding:0;
+	#background-color:red;
+}
+
+#logoDivContainer {
+    #background-color:red;
+    width: 180px;
+    height:50px;
+    position:absolute;
+    top:10px;
+    left:0;
+}
+
+#logoDiv {
+    #background-color: red;
+    width: 180px;
+    height: 50px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 0;
+    #font-family: "Times New Roman", Times, serif;
+    color:orange;
+    font-size:38px;
+    margin-top:0;
+}
+
+#enterShape_top {
+    background-color: white;
+    width: 35px;
+    height: 30px;
+    position: relative;
+    top:5px;
+    left:35px;
+    border: 1px solid white;
+    border-radius: 3px;
+}
+
+#enterShape_bottom {
+    background-color: white;
+    width: 56px;
+    height: 20px;
+    position: absolute;
+    left: 14px;
+    top: 25px;
+    border: 1px solid white;
+    border-radius: 3px;
+
+}
+
+#enterDiv {
+    #background-color: pink;
+    color: #24343E;
+    width: 70px;
+    height: 45px;
+    position: absolute;
+    top:5px;
+    left:0;
+    font-size: 0.7em;
+    text-align: right;
+    padding-top:14px;
+    padding-right: 2px;
+    z-index: 20;
+}
+
+#garageDiv {
+    #background-color: blue;
+    height: 45px;
+    width: 110px;
+    position: absolute;
+    left: 70px;
+    top: 0px;
+    padding-top: 15px;
+    font-size: 0.9em;
 }

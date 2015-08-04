@@ -21,7 +21,16 @@
 <div id="base">
 	<div id="header" >
 	    <div id="headerContentWrapper">
-		<h2 id="appMotto"> Enter<small style="color:white;">your online</small>Garage </h2>
+            <!--
+		<h2 id="appMotto"> Enter<small style="color:white;">your online</small>Garage </h2> -->
+            <div id="logoDivContainer">
+            <div id="logoDiv">
+                 <div id="enterShape_top"></div>
+                 <div id="enterShape_bottom"></div>
+                 <div id="enterDiv">enter</div>
+                 <div id="garageDiv">Garage</div>
+             </div>
+            </div>
 		    <div id="login">	    
 			<form id="login_form" method="post" action="">
 		        {% csrf_token %}
