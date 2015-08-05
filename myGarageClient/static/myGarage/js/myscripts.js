@@ -390,61 +390,7 @@ function validateTempFieldsByType(validationTypeArg) {
 
 
 
-function initializeSlideShow() {
-	var currentPosition = 0;
-	var slideWidth = 550;
-	var slides = $('.slide');
-	var numberOfSlides = slides.length;
-	var slideShowInterval;
-	var speed = 4000;		
-	
-	slideShowInterval = setInterval(changePosition, speed);				
-	slides.wrapAll('<div id="slidesHolder"></div>');				
-	slides.css({ 'float' : 'left' });		
-	$('#slidesHolder').css('width', slideWidth * numberOfSlides);
-	manageNav(currentPosition);	
-	
 
-
-	$('.nav').bind('click', function() {
-				
-		//determine new position
-		currentPosition = ($(this).attr('id')=='rightNav') ? currentPosition+1 : currentPosition-1;
-									
-		//hide/show controls
-		manageNav(currentPosition);
-		clearInterval(slideShowInterval);
-		slideShowInterval = setInterval(changePosition, speed);
-		moveSlide();
-	});
-	
-	function changePosition() {
-		if(currentPosition == numberOfSlides - 1) {
-			currentPosition = 0;
-			manageNav(currentPosition);
-		} else {
-			currentPosition++;
-			manageNav(currentPosition);
-		}
-		moveSlide();
-	}
-	
-	function moveSlide() {						
-			$('#slidesHolder')
-	  			.animate({'marginLeft' : slideWidth*(-currentPosition)});						  						
-	}
-	
-	function manageNav(position) {
-		//hide left arrow if position is first slide
-		if(position==0){ $('#leftNav').hide() }
-		else { $('#leftNav').show() }
-		//hide right arrow is slide position is last slide
-		if(position==numberOfSlides-1){ $('#rightNav').hide() }
-		else { $('#rightNav').show() }
-	} 
-				
-
-}
 
 
 function getCookie(name) {
@@ -640,4 +586,96 @@ function saveRowFunction(e) {
 
        $('#newForm').submit();
     }
+}
+
+
+
+function setButtonActive(elem) {
+    deactivateButtons();
+    $(elem).addClass('active');
+}
+
+function deactivateButtons() {
+    var buttons  = $('.sectionsButton');
+    var id;
+    //console.log(buttons);
+    $.each(buttons, function(){
+        if($(this).hasClass("active")) {
+            //console.log(this);
+            $(this).removeClass("active");
+            return;
+        }
+    });
+}
+
+
+ function getUserCars() {
+    var carNum = 0;
+    $.ajax({type:"GET", url: "/api/v1/cars/"})
+        .fail(function(resp){
+            console.log('bad credentials.');
+        })
+        .done(function(resp){
+            carNum = resp.count;
+            var options = $('#userCars');
+            $.each(resp.results, function() {
+                options.append($("<option />").val(this.pk).text(this.manufacturer_name+" "+this.model_name));
+            });
+            if(carNum>1) {
+                $('#carNum').text('My cars');
+            } else {
+                $('#carNum').text('My car');
+            }
+
+            $('#refuellingsButton').addClass('active');
+            generateTable();
+        });
+}
+
+function generateTable() {
+    // check what section button has the active class
+    //generate table for that section
+    var sectionBtn = $('.sectionsButton.active');
+    var sectionID = $(sectionBtn).attr('id');
+    sectionID = "RefillingsButton";
+    var index = sectionID.indexOf("Button");
+    var sectionName = sectionID.substring(0, index);
+    sectionName = sectionName.toLowerCase();
+    console.log(sectionName);
+    getTableRecords(sectionName);
+
+
+}
+
+function getTableRecords(sectionName) {
+     $.ajax({type:"GET", url: "/api/v1/"+sectionName+"/"})
+        .fail(function(resp){
+            console.log('bad credentials.');
+        })
+        .done(function(resp){
+            if(!resp.count){
+                var message = "there are no "+ sectionName+ " records yet";
+                 $('#garageContent').append(message);
+            }
+            else {
+                var tableHead = $('#tableRecords thead').append($('<tr>'));
+                var tableHeadCellsAdded = false;
+
+                $.each(resp.results, function() {
+                    var newRow = $('#tableRecords tbody').append($('<tr>'));
+                    for (var key in this) {
+                      if(!tableHeadCellsAdded) {
+                          tableHead.append($('<th>').text(""+key));
+                      }
+                      newRow.append($('<td>')
+                          .append($('<input>')
+                               .prop('type', 'text')
+                               .attr('name', key)
+                      ));
+                    }
+                    tableHeadCellsAdded = true;
+                });
+            }
+        });
+
 }

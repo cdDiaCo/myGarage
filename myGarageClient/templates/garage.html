@@ -3,90 +3,11 @@
 {% block head %}
 	  {% load staticfiles %}
 	   <script type="text/javascript">
-           var userID = {{ userID }}
-           console.log('User ID = ' + userID);
-           var userCars;
-
           $(document).ready(function () {
-          /*
-                var carNum = 0;
-                $.get("/cars/user/" + userID + "/", function (result) {
-                    //console.log(JSON.stringify(result));
-                    var options = $('#userCars');
-                    $.each(result, function() {
-                        carNum ++;
-                        options.append($("<option />").val(this.carID).text(this.manufacturer_name+" "+this.model_name));
-                    });
-                    if(carNum > 1){
-                        $('#carNum').text('My cars');
-                    }
-                    else {
-                        $('#carNum').text('My car');
-                    }
-                });
-          */
-
                 getUserCars();
-
-                function getUserCars() {
-                    var carNum = 0;
-                    $.ajax({type:"GET", url: "/api/v1/cars/"})
-                        .fail(function(resp){
-                            console.log('bad credentials.');
-                        })
-                        .done(function(resp){
-                            //console.log(resp.count);
-                            //console.log(resp.results);
-                            carNum = resp.count;
-                            var options = $('#userCars');
-                            $.each(resp.results, function() {
-                                //console.log(this);
-                                options.append($("<option />").val(this.pk).text(this.manufacturer_name+" "+this.model_name));
-                            });
-                            if(carNum>1) {
-                                $('#carNum').text('My cars');
-                            } else {
-                                $('#carNum').text('My car');
-                            }
-                        });
-                }
-
           });
 
 
-
-
-
-
-          function setButtonActive(elem) {
-                deactivateButtons();
-                $(elem).addClass('active');
-                var elemID = $(elem).attr('id');
-                $('.arrow.' + elemID).css('visibility', 'visible');
-          }
-
-          function deactivateButtons() {
-                var buttons  = $('.sectionsButton');
-                var arrows = $('.arrow');
-                var id;
-                //console.log(buttons);
-                $.each(buttons, function(){
-                    if($(this).hasClass("active")) {
-                        //console.log(this);
-                        $(this).removeClass("active");
-                        id = $(this).attr('id');
-                        return;
-                    }
-                });
-
-                $.each(arrows, function(){
-                    if($(this).hasClass(""+id)){
-                        //console.log(this);
-                        $(this).css('visibility', 'hidden');;
-                        return;
-                    }
-                });
-          }
 	   
 	   </script>	 
 {% endblock %}
@@ -121,7 +42,7 @@
 	     </div>
 
         <div id="borderDiv">
-            <div id="bottonsMenuContainer">
+            <div id="buttonsMenuContainer">
                 <div id="buttonsMenu">
                     <button type="button" id="refuellingsButton" class="sectionsButton" onclick="setButtonActive(this);">Refuellings</button>
                     <button type="button" id="cleaningsButton" class="sectionsButton" onclick="setButtonActive(this);">Cleanings</button>
@@ -135,9 +56,10 @@
 
             <div id="garageContentContainer">
                 <div id="garageContent">
-                   <div id="operations">
-                            detalii despre masina sau statistici generale ale masinii/userului
-                   </div>
+                   <table id="tableRecords">
+                       <thead></thead>
+                       <tbody></tbody>
+                   </table>
                 </div>
             </div>
 

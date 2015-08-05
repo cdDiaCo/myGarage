@@ -360,106 +360,22 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 }
 
 
-#slideshow {
-	width:550px;
-	height:360px;
-	margin:0;
-	padding:0;
-	position:relative;
-	float:right;
-	top:70px;
-	right:0;			
-	box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.2);
-	border-radius: 4px;
-}
-
-#slideshowWindow {	
-	margin:0;
-	padding:0;		
-	border-radius: 4px;
-	overflow:hidden;	
-}
-
-.slide {
-	margin:0;
-	padding:0;
-	width:550px; 
-	height:360px;
-	float:left;
-	position:relative
-	
-}
-
-.slide > img {
-	position: relative;
-	float: left;
-	width: 550px;
-	height:360px;
-	border-radius: 4px;
-
-}
-
-.slideText {
-	position:absolute;
-	width:100%;
-	height:40%;
-	top:60%; 
-	left:0;
-	margin:0;
-	padding:20px 30px;
-	background-color: rgba(0, 0, 0, 0.3);	
-	color: white; 	
-	text-shadow: 1px 1px black;
-	font-size: 35px;
-	box-shadow: 1px 1px 90px rgba(0, 0, 0, 0.4);
-
-}
-
-
-.nav {
-	display:block;	
-	position:absolute;
-	cursor:pointer;
-}
-
-#leftNav {    
-	margin-left: 215px;
-	margin-top: 310px;	
-	width:48px;
-	height:36px;
-	background-image:url("../img/previous.gif");
-	background-repeat:no-repeat;
-	z-index:20;
-}
-
-#rightNav {
-	margin-left:285px;
-	margin-top:310px;
-	width:48px;
-	height:36px;
-	background-image:url("../img/next.gif");
-	background-repeat:no-repeat;
-	z-index:20;
-}
-
-#garageLeft {
-	width: 250px;
-	height: 400px;
-	float:left;	
-	margin: 0px;
-}
-
 #garageContent {
-	height:400px;
-	width: 990px;
+	height:360px;
+	width: 970px;
 	background-color: white;
+    border: 1px solid #babbbc;
+
+
 }
+
 
 #garageContentContainer {
-    background-color: yellow;
-    height: 400px;
+    background-color: white;
+    height: 380px;
     width: 990px;
-    margin: -20px auto 0;
+    margin: 10px auto 0;
+    padding: 10px;
 }
 
 .deleteRowBtn {
@@ -520,7 +436,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	border: 2px solid rgba(56,72,83,0.5);
 }
 
-
+/*
 #operations {
     position: relative;
     margin: 30px auto 0px;
@@ -528,6 +444,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	border-color: #f9fafc;
 	background-color: white;
 }
+*/
 
 #newForm {
     margin:0;
@@ -697,16 +614,15 @@ input:-webkit-autofill {
 }
 
 .sectionsButton.active {
-     border-style: inset;
-     border-width: 2px;
+     border: 1px solid orange;
 }
 
 #refuellingsButton {
-    background:  #E9EAEB url('../img/refueling2.png') no-repeat 9px 9px;
+    background: #E9EAEB url('../img/refueling2.png') no-repeat 9px 9px;
 }
 
 #refuellingsButton.active, #refuellingsButton:hover {
-    background: #e2e2e2 url('../img/refueling2.png') no-repeat 9px 9px;
+    background: #dedfe0 url('../img/refueling2.png') no-repeat 9px 9px;
 }
 
 #cleaningsButton {
@@ -714,7 +630,7 @@ input:-webkit-autofill {
 }
 
 #cleaningsButton.active, #cleaningsButton:hover {
-    background: #e2e2e2 url('../img/wash2.png') no-repeat 9px 9px;
+    background: #dedfe0 url('../img/wash2.png') no-repeat 9px 9px;
 }
 
 #serviceButton {
@@ -722,41 +638,39 @@ input:-webkit-autofill {
 }
 
 #serviceButton.active, #serviceButton:hover {
-    background: #e2e2e2 url('../img/service2.png') no-repeat 9px 9px;
+    background: #dedfe0 url('../img/service2.png') no-repeat 9px 9px;
 }
 
 #revisionsButton {
     background:  #E9EAEB url('../img/revisions2.png') no-repeat 9px 9px;
 }
 
-#revisionsButton.active {
-    background: #a7adb1 url('../img/revisions2.png') no-repeat 9px 9px;
+#revisionsButton.active, #revisionsButton:hover {
+    background: #dedfe0 url('../img/revisions2.png') no-repeat 9px 9px;
 }
 
 #taxesButton {
     background:  #E9EAEB url('../img/dollar3.png') no-repeat 9px 9px;
 }
 
-#taxesButton.active {
-    background: #a7adb1 url('../img/dollar3.png') no-repeat 9px 9px;
+#taxesButton.active, #taxesButton:hover {
+    background: #dedfe0 url('../img/dollar3.png') no-repeat 9px 9px;
 }
 
 #insurancesButton  {
     background:  #E9EAEB url('../img/umbrella2.png') no-repeat 9px 9px;
 }
 
-
-#insurancesButton.active {
-    background: #a7adb1 url('../img/umbrella2.png') no-repeat 9px 9px;
+#insurancesButton.active, #insurancesButton:hover  {
+    background: #dedfe0 url('../img/umbrella2.png') no-repeat 9px 9px;
 }
-
 
 #tyresButton {
     background:  #E9EAEB url('../img/tyre2.png') no-repeat 9px 9px;
 }
 
-#tyresButton.active {
-    background: #a7adb1 url('../img/tyre2.png') no-repeat 9px 9px;
+#tyresButton.active, #tyresButton:hover {
+    background: #dedfe0 url('../img/tyre2.png') no-repeat 9px 9px;
 }
 
 .arrowBtnBinding {
@@ -855,7 +769,7 @@ input:-webkit-autofill {
 
 }
 
-#bottonsMenuContainer {
+#buttonsMenuContainer {
     background-color: white;
     width: 990px;
     height: 80px;
