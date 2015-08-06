@@ -81,6 +81,7 @@ function popover(elements){
 
 }
 
+/*
 function addNewRow() {
     //if the car has no records, remove the no records message and add a new row
     $('.records tbody').find('.noRecords').remove();
@@ -189,6 +190,7 @@ function addNewRow() {
     $('#addRecord').attr('disabled', 'disabled'); // temporarily disable the "Add new row" button
 
 }
+*/
 
 function showValidationTip(elementID) {
     $('#' + elementID + '_tip').css('visibility', 'visible');
@@ -598,10 +600,8 @@ function setButtonActive(elem) {
 function deactivateButtons() {
     var buttons  = $('.sectionsButton');
     var id;
-    //console.log(buttons);
     $.each(buttons, function(){
         if($(this).hasClass("active")) {
-            //console.log(this);
             $(this).removeClass("active");
             return;
         }
@@ -609,7 +609,7 @@ function deactivateButtons() {
 }
 
 
- function getUserCars() {
+function getUserCars() {
     var carNum = 0;
     $.ajax({type:"GET", url: "/api/v1/cars/"})
         .fail(function(resp){
@@ -643,9 +643,9 @@ function generateTable() {
     sectionName = sectionName.toLowerCase();
     console.log(sectionName);
     getTableRecords(sectionName);
-
-
 }
+
+var tableStateObj = {"result": "", "tableHeadCellsAdded": false};
 
 function getTableRecords(sectionName) {
      $.ajax({type:"GET", url: "/api/v1/"+sectionName+"/"})
@@ -658,24 +658,86 @@ function getTableRecords(sectionName) {
                  $('#garageContent').append(message);
             }
             else {
-                var tableHead = $('#tableRecords thead').append($('<tr>'));
-                var tableHeadCellsAdded = false;
-
-                $.each(resp.results, function() {
-                    var newRow = $('#tableRecords tbody').append($('<tr>'));
-                    for (var key in this) {
-                      if(!tableHeadCellsAdded) {
-                          tableHead.append($('<th>').text(""+key));
-                      }
-                      newRow.append($('<td>')
-                          .append($('<input>')
-                               .prop('type', 'text')
-                               .attr('name', key)
-                      ));
-                    }
-                    tableHeadCellsAdded = true;
-                });
+                $('#tableRecords thead').append($('<tr>'));
+                tableStateObj.tableHeadCellsAdded = false;
+                tableStateObj.results = resp.results;
+                addNewRow(tableStateObj.results);
             }
         });
+}
 
+
+function addNewRow(results) {
+     console.log("in add new row");
+     $.each(results, function() {
+            var tableContainerWidth = $('#garageContent').width();
+            var tableHead = $('#tableRecords thead').find("tr");
+            $('#tableRecords tbody').append($('<tr>'));
+            var newRow = $('#tableRecords tbody').find('tr').last();
+            var numOfCells = 0;
+
+            for (var key in this) {
+                numOfCells++;
+                if(key==="car") {
+                    if(!isSelectedCar(this[key])){
+                        return;
+                    }
+                }
+
+                if(!tableStateObj.tableHeadCellsAdded) {
+                  console.log("nooooot");
+                  var name = getTableHeadName(key);
+                  tableHead.append($('<th>').text(name));
+                }
+                $(newRow).append($('<td>')
+                  .append($('<input>')
+                       .prop('type', 'text')
+                       .attr('name', key)
+                       .val(this[key])
+                ));
+            }
+
+            var tableCell = $('td');
+            var leftPadding = tableCell.css('padding-left');
+            var rightPadding = tableCell.css('padding-right');
+            var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
+            var cellWidth = tableContainerWidth/numOfCells-(widthPadding+1);
+            $(newRow).find('input').css({"width": cellWidth});
+
+            tableStateObj.tableHeadCellsAdded = true;
+     });
+}
+
+function getTableHeadName(key) {
+    var res = key.split("_");
+    var name ="";
+    for (var i=0; i<res.length; i++) {
+        if(i === 0) {
+            name += res[i].charAt(0).toUpperCase() + res[i].slice(1);
+        } else {
+            name += " " + res[i];
+        }
+    }
+    return name;
+}
+
+function isSelectedCar(carUrl) {
+    carUrl = String(carUrl);
+    var carID = carUrl.charAt(carUrl.length-2);
+    var selectedCar = $('#userCars').val();
+    if(carID == selectedCar) {
+        return true;
+    }
+    return false;
+}
+
+
+function selectCarHandler() {
+    console.log("new car selected");
+    removeTableRows();
+    addNewRow(tableStateObj.results, tableStateObj.tableHeadCellsAdded);
+}
+
+function removeTableRows() {
+    $('#tableRecords tbody').find('tr').remove();
 }

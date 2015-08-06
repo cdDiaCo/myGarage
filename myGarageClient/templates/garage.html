@@ -18,7 +18,7 @@
 
 	
 	
-
+<div id="base_garage">
          <div id="header">
              <div id="headerContentWrapper_garage">
                  <div id="logoDivContainer">
@@ -32,17 +32,19 @@
                  <div id="carOptions">
                     <a href="/logout/" style="float:right;">Click here to logout</a><br>
                     <span id="carNum" style="margin-left:10px; "></span>
-                    <select id="userCars" style="color:black; float:right;">
+                    <select onchange="selectCarHandler()" id="userCars" style="color:black; float:right;">
 
                     </select>
                  </div>
              </div>
-             <!--<img src="{% static 'myGarage/img/soare_masina.png' %}" height="70" style="margin-left:40px;">-->
+
 
 	     </div>
 
         <div id="borderDiv">
+
             <div id="buttonsMenuContainer">
+
                 <div id="buttonsMenu">
                     <button type="button" id="refuellingsButton" class="sectionsButton" onclick="setButtonActive(this);">Refuellings</button>
                     <button type="button" id="cleaningsButton" class="sectionsButton" onclick="setButtonActive(this);">Cleanings</button>
@@ -52,15 +54,18 @@
                     <button type="button" id="insurancesButton" class="sectionsButton" onclick="setButtonActive(this);">Insurances</button>
                     <button type="button" id="tyresButton" class="sectionsButton" onclick="setButtonActive(this);">Tyres</button>
                 </div>
+
             </div>
 
             <div id="garageContentContainer">
+
                 <div id="garageContent">
                    <table id="tableRecords">
                        <thead></thead>
                        <tbody></tbody>
                    </table>
                 </div>
+
             </div>
 
         </div>
@@ -68,7 +73,7 @@
         <div id="footer">
             {% block footer %} {% endblock %}
         </div>
-
+</div>
 	    
 	    
 
