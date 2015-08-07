@@ -634,11 +634,11 @@ input:-webkit-autofill {
     background: #dedfe0 url('../img/wash2.png') no-repeat 9px 9px;
 }
 
-#serviceButton {
+#servicesButton {
     background:  #E9EAEB url('../img/service2.png') no-repeat 9px 9px;
 }
 
-#serviceButton.active, #serviceButton:hover {
+#servicesButton.active, #servicesButton:hover {
     background: #dedfe0 url('../img/service2.png') no-repeat 9px 9px;
 }
 
@@ -805,4 +805,14 @@ input:-webkit-autofill {
 	width: 100%;
 	margin:0;
 	padding:0;
+}
+
+
+#noRecordsMessage {
+    width: 982px;
+    height: 100px;
+    text-align: center;
+    padding-top: 40px;
+    color: orange;
+    background-color: #E9EAEB;
 }

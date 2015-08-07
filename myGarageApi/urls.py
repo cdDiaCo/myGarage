@@ -8,7 +8,7 @@ from rest_framework.authtoken import views
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'cars', CarViewSet)
-router.register(r'refillings', RefuellingViewSet)
+router.register(r'refuellings', RefuellingViewSet)
 router.register(r'cleanings', CleaningViewSet)
 router.register(r'services', ServiceViewSet)
 router.register(r'revisions', RevisionViewSet)
