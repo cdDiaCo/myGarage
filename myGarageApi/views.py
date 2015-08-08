@@ -1,10 +1,22 @@
+from rest_framework.decorators import api_view
 from .models import Car, Refuelling, Cleaning, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.models import User
 
 from .serializers import CarSerializer, UserSerializer, RefuellingSerializer, CleaningSerializer, ServiceSerializer, \
     RevisionSerializer, TaxSerializer, InsuranceSerializer, TyreSerializer
 from rest_framework import viewsets
+from rest_framework.response import Response
 
+
+@api_view(['GET'])
+def get_columns_meta(request, model_name):
+    columns = []
+    model = model_name.lower()
+    models = {'car': Car, 'refuelling': Refuelling, 'cleaning': Cleaning, 'service': Service, 'revision': Revision,
+              'tax': Tax, 'insurance': Insurance, 'tyre': Tyre}
+    if model in models:
+        columns = [f.name for f in models[model]._meta.get_fields()]
+    return Response(columns)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()

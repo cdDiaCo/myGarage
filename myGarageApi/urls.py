@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from .views import UserViewSet, CarViewSet, RefuellingViewSet, CleaningViewSet, ServiceViewSet, RevisionViewSet, \
-    TaxViewSet, InsuranceViewSet, TyreViewSet
+    TaxViewSet, InsuranceViewSet, TyreViewSet, get_columns_meta
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 
@@ -18,6 +18,7 @@ router.register(r'tyres', TyreViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^columns/(?P<model_name>.+)/$', get_columns_meta),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token)
 ]
