@@ -26,7 +26,7 @@ class RefuellingSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Refuelling
-        fields = ('car', 'refuel_date', 'current_mileage', 'quantity_refuelled', 'sum_refuelled')
+        fields = ('pk', 'car', 'refuel_date', 'current_mileage', 'quantity_refuelled', 'sum_refuelled')
 
 
 class CleaningSerializer(serializers.HyperlinkedModelSerializer):
@@ -34,7 +34,7 @@ class CleaningSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Cleaning
-        fields = ('car', 'cleaning_date', 'cleaning_cost', 'cleaning_type')
+        fields = ('pk', 'car', 'cleaning_date', 'cleaning_cost', 'cleaning_type')
 
 
 class ServiceSerializer(serializers.HyperlinkedModelSerializer):
@@ -42,7 +42,7 @@ class ServiceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Service
-        fields = ('car', 'service_date', 'description', 'service_cost')
+        fields = ('pk', 'car', 'service_date', 'description', 'service_cost')
 
 
 class RevisionSerializer(serializers.HyperlinkedModelSerializer):
@@ -50,7 +50,7 @@ class RevisionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Revision
-        fields = ('car', 'revision_date', 'observations', 'auto_service_name', 'revision_cost', 'itp')
+        fields = ('pk', 'car', 'revision_date', 'observations', 'auto_service_name', 'revision_cost', 'itp')
 
 
 class TaxSerializer(serializers.HyperlinkedModelSerializer):
@@ -58,7 +58,7 @@ class TaxSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Tax
-        fields = ('car', 'tax_begin_date', 'tax_end_date', 'tax_sum', 'vignete')
+        fields = ('pk', 'car', 'tax_begin_date', 'tax_end_date', 'tax_sum', 'vignete')
 
 
 class InsuranceSerializer(serializers.HyperlinkedModelSerializer):
@@ -66,7 +66,7 @@ class InsuranceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Insurance
-        fields = ('car', 'insurance_begin_date', 'insurance_end_date', 'insurance_company', 'insurance_type',
+        fields = ('pk', 'car', 'insurance_begin_date', 'insurance_end_date', 'insurance_company', 'insurance_type',
                   'insurance_cost', 'acquisition_place')
 
 
@@ -75,5 +75,5 @@ class TyreSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Tyre
-        fields = ('car', 'manufacturer', 'model', 'type', 'quantity', 'acquisition_date', 'acquisition_price',
+        fields = ('pk', 'car', 'manufacturer', 'model', 'type', 'quantity', 'acquisition_date', 'acquisition_price',
                   'state')
