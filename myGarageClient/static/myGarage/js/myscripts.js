@@ -655,8 +655,8 @@ function getTableRecords(sectionName) {
         })
         .done(function(resp){
             if(!resp.count){
-                console.log("qqqq  "+ JSON.stringify(resp));
-                var message = "there are no "+ sectionName+ " records yet";
+                 tableStateObj.results = [];
+                 var message = "there are no "+ sectionName+ " records yet";
                  $('#garageContent').append(message);
             }
             else {
@@ -680,14 +680,16 @@ function addNewRow() {
             var tableHead = $('#tableRecords thead').find("tr");
             $('#tableRecords tbody').append($('<tr>'));
             var newRow = $('#tableRecords tbody').find('tr').last();
-            var numOfCells = 0;
+            var numOfColumns = 0;
 
             for (var key in elem) {
-                numOfCells++;
+                if(key==="pk") {
+                    continue;
+                }
                 if(key==="car") {
                     if(!isSelectedCar(elem[key])) {
                         if(!carHasRecords && index === (self.results.length-1)) {
-                            var numOfColumns = $(tableHead).find('th').length;
+                            numOfColumns = $(tableHead).find('th').length;
                             $(newRow).append($('<td>')
                                         .attr('colspan', numOfColumns)
                                         .append($('<div>')
@@ -717,7 +719,7 @@ function addNewRow() {
             var leftPadding = tableCell.css('padding-left');
             var rightPadding = tableCell.css('padding-right');
             var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-            var cellWidth = tableContainerWidth/(numOfCells-1)-(widthPadding+1);
+            var cellWidth = tableContainerWidth/numOfColumns-(widthPadding+1);
             $(newRow).find('input').css({"width": cellWidth});
 
             self.tableHeadCellsAdded = true;
