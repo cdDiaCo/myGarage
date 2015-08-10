@@ -366,6 +366,7 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 #garageContent {
 	height:auto;
 	width: 990px;
+	position: relative;
 	margin-top: 20px;
 	background-color: #E9EAEB;
     #border: 1px solid #babbbc;
@@ -774,6 +775,7 @@ input:-webkit-autofill {
     padding: 0;
     margin: 0;
     color: #24343E;
+    display: none;
 }
 
 #tableRecords td {
@@ -815,4 +817,35 @@ input:-webkit-autofill {
     padding-top: 40px;
     color: orange;
     background-color: #E9EAEB;
+}
+
+.rowButtons {
+    #background-color: red;
+    width: 100%;
+    height: 20px;
+}
+
+.saveRowImg {
+    width:18px;
+    height:18px;
+    margin-right:10px;
+    margin-left: 5px;
+}
+
+#addNewRecordBtn {
+    visibility: hidden;
+	background: #24343E url("../img/addRecord.png") no-repeat 5% 50%;
+	color: white;
+	position: absolute;
+	left: 0;
+	padding: 10px 10px 10px 35px;
+    height: 40px;
+	border-radius: 3px;
+	border: 2px solid #3F515D;
+	box-shadow: 2px 2px 4px 1px rgba(50, 50, 50, 0.4);
+	outline:none;
+}
+
+#addNewRecordBtn:hover {
+	background-image: url("../img/addRecord_hover.png");
 }

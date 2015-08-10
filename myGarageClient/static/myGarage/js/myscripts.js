@@ -62,6 +62,7 @@ function getUserCars() {
 function prepareTable() {
     // check what section button has the active class
     //generate table for that section
+    $('#tableRecords').css({'display': 'none'});
     var sectionBtn = $('.sectionsButton.active');
     var sectionID = $(sectionBtn).attr('id');
     var index = sectionID.indexOf("Button");
@@ -78,7 +79,6 @@ function getTableRecords(sectionName) {
             console.log('bad credentials.');
         })
         .done(function(resp){
-            console.log('in get table records');
             activeBtnState.sectionName = sectionName;
             activeBtnState.numOfRecords = resp.count;
             activeBtnState.results = resp.results;
@@ -99,7 +99,6 @@ function getTableColumns(sectionName) {
             console.log('bad credentials.');
         })
         .done(function(resp){
-            console.log('in get table columns');
             activeBtnState.numOfColumns = resp.length-2;
             activeBtnState.columns = resp;
             addTableHead();
@@ -117,6 +116,7 @@ function addTableHead() {
         }
         tableHead.append($('<th>').text(columnName));
     }
+    tableHead.append($('<th>').css({'width': '70px'}));
 }
 
 function addTableBody() {
@@ -146,25 +146,52 @@ function addTableBody() {
                                .val(elem[key])
                           ));
              }
+             addOperationsButtons(newRow);
+
              var tableCell = $('td');
              var leftPadding = tableCell.css('padding-left');
              var rightPadding = tableCell.css('padding-right');
              var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-             var cellWidth = tableContainerWidth/activeBtnState.numOfColumns-(widthPadding+1);
+             var cellWidth = (tableContainerWidth-70)/activeBtnState.numOfColumns-(widthPadding+1);
              $(newRow).find('input').css({"width": cellWidth});
          });
+
+
     }
     else {
+         $('#tableRecords thead tr').children().last().remove();
          $('#tableRecords tbody').append($('<tr>'));
          var newRow = $('#tableRecords tbody').find('tr').last();
          var message = 'You have no '+activeBtnState.sectionName+' added yet!';
          setNoRecordsBody(newRow, message);
     }
+
+    $('#tableRecords').show();
+    setAddNewRecordBtn();
+}
+
+function setAddNewRecordBtn() {
+    var tableHeight = $('#tableRecords').height();
+    var marginTop = 15 + tableHeight + "px";
+    $('#addNewRecordBtn').css({'top': marginTop, });
+    $('#addNewRecordBtn').css({'visibility': 'visible'});
+}
+
+function addOperationsButtons(newRow) {
+     $(newRow).append($('<td>')
+            .css({'width': '70px'})
+            .append($('<div>')
+                .addClass('rowButtons')
+                .append($('<img>')
+                    .attr("src", saveImgSrc)
+                    .addClass("saveRowImg"))
+                .append($('<img>')
+                    .attr("src", deleteImgSrc))));
 }
 
 function setNoRecordsBody(newRow, message) {
     $(newRow).append($('<td>')
-        .attr('colspan', activeBtnState.numOfColumns)
+        .attr('colspan', activeBtnState.numOfColumns+1)
         .append($('<div>')
             .attr('id', 'noRecordsMessage')
             .text(message)));
