@@ -785,6 +785,9 @@ input:-webkit-autofill {
     outline : none;
 }
 
+#tableRecords tr {
+    height: 35px;
+}
 
 
 #tableRecords input {
@@ -795,11 +798,15 @@ input:-webkit-autofill {
 
 #tableRecords th {
     background-color: white;
-    height: 40px;
     padding-top: 15px;
     padding-left: 15px;
+    padding-bottom: 15px;
     vertical-align:baseline;
     border: 1px solid #24343E;
+}
+
+#emptyDiv {
+    background-color: #E9EAEB;
 }
 
 #base_garage {
@@ -812,7 +819,7 @@ input:-webkit-autofill {
 
 #noRecordsMessage {
     width: 982px;
-    height: 100px;
+    height: 150px;
     text-align: center;
     padding-top: 40px;
     color: orange;
