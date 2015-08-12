@@ -780,18 +780,20 @@ input:-webkit-autofill {
 
 #tableRecords td {
     border: 1px solid #24343E;
-    padding: 4px;
+    padding: 1px;
     background-color: white;
     outline : none;
 }
 
 #tableRecords tr {
-    height: 35px;
+    height: 30px;
 }
 
 
 #tableRecords input {
-    border: 1px solid #E9EAEB;
+    border: none;
+    line-height: 24px;
+    padding: 0;
     outline: none;
     background-color: white;
 }
@@ -855,4 +857,8 @@ input:-webkit-autofill {
 
 #addNewRecordBtn:hover {
 	background-image: url("../img/addRecord_hover.png");
+}
+
+#selectedRecord {
+    border: 2px solid orange;
 }

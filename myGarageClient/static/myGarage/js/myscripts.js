@@ -171,19 +171,9 @@ function addTableBody() {
                 }
         });
 
-         // here we add an extra tbody that holds an 'empty space'
-         // the purpose is to to make up for the difference between the min height of the table body (150px) and
-         // the height that the table would have with only 2-3 rows
+
          if(!noRecordsMsg) { // we have records for the selected section and car
-             var contentBodyHeight = $("#contentBody tr").length * $('#contentBody tr').height();
-             if(contentBodyHeight < 150){
-                var emptySpace = 150 - contentBodyHeight;
-                $("#emptyBody").append($('<tr>')
-                                    .append($('<td>').attr('colspan', activeBtnState.numOfColumns+1)
-                                        .append($('<div>')
-                                            .attr('id', 'emptyDiv'))));
-                $("#emptyDiv").height(emptySpace);
-             }
+            arrangeTableForMinHeight();
          }
     }
     else { // there are no records for this section
@@ -194,8 +184,26 @@ function addTableBody() {
          setNoRecordsBody(newRow, message);
     }
 
+    var rows = $('#contentBody tr');
+    rows.on('click', markSelectedRecord);
+
     $('#tableRecords').show();
     setAddNewRecordBtn();
+}
+
+// here we add an extra tbody that holds an 'empty space'
+// the purpose is to make up for the difference between the min height of the table body (150px) and
+// the height that the table would have with only 2-3 rows
+function arrangeTableForMinHeight() {
+    var contentBodyHeight = $("#contentBody tr").length * $('#contentBody tr').height();
+    if(contentBodyHeight < 150){
+        var emptySpace = 150 - contentBodyHeight;
+        $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
+                            .append($('<td>').attr('colspan', activeBtnState.numOfColumns+1)
+                                .append($('<div>')
+                                    .attr('id', 'emptyDiv'))));
+        $("#emptyDiv").height(emptySpace);
+    }
 }
 
 // adds the button responsible for adding a new row
@@ -206,6 +214,27 @@ function setAddNewRecordBtn() {
     $('#addNewRecordBtn').css({'visibility': 'visible'});
 }
 
+function removeAddNewRecordBtn() {
+    $('#addNewRecordBtn').css({'visibility': 'hidden'});
+}
+
+// this function is called when the user wants to add a new record to the table
+function addNewRecord() {
+    $("#emptyBody").find("#emptySpaceRow").remove();
+    $('#contentBody').append($('<tr>'));
+    arrangeTableForMinHeight();
+    removeAddNewRecordBtn();
+    for (column in activeBtnState.columns) {
+        if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") {continue;}
+        $('#contentBody').find("tr").last().append($("<td>")
+                                                .append($('<input>')
+                                                .prop('type', 'text')
+                                                .attr('name', activeBtnState.columns[column])));
+    }
+    addOperationsButtons($('#contentBody').find("tr").last());
+    setAddNewRecordBtn();
+}
+
 // adds an additional column that holds the save and delete row buttons
 function addOperationsButtons(newRow) {
      $(newRow).append($('<td>')
@@ -214,9 +243,91 @@ function addOperationsButtons(newRow) {
                 .addClass('rowButtons')
                 .append($('<img>')
                     .attr("src", saveImgSrc)
-                    .addClass("saveRowImg"))
+                    .addClass("saveRowImg")
+                    .click(saveRecord))
                 .append($('<img>')
-                    .attr("src", deleteImgSrc))));
+                    .attr("src", deleteImgSrc)
+                    .click(deleteRecord))));
+}
+
+// set the csrf token before making ajax call
+function ajaxSetup() {
+    var csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    });
+}
+
+// mark the record clicked by the user
+function markSelectedRecord() {
+    if($('#selectedRecord').length !== 0) {
+        unmarkSelectedRecord();
+    }
+
+    $(this).attr('id', 'selectedRecord');
+}
+
+function unmarkSelectedRecord() {
+     $("#selectedRecord").removeAttr("id");
+}
+
+// returns the input data contained by the selected row
+function getSelectedRecordData() {
+    var columns = $("#selectedRecord").find("td");
+    var data = {};
+    for ( var i = 0; i<columns.length-1; i++){
+        var cell = columns[i];
+        var cellChildren = $(cell).children();
+        //console.log(cellChildren);
+        var name = cellChildren.attr("name");
+        var value = cellChildren.val();
+        data[name] = value;
+    }
+    return data;
+}
+
+function getSelectedCarURL() {
+    var selectedCar = $('#userCars').val();
+    var carUrl = "/api/v1/cars/" + selectedCar + "/";
+    return carUrl;
+}
+
+function saveRecord() {
+    var dataObj = getSelectedRecordData();
+    var selectedCarUrl = getSelectedCarURL();
+    dataObj["car"] = selectedCarUrl;
+
+    ajaxSetup();
+    $.ajax({
+              method: "POST",
+              url: "/api/v1/refuellings/",
+              data: dataObj
+          })
+          .done(function( msg ) {
+              console.log( "Data Saved: " + msg );
+          });
+
+}
+
+function deleteRecord() {
+    ajaxSetup();
+    $.ajax({
+              method: "DELETE",
+              url: "/api/v1/refuellings/",
+              data:{car: "/api/v1/cars/1/",
+                    refuel_date: "2015-04-06",
+                    current_mileage: 444,
+                    quantity_refuelled: 444,
+                    sum_refuelled: 444
+                   }
+
+          })
+          .done(function( msg ) {
+              console.log( "Data Saved: " + msg );
+          });
+
 }
 
 // this is called when the user has no records for a certain section and/or car
