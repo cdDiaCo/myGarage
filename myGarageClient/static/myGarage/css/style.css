@@ -864,4 +864,7 @@ input:-webkit-autofill {
 }
 
 
+#hiddenValue {
+    display:none;
+}
 

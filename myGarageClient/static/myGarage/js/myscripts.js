@@ -129,11 +129,16 @@ function addTableBody() {
          var noRecordsMsg = "";
          var carHasRecords = false;
          $.each(activeBtnState.results, function(index, elem) {
+             var pk;
              var tableContainerWidth = $('#garageContent').width();
              $('#contentBody').append($('<tr>'));
              var newRow = $('#contentBody').find('tr').last();
              for (var key in elem) {
-                 if(key==="pk") {continue;}
+                 if(key==="pk") {
+                    pk = elem[key];
+                    //$(newRow).append($('<input>').attr("name", key).attr("id", "hiddenValue").val(pk));
+                    continue;
+                 }
                  if(key==="car") {
                       if(!isSelectedCar(elem[key])) { // this record belongs to another car
                           if(!carHasRecords && index === (activeBtnState.results.length-1)) {
@@ -153,6 +158,7 @@ function addTableBody() {
                                .val(elem[key])
                           ));
              }
+             $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
              addOperationsButtons(newRow);
 
              var tableCell = $('td');
@@ -233,6 +239,9 @@ function addNewRecord() {
     }
 
     addOperationsButtons($('#contentBody').find("tr").last());
+    $('#contentBody').find("tr").last().addClass("temporaryRow");
+    $(".temporaryRow").find(".saveRowImg").off('click', updateRecord);
+    $(".temporaryRow").find(".saveRowImg").on('click', saveRecord);
     $('#contentBody').find("tr").last().on('click', markSelectedRecord);
     setAddNewRecordBtn();
 }
@@ -246,7 +255,7 @@ function addOperationsButtons(newRow) {
                 .append($('<img>')
                     .attr("src", saveImgSrc)
                     .addClass("saveRowImg")
-                    .click(saveRecord))
+                    .click(updateRecord))
                 .append($('<img>')
                     .attr("src", deleteImgSrc)
                     .click(deleteRecord))));
@@ -275,6 +284,11 @@ function unmarkSelectedRecord() {
      $("#selectedRecord").removeAttr("id");
 }
 
+function getSelectedRecordPk() {
+    var pk = $("#selectedRecord").find("#hiddenValue").text();
+    return pk;
+}
+
 // returns the input data contained by the selected row
 function getSelectedRecordData() {
     var columns = $("#selectedRecord").find("td");
@@ -287,6 +301,7 @@ function getSelectedRecordData() {
         var value = cellChildren.val();
         data[name] = value;
     }
+    //console.log(data);
     return data;
 }
 
@@ -297,40 +312,66 @@ function getSelectedCarURL() {
 }
 
 function saveRecord() {
+    console.log("in save record");
+    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var dataObj = getSelectedRecordData();
     var selectedCarUrl = getSelectedCarURL();
     dataObj["car"] = selectedCarUrl;
 
     ajaxSetup();
     $.ajax({
-              method: "POST",
+              method: "POST", // or PUT when updating
               url: "/api/v1/refuellings/",
-              data: dataObj
+              contentType : 'application/json',
+              data: JSON.stringify(dataObj),
+          })
+          .done(function( objSaved ) {
+              console.log( "Data Saved: " + JSON.stringify(objSaved));
+              unmarkSelectedRecord();
+              $(".saveRowImg").off('click', saveRecord);
+              $(".saveRowImg").on('click', updateRecord);
+              $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk))
+              $(".temporaryRow").removeClass("temporaryRow");
+          });
+}
+
+function updateRecord() {
+    console.log("in update");
+    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var pk = getSelectedRecordPk();
+    var dataObj = getSelectedRecordData();
+    var selectedCarUrl = getSelectedCarURL();
+    dataObj["car"] = selectedCarUrl;
+    console.log(dataObj);
+
+    ajaxSetup();
+    $.ajax({
+              method: "PUT", // or PUT when updating
+              contentType : 'application/json',
+              url: "/api/v1/refuellings/"+pk+"/",
+              data: JSON.stringify(dataObj),
           })
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
               unmarkSelectedRecord();
           });
-
 }
 
 function deleteRecord() {
+    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var pk = getSelectedRecordPk();
     ajaxSetup();
     $.ajax({
               method: "DELETE",
-              url: "/api/v1/refuellings/",
-              data:{car: "/api/v1/cars/1/",
-                    refuel_date: "2015-04-06",
-                    current_mileage: 444,
-                    quantity_refuelled: 444,
-                    sum_refuelled: 444
-                   }
-
-          })
+              url: "/api/v1/refuellings/"+pk+"/"
+           })
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
-          });
+              $("#selectedRecord").remove();
+              removeAddNewRecordBtn();
+              setAddNewRecordBtn();
 
+          });
 }
 
 // this is called when the user has no records for a certain section and/or car
