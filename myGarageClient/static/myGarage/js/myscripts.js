@@ -231,7 +231,9 @@ function addNewRecord() {
                                                 .prop('type', 'text')
                                                 .attr('name', activeBtnState.columns[column])));
     }
+
     addOperationsButtons($('#contentBody').find("tr").last());
+    $('#contentBody').find("tr").last().on('click', markSelectedRecord);
     setAddNewRecordBtn();
 }
 
@@ -307,6 +309,7 @@ function saveRecord() {
           })
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
+              unmarkSelectedRecord();
           });
 
 }
