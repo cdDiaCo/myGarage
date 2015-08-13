@@ -118,9 +118,9 @@ function addTableHead() {
         if(columnName === "Id" || columnName === "Car") {
             continue;
         }
-        tableHead.append($('<th>').text(columnName));
+        $(tableHead).append($('<th>').text(columnName));
     }
-    tableHead.append($('<th>').css({'width': '70px'}));
+    $(tableHead).append($('<th>').css({'width': '70px'})); // this is the column that holds the operations buttons
 }
 
 // this builds the table's body
@@ -183,7 +183,6 @@ function addTableBody() {
          }
     }
     else { // there are no records for this section
-         $('#tableRecords thead tr').children().last().remove();
          $('#contentBody').append($('<tr>'));
          var newRow = $('#contentBody').find('tr').last();
          var message = 'You have no '+activeBtnState.sectionName+' added yet!';
@@ -230,6 +229,7 @@ function removeTheAddNewRecordBtn() {
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
     disableTheAddNewRecordBtn();
+    removeNoRecordsTD();
 
     $("#emptyBody").find("#emptySpaceRow").remove();
     $('#contentBody').append($('<tr>'));
@@ -361,6 +361,7 @@ function enableTheAddNewRecordBtn() {
 function saveRecord() {
     console.log("in save record");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var section = activeBtnState.sectionName;
     var dataObj = getSelectedRecordData();
     var selectedCarUrl = getSelectedCarURL();
     dataObj["car"] = selectedCarUrl;
@@ -368,7 +369,7 @@ function saveRecord() {
     ajaxSetup();
     $.ajax({
               method: "POST", // or PUT when updating
-              url: "/api/v1/refuellings/",
+              url: "/api/v1/" + section + "/",
               contentType : 'application/json',
               data: JSON.stringify(dataObj),
           })
@@ -383,6 +384,7 @@ function saveRecord() {
 function updateRecord() {
     console.log("in update");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var section = activeBtnState.sectionName;
     var pk = getSelectedRecordPk();
     var dataObj = getSelectedRecordData();
     var selectedCarUrl = getSelectedCarURL();
@@ -393,7 +395,7 @@ function updateRecord() {
     $.ajax({
               method: "PUT",
               contentType : 'application/json',
-              url: "/api/v1/refuellings/"+pk+"/",
+              url: "/api/v1/" + section + "/" + pk + "/",
               data: JSON.stringify(dataObj),
           })
           .done(function( msg ) {
@@ -412,11 +414,12 @@ function rearrangeTableAfterDeletingRecord() {
 
 function deleteRecord() {
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var section = activeBtnState.sectionName;
     var pk = getSelectedRecordPk();
     ajaxSetup();
     $.ajax({
               method: "DELETE",
-              url: "/api/v1/refuellings/"+pk+"/"
+              url: "/api/v1/" + section + "/" + pk + "/"
            })
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
@@ -427,11 +430,17 @@ function deleteRecord() {
 // this is called when the user has no records for a certain section and/or car
 function setNoRecordsBody(newRow, message) {
     $(newRow).append($('<td>')
+        .attr("id", "noRecordsTD")
         .attr('colspan', activeBtnState.numOfColumns+1)
         .append($('<div>')
             .attr('id', 'noRecordsMessage')
             .text(message)));
 }
+
+function removeNoRecordsTD() {
+    $("#noRecordsTD").closest("tr").remove();
+}
+
 
 // get table head columns names from the DB column names
 function getTableHeadName(key) {
@@ -460,8 +469,8 @@ function isSelectedCar(carUrl) {
 
 // this is called when the user selects a different car
 function selectCarHandler() {
-    removeTableRows();
-    addTableBody();
+    removeTable();
+    prepareTable();
 }
 
 function removeTableRows() {
