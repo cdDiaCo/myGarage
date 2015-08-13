@@ -406,26 +406,6 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	outline:none;
 }
 
-
-#addRecord:hover {
-	background-image: url("../img/addRecord_hover.png");
-}
-
-#addRecord:disabled {
-    background-image: url("../img/addRecord_disabled.png");
-	background-color: #99adb8;
-	border: 2px solid #99adb8;
-	box-shadow: 1px 1px 2px 1px rgba(50, 50, 50, 0.2);
-	color:#DADCDE;
-}
-
-#addRecord:active {
-    background-image: url("../img/addRecord.png");
-	background-color: #3F515D;
-	box-shadow: 1px 1px 4px 1px rgba(50, 50, 50, 0.4);
-	border: 2px solid rgba(56,72,83,0.5);
-}
-
 /*
 #operations {
     position: relative;
@@ -828,12 +808,12 @@ input:-webkit-autofill {
     height:20px;
     margin-right:10px;
     margin-left: 5px;
-    margin-top: 2px;
+    #margin-top: 2px;
 }
 
 
 
-#addNewRecordBtn {
+#addNewRecordBtn, #addNewRecordBtn:disabled {
     visibility: hidden;
 	background: #24343E url("../img/addRecord.png") no-repeat 5% 50%;
 	color: white;
@@ -850,6 +830,25 @@ input:-webkit-autofill {
 #addNewRecordBtn:hover {
 	background-image: url("../img/addRecord_hover.png");
 }
+
+#coverDiv {
+    height: 40px;
+    width: 152px;
+    background-color: rgba(188,189,189, 0.5);
+    display: none;
+    position: absolute;
+    z-index: 25;
+}
+
+/*
+#addNewRecordBtn:disabled {
+    background-image: url("../img/addRecord.png");
+	background-color: #99adb8;
+	border: 2px solid #99adb8;
+	box-shadow: 1px 1px 2px 1px rgba(50, 50, 50, 0.2);
+	color:#DADCDE;
+}
+*/
 
 #selectedRecord {
     border: 2px solid orange;

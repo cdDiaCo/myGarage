@@ -125,6 +125,7 @@ function addTableHead() {
 
 // this builds the table's body
 function addTableBody() {
+    enableTheAddNewRecordBtn();
     if(activeBtnState.numOfRecords > 0){ // there are records for this section
          var noRecordsMsg = "";
          var carHasRecords = false;
@@ -194,6 +195,7 @@ function addTableBody() {
 
     $('#tableRecords').show();
     setAddNewRecordBtn();
+    $("#addNewRecordBtn").prop('disabled', false);
 }
 
 // here we add an extra tbody that holds an 'empty space'
@@ -217,6 +219,8 @@ function setAddNewRecordBtn() {
     var marginTop = 15 + tableHeight + "px";
     $('#addNewRecordBtn').css({'top': marginTop, });
     $('#addNewRecordBtn').css({'visibility': 'visible'});
+    $("#coverDiv").css({'top': marginTop});
+
 }
 
 function removeTheAddNewRecordBtn() {
@@ -225,6 +229,8 @@ function removeTheAddNewRecordBtn() {
 
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
+    disableTheAddNewRecordBtn();
+
     $("#emptyBody").find("#emptySpaceRow").remove();
     $('#contentBody').append($('<tr>'));
     arrangeTableForMinHeight();
@@ -342,6 +348,16 @@ function makeRowPermanent(objSaved) {
     $(".temporaryRow").removeClass("temporaryRow");
 }
 
+function disableTheAddNewRecordBtn() {
+    $("#addNewRecordBtn").prop('disabled', true);
+    $("#coverDiv").show();
+}
+
+function enableTheAddNewRecordBtn() {
+     $("#coverDiv").hide();
+     $("#addNewRecordBtn").prop('disabled', false);
+}
+
 function saveRecord() {
     console.log("in save record");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
@@ -360,6 +376,7 @@ function saveRecord() {
               console.log( "Data Saved: " + JSON.stringify(objSaved));
               unmarkSelectedRecord();
               makeRowPermanent(objSaved);
+              enableTheAddNewRecordBtn();
           });
 }
 
@@ -385,6 +402,14 @@ function updateRecord() {
           });
 }
 
+function rearrangeTableAfterDeletingRecord() {
+      $("#selectedRecord").remove();
+      removeTheAddNewRecordBtn();
+      $("#emptyBody").find("#emptySpaceRow").remove();
+      arrangeTableForMinHeight();
+      setAddNewRecordBtn();
+}
+
 function deleteRecord() {
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var pk = getSelectedRecordPk();
@@ -395,12 +420,7 @@ function deleteRecord() {
            })
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
-              $("#selectedRecord").remove();
-              removeTheAddNewRecordBtn();
-              $("#emptyBody").find("#emptySpaceRow").remove();
-              arrangeTableForMinHeight();
-              setAddNewRecordBtn();
-
+              rearrangeTableAfterDeletingRecord();
           });
 }
 
