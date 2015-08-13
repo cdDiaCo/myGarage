@@ -393,19 +393,6 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	visibility: hidden;
 }
 
-.saveRowBtn {
-    background-image: url("../img/save.png");
-    background-repeat:no-repeat;
-    margin: 0;
-    padding: 0px 10px;
-    background-color: inherit;
-	border: none;
-	outline: none;
-	box-shadow: none;
-	visibility: hidden;
-
-}
-
 #addRecord {
 	background: #3F515D url("../img/addRecord.png") no-repeat 5% 50%;
 	color: white;
@@ -492,11 +479,12 @@ input.recordsTextInput {
    font-weight: bold;
 }
 
-
+/*
 tbody tr:nth-child(even) {
     #background-color: #ffd59a;
     background-color: #ffe0b4;
 }
+*/
 
 .records thead {
 	color: #ffffff;
@@ -776,6 +764,7 @@ input:-webkit-autofill {
     margin: 0;
     color: #24343E;
     display: none;
+    background-color: white;
 }
 
 #tableRecords td {
@@ -786,7 +775,7 @@ input:-webkit-autofill {
 
 #tableRecords tr {
     height: 30px;
-    background-color: white;
+    #background-color: white;
 }
 
 
@@ -834,12 +823,15 @@ input:-webkit-autofill {
     height: 20px;
 }
 
-.saveRowImg {
-    width:18px;
-    height:18px;
+.updateRowImg, .saveRowImg {
+    width:19px;
+    height:20px;
     margin-right:10px;
     margin-left: 5px;
+    margin-top: 2px;
 }
+
+
 
 #addNewRecordBtn {
     visibility: hidden;
@@ -861,6 +853,10 @@ input:-webkit-autofill {
 
 #selectedRecord {
     border: 2px solid orange;
+}
+
+.temporaryRow {
+    background-color: #E9EAEB;
 }
 
 

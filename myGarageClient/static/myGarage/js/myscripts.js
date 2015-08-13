@@ -177,7 +177,6 @@ function addTableBody() {
                 }
         });
 
-
          if(!noRecordsMsg) { // we have records for the selected section and car
             arrangeTableForMinHeight();
          }
@@ -220,7 +219,7 @@ function setAddNewRecordBtn() {
     $('#addNewRecordBtn').css({'visibility': 'visible'});
 }
 
-function removeAddNewRecordBtn() {
+function removeTheAddNewRecordBtn() {
     $('#addNewRecordBtn').css({'visibility': 'hidden'});
 }
 
@@ -229,7 +228,7 @@ function addNewRecord() {
     $("#emptyBody").find("#emptySpaceRow").remove();
     $('#contentBody').append($('<tr>'));
     arrangeTableForMinHeight();
-    removeAddNewRecordBtn();
+    removeTheAddNewRecordBtn();
     for (column in activeBtnState.columns) {
         if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") {continue;}
         $('#contentBody').find("tr").last().append($("<td>")
@@ -238,27 +237,53 @@ function addNewRecord() {
                                                 .attr('name', activeBtnState.columns[column])));
     }
 
-    addOperationsButtons($('#contentBody').find("tr").last());
     $('#contentBody').find("tr").last().addClass("temporaryRow");
-    $(".temporaryRow").find(".saveRowImg").off('click', updateRecord);
-    $(".temporaryRow").find(".saveRowImg").on('click', saveRecord);
+    addOperationsButtons($('.temporaryRow'));
     $('#contentBody').find("tr").last().on('click', markSelectedRecord);
     setAddNewRecordBtn();
 }
 
+function appendSaveRowImg(parentElement){
+    $(parentElement).append($('<img>')
+                    .attr("src", saveImgSrc)
+                    .addClass("saveRowImg")
+                    .click(saveRecord));
+}
+
+function replaceSaveRowImg(parentElement) {
+    $(parentElement).find(".saveRowImg").remove();
+    $( ".temporaryRow .deleteRowImg" ).before( $('<img>')
+                        .attr("src", updateImgSrc)
+                        .addClass("updateRowImg")
+                        .click(updateRecord));
+}
+
+function appendUpdateRowImg(parentElement) {
+    $(parentElement).append($('<img>')
+                        .attr("src", updateImgSrc)
+                        .addClass("updateRowImg")
+                        .click(updateRecord));
+}
+
+function appendDeleteRowImg(parentElement) {
+    $(parentElement).append($('<img>')
+                    .attr("src", deleteImgSrc)
+                    .addClass("deleteRowImg")
+                    .click(deleteRecord));
+}
+
 // adds an additional column that holds the save and delete row buttons
-function addOperationsButtons(newRow) {
+function addOperationsButtons(newRow ) {
      $(newRow).append($('<td>')
             .css({'width': '70px'})
             .append($('<div>')
-                .addClass('rowButtons')
-                .append($('<img>')
-                    .attr("src", saveImgSrc)
-                    .addClass("saveRowImg")
-                    .click(updateRecord))
-                .append($('<img>')
-                    .attr("src", deleteImgSrc)
-                    .click(deleteRecord))));
+                .addClass('rowButtons')));
+     if($(newRow).hasClass( "temporaryRow" )){
+        appendSaveRowImg($(".rowButtons").last());
+     } else {
+        appendUpdateRowImg($(".rowButtons").last());
+     }
+     appendDeleteRowImg($(".rowButtons").last());
 }
 
 // set the csrf token before making ajax call
@@ -311,6 +336,12 @@ function getSelectedCarURL() {
     return carUrl;
 }
 
+function makeRowPermanent(objSaved) {
+    $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk))
+    replaceSaveRowImg($(".temporaryRow").last());
+    $(".temporaryRow").removeClass("temporaryRow");
+}
+
 function saveRecord() {
     console.log("in save record");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
@@ -328,10 +359,7 @@ function saveRecord() {
           .done(function( objSaved ) {
               console.log( "Data Saved: " + JSON.stringify(objSaved));
               unmarkSelectedRecord();
-              $(".saveRowImg").off('click', saveRecord);
-              $(".saveRowImg").on('click', updateRecord);
-              $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk))
-              $(".temporaryRow").removeClass("temporaryRow");
+              makeRowPermanent(objSaved);
           });
 }
 
@@ -346,7 +374,7 @@ function updateRecord() {
 
     ajaxSetup();
     $.ajax({
-              method: "PUT", // or PUT when updating
+              method: "PUT",
               contentType : 'application/json',
               url: "/api/v1/refuellings/"+pk+"/",
               data: JSON.stringify(dataObj),
@@ -368,7 +396,9 @@ function deleteRecord() {
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
               $("#selectedRecord").remove();
-              removeAddNewRecordBtn();
+              removeTheAddNewRecordBtn();
+              $("#emptyBody").find("#emptySpaceRow").remove();
+              arrangeTableForMinHeight();
               setAddNewRecordBtn();
 
           });
