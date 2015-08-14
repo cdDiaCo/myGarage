@@ -202,8 +202,8 @@ h2{
 	height: 50px;
 	width: 215px;
 	position: absolute;
-	right:0px;
-	top: 15px;
+	right:30px;
+	top: 44px;
 	#margin: 5px 20px 0 0;
     color: white;
 }
@@ -660,7 +660,7 @@ input:-webkit-autofill {
     height:50px;
     position:absolute;
     top:10px;
-    left:0;
+    left:-10px;
 }
 
 #logoDiv {
@@ -721,14 +721,22 @@ input:-webkit-autofill {
     font-size: 0.9em;
 }
 
-#buttonsMenu {
+#buttonsMenuAbsolutePos {
     width: 975px;
     height: 60px;
-    #background-color: #E9EAEB;
-    position: relative;
-    top: 25px;
+    #background-color: green;
     margin: auto;
     padding:0;
+    position: relative;
+    top: 25px;
+}
+
+#buttonsMenu {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    padding:0;
+    z-index: 20;
 }
 
 #buttonsMenuContainer {
@@ -840,18 +848,10 @@ input:-webkit-autofill {
     z-index: 25;
 }
 
-/*
-#addNewRecordBtn:disabled {
-    background-image: url("../img/addRecord.png");
-	background-color: #99adb8;
-	border: 2px solid #99adb8;
-	box-shadow: 1px 1px 2px 1px rgba(50, 50, 50, 0.2);
-	color:#DADCDE;
-}
-*/
 
 #selectedRecord {
-    border: 2px solid orange;
+    border: 2px solid rgba(255,165,0, 0.3);
+    #background-color: rgba(36,52,62, 0.1);
 }
 
 .temporaryRow {
@@ -863,3 +863,47 @@ input:-webkit-autofill {
     display:none;
 }
 
+/*
+#bottomGarageContent {
+    background-color: #d1d2d3;
+    margin-top: 15px;
+    height: 210px;
+    width: 100%;
+
+}
+*/
+
+
+#triangleBtn {
+    position: absolute;
+	right: 5px;
+	top: 45px;
+	width: 16px;
+	height: 16px;
+	outline: 1px solid white;
+}
+
+#dropDownMenu {
+    width: 150px;
+    height: 100px;
+    z-index: 25;
+    background-color: rgba(36,52,62, 0.9);
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-radius: 3px;
+    display: none;
+    color: white;
+}
+
+#dropDownMenu a {
+    color: white;
+}
+
+#dropDownMenuContainer {
+    width: 150px;
+    height: 100%;
+    #background-color: red;
+    float: right;
+    position: relative;
+}

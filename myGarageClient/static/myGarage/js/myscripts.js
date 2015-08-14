@@ -183,13 +183,13 @@ function addTableBody() {
          }
     }
     else { // there are no records for this section
-         $('#contentBody').append($('<tr>'));
-         var newRow = $('#contentBody').find('tr').last();
+         $('#emptyBody').append($('<tr>'));
+         var newRow = $('#emptyBody').find('tr').last();
          var message = 'You have no '+activeBtnState.sectionName+' added yet!';
          setNoRecordsBody(newRow, message);
     }
 
-    var rows = $('#contentBody tr');
+    var rows = $('#contentBody>tr');
     rows.on('click', markSelectedRecord);
 
     $('#tableRecords').show();
@@ -480,4 +480,16 @@ function removeTableRows() {
 function removeTable() {
     $('#tableRecords tbody').find('tr').remove();
     $('#tableRecords thead').find('tr').remove();
+}
+
+function showDropDownMenu() {
+    $("#dropDownMenu").show();
+}
+
+function hideDropDownMenu() {
+    $("#dropDownMenu").hide();
+}
+
+function doNotCloseDropDownMenu(event) {
+    event.stopPropagation();
 }

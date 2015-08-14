@@ -21,7 +21,7 @@
 
 	
 	
-<div id="base_garage">
+<div id="base_garage" onclick="hideDropDownMenu();">
          <div id="header">
              <div id="headerContentWrapper_garage">
                  <div id="logoDivContainer">
@@ -33,12 +33,12 @@
                      </div>
                  </div>
                  <div id="carOptions">
-                    <a href="/logout/" style="float:right;">Click here to logout</a><br>
                     <span id="carNum" style="margin-left:10px; "></span>
                     <select onchange="selectCarHandler()" id="userCars" style="color:black; float:right;">
 
                     </select>
                  </div>
+                 <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onmouseover="showDropDownMenu();">
              </div>
 
 
@@ -47,16 +47,23 @@
         <div id="borderDiv">
 
             <div id="buttonsMenuContainer">
-
-                <div id="buttonsMenu">
-                    <button type="button" id="refuellingsButton" class="sectionsButton" onclick="setButtonActive(this);">Refuellings</button>
-                    <button type="button" id="cleaningsButton" class="sectionsButton" onclick="setButtonActive(this);">Cleanings</button>
-                    <button type="button" id="servicesButton" class="sectionsButton" onclick="setButtonActive(this);">Services</button>
-                    <button type="button" id="revisionsButton" class="sectionsButton" onclick="setButtonActive(this);">Revisions</button>
-                    <button type="button" id="taxesButton" class="sectionsButton" onclick="setButtonActive(this);">Taxes</button>
-                    <button type="button" id="insurancesButton" class="sectionsButton" onclick="setButtonActive(this);">Insurances</button>
-                    <button type="button" id="tyresButton" class="sectionsButton" onclick="setButtonActive(this);">Tyres</button>
+                <div id="dropDownMenuContainer">
+                    <div id="dropDownMenu" onclick="doNotCloseDropDownMenu(event);">
+                        <a href="/logout/">Click here to logout</a>
+                    </div>
                 </div>
+                <div id="buttonsMenuAbsolutePos">
+                    <div id="buttonsMenu">
+                        <button type="button" id="refuellingsButton" class="sectionsButton" onclick="setButtonActive(this);">Refuellings</button>
+                        <button type="button" id="cleaningsButton" class="sectionsButton" onclick="setButtonActive(this);">Cleanings</button>
+                        <button type="button" id="servicesButton" class="sectionsButton" onclick="setButtonActive(this);">Services</button>
+                        <button type="button" id="revisionsButton" class="sectionsButton" onclick="setButtonActive(this);">Revisions</button>
+                        <button type="button" id="taxesButton" class="sectionsButton" onclick="setButtonActive(this);">Taxes</button>
+                        <button type="button" id="insurancesButton" class="sectionsButton" onclick="setButtonActive(this);">Insurances</button>
+                        <button type="button" id="tyresButton" class="sectionsButton" onclick="setButtonActive(this);">Tyres</button>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -68,8 +75,10 @@
                        <tbody id="contentBody"></tbody>
                        <tbody id="emptyBody"></tbody>
                    </table>
+                    <div id="bottomGarageContent">
                     <input type="button" id="addNewRecordBtn" alt="Add new record" value="Add new record" onclick="addNewRecord();"/>
                     <div id="coverDiv"></div>
+                    </div>
                 </div>
 
             </div>
