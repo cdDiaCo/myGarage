@@ -894,10 +894,12 @@ input:-webkit-autofill {
     border-radius: 3px;
     display: none;
     color: white;
+    padding: 4px;
 }
 
 #dropDownMenu a {
-    color: white;
+    color: #24343E;
+    text-decoration: none;
 }
 
 #dropDownMenuContainer {
@@ -906,4 +908,34 @@ input:-webkit-autofill {
     #background-color: red;
     float: right;
     position: relative;
+}
+
+#dropDownMenuContent {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#logoutLinkDiv {
+    #background-color:red;
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    line-height: 20px;
+
+}
+
+.selectedDropDownMenuElement {
+    background-color: #24343E;
+}
+
+#dropDownMenu .selectedDropDownMenuElement a {
+    color: #FFFFFF;
+}
+
+#dropDownMenuContent hr {
+    margin-top: 5px;
 }

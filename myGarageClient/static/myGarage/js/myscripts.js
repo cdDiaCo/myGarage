@@ -482,7 +482,17 @@ function removeTable() {
     $('#tableRecords thead').find('tr').remove();
 }
 
+function changeDropDownMenuVisibility(){
+    var display = $("#dropDownMenu").css('display');
+    if(display === "none") {
+         showDropDownMenu();
+    } else {
+        hideDropDownMenu();
+    }
+}
+
 function showDropDownMenu() {
+    doNotCloseDropDownMenu(event);
     $("#dropDownMenu").show();
 }
 
@@ -493,3 +503,13 @@ function hideDropDownMenu() {
 function doNotCloseDropDownMenu(event) {
     event.stopPropagation();
 }
+
+function selectDropDownMenuElement(elem) {
+    $(elem).attr("class", "selectedDropDownMenuElement");
+}
+
+function deselectDropDownMenuElement(elem) {
+    $(elem).removeAttr("class");
+}
+
+

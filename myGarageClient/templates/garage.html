@@ -38,7 +38,7 @@
 
                     </select>
                  </div>
-                 <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onmouseover="showDropDownMenu();">
+                 <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onclick="changeDropDownMenuVisibility();">
              </div>
 
 
@@ -49,7 +49,12 @@
             <div id="buttonsMenuContainer">
                 <div id="dropDownMenuContainer">
                     <div id="dropDownMenu" onclick="doNotCloseDropDownMenu(event);">
-                        <a href="/logout/">Click here to logout</a>
+                        <div id="dropDownMenuContent">
+                            <div id="logoutLinkDiv" onmouseover="selectDropDownMenuElement(this);" onmouseleave="deselectDropDownMenuElement(this);">
+                                <a href="/logout/">Click here to logout</a>
+                            </div>
+                            <hr>
+                        </div>
                     </div>
                 </div>
                 <div id="buttonsMenuAbsolutePos">
