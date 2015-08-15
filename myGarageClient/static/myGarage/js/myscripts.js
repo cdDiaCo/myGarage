@@ -206,7 +206,7 @@ function setTableCellsWidth(newRow, tableContainerWidth) {
 // the purpose is to make up for the difference between the min height of the table body (150px) and
 // the height that the table would have with only 2-3 rows
 function arrangeTableForMinHeight() {
-    var contentBodyHeight = $("#contentBody tr").length * $('#contentBody tr').height();
+    var contentBodyHeight = $("#contentBody tr").length * ($('#contentBody tr').height()+2); // 2 is the sum of tr's border-top + boder-bottom
     if(contentBodyHeight < 150){
         var emptySpace = 150 - contentBodyHeight;
         $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
