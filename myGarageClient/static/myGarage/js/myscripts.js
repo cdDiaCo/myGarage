@@ -482,16 +482,16 @@ function removeTable() {
     $('#tableRecords thead').find('tr').remove();
 }
 
-function changeDropDownMenuVisibility(){
+function changeDropDownMenuVisibility(event){
     var display = $("#dropDownMenu").css('display');
     if(display === "none") {
-         showDropDownMenu();
+         showDropDownMenu(event);
     } else {
         hideDropDownMenu();
     }
 }
 
-function showDropDownMenu() {
+function showDropDownMenu(event) {
     doNotCloseDropDownMenu(event);
     $("#dropDownMenu").show();
 }
