@@ -249,11 +249,21 @@ function addNewRecord() {
     setAddNewRecordBtn();
 }
 
+function changeImgSrcToHover() {
+    console.log("in change img " + this);
+    $(this).attr("src", saveImgHoverSrc);
+}
+
+function changeImgSrcToNormal() {
+    $(this).attr("src", saveImgSrc);
+}
+
 function appendSaveRowImg(parentElement){
     $(parentElement).append($('<img>')
                     .attr("src", saveImgSrc)
                     .addClass("saveRowImg")
-                    .click(saveRecord));
+                    .click(saveRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
 }
 
 function replaceSaveRowImg(parentElement) {

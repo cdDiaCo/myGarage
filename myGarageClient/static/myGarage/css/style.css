@@ -820,7 +820,6 @@ input:-webkit-autofill {
 }
 
 
-
 #addNewRecordBtn, #addNewRecordBtn:disabled {
     visibility: hidden;
 	background: #24343E url("../img/addRecord.png") no-repeat 5% 50%;
