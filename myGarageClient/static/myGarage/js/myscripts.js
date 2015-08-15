@@ -112,7 +112,7 @@ function renderPagination() {
     }
     pagination.find("li a").click(function() {
         removeTableRows();
-        getTableRecords(null, url + '/?page=' + $(this).text());
+        getTableRecords(sectionName, url + '/?page=' + $(this).text());
         activeBtnState.page = $(this).text();
     });
 }
