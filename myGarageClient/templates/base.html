@@ -1,30 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		  {% load staticfiles %}
-		  
-		  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'myGarage/css/style.css' %}">
 
-		  
-		  <link rel="stylesheet" type="text/css" href="{% static 'myGarage/css/style.css' %}">
-		  <script src="{% static 'myGarage/js/myscripts.js' %}"></script>
-          <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-		  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
-    	  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-          <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-          <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    {% block head %}
+    {% endblock %}
 
-
-
-    {% block head %}	  
-    {% endblock %} 
-    
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>    
+<body>
     {% block content %}{% endblock %}
-    
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'myGarage/js/myscripts.js' %}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 </body>
 </html>
