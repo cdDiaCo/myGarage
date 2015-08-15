@@ -747,6 +747,7 @@ input:-webkit-autofill {
 }
 
 #tableRecords {
+    table-layout: fixed;
     width: 990px;
     padding: 0;
     margin: 0;
@@ -784,6 +785,7 @@ input:-webkit-autofill {
 }
 
 #tableRecords th {
+    overflow: hidden;
     background-color: white;
     padding-top: 15px;
     padding-left: 15px;

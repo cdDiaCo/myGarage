@@ -122,6 +122,7 @@ function addTableHead() {
         $(tableHead).append($('<th>').text(columnName));
     }
     $(tableHead).append($('<th>').css({'width': '70px'})); // this is the column that holds the operations buttons
+    setTableCellsWidth(tableHead,  $('#garageContent').width(), true);
 }
 
 // this builds the table's body
@@ -163,7 +164,7 @@ function addTableBody() {
              $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
              addOperationsButtons(newRow);
 
-             setTableCellsWidth(newRow, tableContainerWidth);
+             setTableCellsWidth(newRow, tableContainerWidth, false);
          });
 
         // here we remove the table row/rows added and not populated
@@ -193,8 +194,15 @@ function addTableBody() {
     $("#addNewRecordBtn").prop('disabled', false);
 }
 
-function setTableCellsWidth(newRow, tableContainerWidth) {
-    var tableCell = $('td');
+function setTableCellsWidth(newRow, tableContainerWidth, isTableHead) {
+    console.log("in set table cell width");
+    var tableCell;
+    if (isTableHead) {
+        tableCell = $('th');
+    } else {
+         tableCell = $('td');
+    }
+
     var leftPadding = tableCell.css('padding-left');
     var rightPadding = tableCell.css('padding-right');
     var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
@@ -250,7 +258,7 @@ function addNewRecord() {
 
     $('#contentBody').find("tr").last().addClass("temporaryRow");
     addOperationsButtons($('.temporaryRow'));
-    setTableCellsWidth($(".temporaryRow"), $('#garageContent').width());
+    setTableCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
     $('#contentBody').find("tr").last().on('click', markSelectedRecord);
     setAddNewRecordBtn();
 }
