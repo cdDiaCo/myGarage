@@ -544,4 +544,12 @@ function deselectDropDownMenuElement(elem) {
     $(elem).removeAttr("class");
 }
 
+function onHoverTriangleBtn(elem) {
+    $(elem).attr("src", triangleImgHoverSrc);
+    $(elem).css({"outline": "1px solid orange"});
+    $(elem).mouseleave(function() {
+        $(this).attr("src", triangleImgSrc);
+        $(this).css({"outline": "1px solid white"});
+    });
+}
 

@@ -13,7 +13,8 @@
        var deleteImgHoverSrc = "{% static 'myGarage/img/delete_hover.png' %}";
        var updateImgSrc = "{% static 'myGarage/img/update.png' %}";
        var updateImgHoverSrc = "{% static 'myGarage/img/update_hover.png' %}";
-
+       var triangleImgHoverSrc = "{% static 'myGarage/img/triangle_hover.png' %}";
+       var triangleImgSrc = "{% static 'myGarage/img/triangle.png' %}";
 	   
 	   </script>	 
 {% endblock %}
@@ -41,7 +42,7 @@
 
                     </select>
                  </div>
-                 <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onclick="changeDropDownMenuVisibility(event);">
+                 <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onclick="changeDropDownMenuVisibility(event);" onmouseover="onHoverTriangleBtn(this);">
              </div>
 
 
