@@ -19,20 +19,21 @@ var activeBtnState = {};
 
 // when one of the section buttons gets clicked
 function setButtonActive(elem) {
-    deactivateButtons();
-    $(elem).addClass('active');
-    removeTable();
-    prepareTable();
+    if ($('.sectionsButton.active')[0] !== elem) {
+        deactivateButtons();
+        $(elem).addClass('active');
+        removeTable();
+        prepareTable();
+    }
 }
 
 // before activating a new button, we have to deactivate the last one
 function deactivateButtons() {
-    var buttons  = $('.sectionsButton');
-    var id;
+    var buttons = $('.sectionsButton');
     $.each(buttons, function(){
         if($(this).hasClass("active")) {
             $(this).removeClass("active");
-            return;
+            return false;
         }
     });
 }
@@ -43,7 +44,7 @@ function getUserCars() {
     var carNum = 0;
     $.ajax({type:"GET", url: "/api/v1/cars/"})
         .fail(function(resp){
-            console.log('bad credentials.');
+            console.log(resp.responseText);
         })
         .done(function(resp){
             carNum = resp.count;
@@ -51,7 +52,7 @@ function getUserCars() {
             $.each(resp.results, function() {
                 options.append($("<option />").val(this.pk).text(this.manufacturer_name+" "+this.model_name));
             });
-            if(carNum>1) {
+            if(carNum > 1) {
                 $('#carNum').text('My cars');
             } else {
                 $('#carNum').text('My car');
@@ -78,7 +79,7 @@ function prepareTable() {
 function getTableRecords(sectionName) {
      $.ajax({type:"GET", url: "/api/v1/"+sectionName+"/"})
         .fail(function(resp){
-            console.log('bad credentials.');
+            console.log(resp.responseText);
         })
         .done(function(resp){
             activeBtnState.sectionName = sectionName;
@@ -92,17 +93,17 @@ function getTableRecords(sectionName) {
 function getTableColumns(sectionName) {
     var sectionSingular;
     if(sectionName === "taxes") {
-        sectionSingular = sectionName.substring(0, sectionName.length-2);
+        sectionSingular = sectionName.substring(0, sectionName.length - 2);
     }
     else {
-        sectionSingular = sectionName.substring(0, sectionName.length-1);
+        sectionSingular = sectionName.substring(0, sectionName.length - 1);
     }
     $.ajax({type:"GET", url: "/api/v1/columns/"+sectionSingular+"/"})
         .fail(function(resp){
-            console.log('bad credentials.');
+            console.log(resp.responseText);
         })
         .done(function(resp){
-            activeBtnState.numOfColumns = resp.length-2;
+            activeBtnState.numOfColumns = resp.length - 2;
             activeBtnState.columns = resp;
             addTableHead();
             getTableRecords(sectionName);
@@ -113,7 +114,7 @@ function getTableColumns(sectionName) {
 function addTableHead() {
     $('#tableRecords thead').append($('<tr>'));
     var tableHead = $('#tableRecords thead').find('tr');
-    for(column in activeBtnState.columns) {
+    for(var column in activeBtnState.columns) {
         var columnName = getTableHeadName(activeBtnState.columns[column]);
         if(columnName === "Id" || columnName === "Car") {
             continue;
@@ -125,7 +126,7 @@ function addTableHead() {
 
 // this builds the table's body
 function addTableBody() {
-    enableTheAddNewRecordBtn();
+    enableAddNewRecordBtn();
     if(activeBtnState.numOfRecords > 0){ // there are records for this section
          var noRecordsMsg = "";
          var carHasRecords = false;
@@ -135,14 +136,14 @@ function addTableBody() {
              $('#contentBody').append($('<tr>'));
              var newRow = $('#contentBody').find('tr').last();
              for (var key in elem) {
-                 if(key==="pk") {
+                 if(key === "pk") {
                     pk = elem[key];
                     //$(newRow).append($('<input>').attr("name", key).attr("id", "hiddenValue").val(pk));
                     continue;
                  }
-                 if(key==="car") {
+                 if(key === "car") {
                       if(!isSelectedCar(elem[key])) { // this record belongs to another car
-                          if(!carHasRecords && index === (activeBtnState.results.length-1)) {
+                          if(!carHasRecords && index === (activeBtnState.results.length - 1)) {
                               // this combination of section and car doesn't have any records
                               noRecordsMsg = 'You have no '+activeBtnState.sectionName+' added for this car!';
                               setNoRecordsBody(newRow, noRecordsMsg);
@@ -166,7 +167,7 @@ function addTableBody() {
              var leftPadding = tableCell.css('padding-left');
              var rightPadding = tableCell.css('padding-right');
              var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-             var cellWidth = (tableContainerWidth-70)/activeBtnState.numOfColumns-(widthPadding+1);
+             var cellWidth = (tableContainerWidth - 70)/activeBtnState.numOfColumns-(widthPadding + 1);
              $(newRow).find('input').css({"width": cellWidth});
          });
 
@@ -185,7 +186,7 @@ function addTableBody() {
     else { // there are no records for this section
          $('#emptyBody').append($('<tr>'));
          var newRow = $('#emptyBody').find('tr').last();
-         var message = 'You have no '+activeBtnState.sectionName+' added yet!';
+         var message = 'You have no ' + activeBtnState.sectionName + ' added yet!';
          setNoRecordsBody(newRow, message);
     }
 
@@ -205,7 +206,7 @@ function arrangeTableForMinHeight() {
     if(contentBodyHeight < 150){
         var emptySpace = 150 - contentBodyHeight;
         $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
-                            .append($('<td>').attr('colspan', activeBtnState.numOfColumns+1)
+                            .append($('<td>').attr('colspan', activeBtnState.numOfColumns + 1)
                                 .append($('<div>')
                                     .attr('id', 'emptyDiv'))));
         $("#emptyDiv").height(emptySpace);
@@ -216,27 +217,27 @@ function arrangeTableForMinHeight() {
 function setAddNewRecordBtn() {
     var tableHeight = $('#tableRecords').height();
     var marginTop = 15 + tableHeight + "px";
-    $('#addNewRecordBtn').css({'top': marginTop, });
+    $('#addNewRecordBtn').css({'top': marginTop});
     $('#addNewRecordBtn').css({'visibility': 'visible'});
     $("#coverDiv").css({'top': marginTop});
 
 }
 
-function removeTheAddNewRecordBtn() {
+function removeAddNewRecordBtn() {
     $('#addNewRecordBtn').css({'visibility': 'hidden'});
 }
 
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
-    disableTheAddNewRecordBtn();
+    disableAddNewRecordBtn();
     removeNoRecordsTD();
 
     $("#emptyBody").find("#emptySpaceRow").remove();
     $('#contentBody').append($('<tr>'));
     arrangeTableForMinHeight();
-    removeTheAddNewRecordBtn();
-    for (column in activeBtnState.columns) {
-        if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") {continue;}
+    removeAddNewRecordBtn();
+    for (var column in activeBtnState.columns) {
+        if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") { continue; }
         $('#contentBody').find("tr").last().append($("<td>")
                                                 .append($('<input>')
                                                 .prop('type', 'text')
@@ -316,15 +317,14 @@ function unmarkSelectedRecord() {
 }
 
 function getSelectedRecordPk() {
-    var pk = $("#selectedRecord").find("#hiddenValue").text();
-    return pk;
+    return $("#selectedRecord").find("#hiddenValue").text();
 }
 
 // returns the input data contained by the selected row
 function getSelectedRecordData() {
     var columns = $("#selectedRecord").find("td");
     var data = {};
-    for ( var i = 0; i<columns.length-1; i++){
+    for (var i = 0; i<columns.length-1; i++){
         var cell = columns[i];
         var cellChildren = $(cell).children();
         //console.log(cellChildren);
@@ -338,22 +338,21 @@ function getSelectedRecordData() {
 
 function getSelectedCarURL() {
     var selectedCar = $('#userCars').val();
-    var carUrl = "/api/v1/cars/" + selectedCar + "/";
-    return carUrl;
+    return "/api/v1/cars/" + selectedCar + "/";
 }
 
 function makeRowPermanent(objSaved) {
-    $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk))
+    $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk));
     replaceSaveRowImg($(".temporaryRow").last());
     $(".temporaryRow").removeClass("temporaryRow");
 }
 
-function disableTheAddNewRecordBtn() {
+function disableAddNewRecordBtn() {
     $("#addNewRecordBtn").prop('disabled', true);
     $("#coverDiv").show();
 }
 
-function enableTheAddNewRecordBtn() {
+function enableAddNewRecordBtn() {
      $("#coverDiv").hide();
      $("#addNewRecordBtn").prop('disabled', false);
 }
@@ -363,21 +362,20 @@ function saveRecord() {
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var section = activeBtnState.sectionName;
     var dataObj = getSelectedRecordData();
-    var selectedCarUrl = getSelectedCarURL();
-    dataObj["car"] = selectedCarUrl;
+    dataObj["car"] = getSelectedCarURL();
 
     ajaxSetup();
     $.ajax({
-              method: "POST", // or PUT when updating
+              method: "POST",
               url: "/api/v1/" + section + "/",
               contentType : 'application/json',
-              data: JSON.stringify(dataObj),
+              data: JSON.stringify(dataObj)
           })
           .done(function( objSaved ) {
               console.log( "Data Saved: " + JSON.stringify(objSaved));
               unmarkSelectedRecord();
               makeRowPermanent(objSaved);
-              enableTheAddNewRecordBtn();
+              enableAddNewRecordBtn();
           });
 }
 
@@ -387,8 +385,7 @@ function updateRecord() {
     var section = activeBtnState.sectionName;
     var pk = getSelectedRecordPk();
     var dataObj = getSelectedRecordData();
-    var selectedCarUrl = getSelectedCarURL();
-    dataObj["car"] = selectedCarUrl;
+    dataObj["car"] = getSelectedCarURL();
     console.log(dataObj);
 
     ajaxSetup();
@@ -396,7 +393,7 @@ function updateRecord() {
               method: "PUT",
               contentType : 'application/json',
               url: "/api/v1/" + section + "/" + pk + "/",
-              data: JSON.stringify(dataObj),
+              data: JSON.stringify(dataObj)
           })
           .done(function( msg ) {
               console.log( "Data Saved: " + msg );
@@ -406,7 +403,7 @@ function updateRecord() {
 
 function rearrangeTableAfterDeletingRecord() {
       $("#selectedRecord").remove();
-      removeTheAddNewRecordBtn();
+      removeAddNewRecordBtn();
       $("#emptyBody").find("#emptySpaceRow").remove();
       arrangeTableForMinHeight();
       setAddNewRecordBtn();
@@ -446,7 +443,7 @@ function removeNoRecordsTD() {
 function getTableHeadName(key) {
     var res = key.split("_");
     var name ="";
-    for (var i=0; i<res.length; i++) {
+    for (var i=0; i < res.length; i++) {
         if(i === 0) {
             name += res[i].charAt(0).toUpperCase() + res[i].slice(1);
         } else {
@@ -459,12 +456,9 @@ function getTableHeadName(key) {
 // this checks if the car selected by the user matches the current record's car
 function isSelectedCar(carUrl) {
     carUrl = String(carUrl);
-    var carID = carUrl.charAt(carUrl.length-2);
+    var carID = carUrl.charAt(carUrl.length - 2);
     var selectedCar = $('#userCars').val();
-    if(carID == selectedCar) {
-        return true;
-    }
-    return false;
+    return carID == selectedCar;
 }
 
 // this is called when the user selects a different car
