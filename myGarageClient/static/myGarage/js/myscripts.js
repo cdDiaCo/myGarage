@@ -92,29 +92,28 @@ function getTableRecords(sectionName, url) {
             activeBtnState.numOfPages = Math.ceil(activeBtnState.numOfRecords / maxResults);
             activeBtnState.nextPage = resp.next;
             activeBtnState.previous = resp.previous;
-            addTableBody();
+            activeBtnState.page = activeBtnState.page || 1;
             renderPagination();
+            addTableBody();
         });
-}
-
-function removeTableRecords() {
-    $('#contentBody tr').each(function(index, elem) {
-        $(elem).remove();
-    });
 }
 
 function renderPagination() {
     var pagination = $('#pagination-ul'),
-        url = "/api/v1/" + getActiveSectionName();
+        sectionName = getActiveSectionName(),
+        url = "/api/v1/" + sectionName;
     pagination.find('li').each(function(index, elem) { $(elem).remove() });
 
     for (var i = 1; i <= activeBtnState.numOfPages; i++) {
         pagination.append('<li><a href="#">' + i +'</a></li>');
+        if (parseInt(activeBtnState.page) === i) {
+            pagination.find('li:nth-child(' + i + ')').addClass('active');
+        }
     }
-
     pagination.find("li a").click(function() {
-        removeTableRecords();
-        getTableRecords('', url + '/?page=' + $(this).text());
+        removeTableRows();
+        getTableRecords(null, url + '/?page=' + $(this).text());
+        activeBtnState.page = $(this).text();
     });
 }
 
