@@ -753,7 +753,14 @@ input:-webkit-autofill {
     color: #24343E;
     display: none;
     background-color: white;
+    border: 1px solid #24343E;
 }
+
+/*
+#emptyBody tr {
+    border: 1px solid #24343E;
+}
+*/
 
 #tableRecords td {
     border: 1px solid #24343E;
@@ -764,6 +771,7 @@ input:-webkit-autofill {
 #tableRecords tr {
     height: 30px;
     #background-color: white;
+    border: 1px solid #24343E;
 }
 
 
@@ -861,17 +869,6 @@ input:-webkit-autofill {
 #hiddenValue {
     display:none;
 }
-
-/*
-#bottomGarageContent {
-    background-color: #d1d2d3;
-    margin-top: 15px;
-    height: 210px;
-    width: 100%;
-
-}
-*/
-
 
 #triangleBtn {
     position: absolute;

@@ -163,12 +163,7 @@ function addTableBody() {
              $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
              addOperationsButtons(newRow);
 
-             var tableCell = $('td');
-             var leftPadding = tableCell.css('padding-left');
-             var rightPadding = tableCell.css('padding-right');
-             var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-             var cellWidth = (tableContainerWidth - 70)/activeBtnState.numOfColumns-(widthPadding + 1);
-             $(newRow).find('input').css({"width": cellWidth});
+             setTableCellsWidth(newRow, tableContainerWidth);
          });
 
         // here we remove the table row/rows added and not populated
@@ -196,6 +191,15 @@ function addTableBody() {
     $('#tableRecords').show();
     setAddNewRecordBtn();
     $("#addNewRecordBtn").prop('disabled', false);
+}
+
+function setTableCellsWidth(newRow, tableContainerWidth) {
+    var tableCell = $('td');
+    var leftPadding = tableCell.css('padding-left');
+    var rightPadding = tableCell.css('padding-right');
+    var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
+    var cellWidth = (tableContainerWidth - 70)/activeBtnState.numOfColumns-(widthPadding + 1);
+    $(newRow).find('input').css({"width": cellWidth});
 }
 
 // here we add an extra tbody that holds an 'empty space'
@@ -231,11 +235,11 @@ function removeAddNewRecordBtn() {
 function addNewRecord() {
     disableAddNewRecordBtn();
     removeNoRecordsTD();
-
     $("#emptyBody").find("#emptySpaceRow").remove();
     $('#contentBody').append($('<tr>'));
     arrangeTableForMinHeight();
     removeAddNewRecordBtn();
+
     for (var column in activeBtnState.columns) {
         if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") { continue; }
         $('#contentBody').find("tr").last().append($("<td>")
@@ -246,6 +250,7 @@ function addNewRecord() {
 
     $('#contentBody').find("tr").last().addClass("temporaryRow");
     addOperationsButtons($('.temporaryRow'));
+    setTableCellsWidth($(".temporaryRow"), $('#garageContent').width());
     $('#contentBody').find("tr").last().on('click', markSelectedRecord);
     setAddNewRecordBtn();
 }
