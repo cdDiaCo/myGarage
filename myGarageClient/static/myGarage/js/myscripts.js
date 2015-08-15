@@ -192,12 +192,7 @@ function addTableBody() {
              $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
              addOperationsButtons(newRow);
 
-             var tableCell = $('td');
-             var leftPadding = tableCell.css('padding-left');
-             var rightPadding = tableCell.css('padding-right');
-             var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-             var cellWidth = (tableContainerWidth - 70)/activeBtnState.numOfColumns-(widthPadding + 1);
-             $(newRow).find('input').css({"width": cellWidth});
+             setTableCellsWidth(newRow, tableContainerWidth);
          });
 
         // here we remove the table row/rows added and not populated
@@ -227,11 +222,20 @@ function addTableBody() {
     $("#addNewRecordBtn").prop('disabled', false);
 }
 
+function setTableCellsWidth(newRow, tableContainerWidth) {
+    var tableCell = $('td');
+    var leftPadding = tableCell.css('padding-left');
+    var rightPadding = tableCell.css('padding-right');
+    var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
+    var cellWidth = (tableContainerWidth - 70)/activeBtnState.numOfColumns-(widthPadding + 1);
+    $(newRow).find('input').css({"width": cellWidth});
+}
+
 // here we add an extra tbody that holds an 'empty space'
 // the purpose is to make up for the difference between the min height of the table body (150px) and
 // the height that the table would have with only 2-3 rows
 function arrangeTableForMinHeight() {
-    var contentBodyHeight = $("#contentBody tr").length * $('#contentBody tr').height();
+    var contentBodyHeight = $("#contentBody tr").length * ($('#contentBody tr').height()+2); // 2 is the sum of tr's border-top + boder-bottom
     if(contentBodyHeight < 150){
         var emptySpace = 150 - contentBodyHeight;
         $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
@@ -260,11 +264,11 @@ function removeAddNewRecordBtn() {
 function addNewRecord() {
     disableAddNewRecordBtn();
     removeNoRecordsTD();
-
     $("#emptyBody").find("#emptySpaceRow").remove();
     $('#contentBody').append($('<tr>'));
     arrangeTableForMinHeight();
     removeAddNewRecordBtn();
+
     for (var column in activeBtnState.columns) {
         if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") { continue; }
         $('#contentBody').find("tr").last().append($("<td>")
@@ -275,15 +279,52 @@ function addNewRecord() {
 
     $('#contentBody').find("tr").last().addClass("temporaryRow");
     addOperationsButtons($('.temporaryRow'));
+    setTableCellsWidth($(".temporaryRow"), $('#garageContent').width());
     $('#contentBody').find("tr").last().on('click', markSelectedRecord);
     setAddNewRecordBtn();
+}
+
+function changeImgSrcToHover() {
+    var imgClass = $(this).attr("class");
+    var newImgSrc;
+    switch (imgClass) {
+        case "saveRowImg":
+            newImgSrc = saveImgHoverSrc;
+            break;
+        case "updateRowImg":
+            newImgSrc = updateImgHoverSrc;
+            break;
+        case "deleteRowImg":
+            newImgSrc = deleteImgHoverSrc;
+            break;
+    }
+
+    $(this).attr("src", newImgSrc);
+}
+
+function changeImgSrcToNormal() {
+    var imgClass = $(this).attr("class");
+    var newImgSrc;
+    switch (imgClass) {
+        case "saveRowImg":
+            newImgSrc = saveImgSrc;
+            break;
+        case "updateRowImg":
+            newImgSrc = updateImgSrc;
+            break;
+        case "deleteRowImg":
+            newImgSrc = deleteImgSrc;
+            break;
+    }
+    $(this).attr("src", newImgSrc);
 }
 
 function appendSaveRowImg(parentElement){
     $(parentElement).append($('<img>')
                     .attr("src", saveImgSrc)
                     .addClass("saveRowImg")
-                    .click(saveRecord));
+                    .click(saveRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
 }
 
 function replaceSaveRowImg(parentElement) {
@@ -298,14 +339,16 @@ function appendUpdateRowImg(parentElement) {
     $(parentElement).append($('<img>')
                         .attr("src", updateImgSrc)
                         .addClass("updateRowImg")
-                        .click(updateRecord));
+                        .click(updateRecord)
+                        .hover(changeImgSrcToHover, changeImgSrcToNormal));
 }
 
 function appendDeleteRowImg(parentElement) {
     $(parentElement).append($('<img>')
                     .attr("src", deleteImgSrc)
                     .addClass("deleteRowImg")
-                    .click(deleteRecord));
+                    .click(deleteRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
 }
 
 // adds an additional column that holds the save and delete row buttons
@@ -535,4 +578,12 @@ function deselectDropDownMenuElement(elem) {
     $(elem).removeAttr("class");
 }
 
+function onHoverTriangleBtn(elem) {
+    $(elem).attr("src", triangleImgHoverSrc);
+    $(elem).css({"outline": "1px solid orange"});
+    $(elem).mouseleave(function() {
+        $(this).attr("src", triangleImgSrc);
+        $(this).css({"outline": "1px solid white"});
+    });
+}
 
