@@ -1,3 +1,4 @@
+var maxResults = 10;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -67,17 +68,20 @@ function getUserCars() {
 // generate table for that section
 function prepareTable() {
     $('#tableRecords').css({'display': 'none'});
+    getTableColumns(getActiveSectionName());
+}
+
+function getActiveSectionName() {
     var sectionBtn = $('.sectionsButton.active');
     var sectionID = $(sectionBtn).attr('id');
     var index = sectionID.indexOf("Button");
-    var sectionName = sectionID.substring(0, index);
-    sectionName = sectionName.toLowerCase();
-    getTableColumns(sectionName);
+    return sectionID.substring(0, index).toLowerCase();
 }
 
 // gets the records for the selected section
-function getTableRecords(sectionName) {
-     $.ajax({type:"GET", url: "/api/v1/"+sectionName+"/"})
+function getTableRecords(sectionName, url) {
+    var req_url = url ? url : "/api/v1/" + sectionName + "/";
+    $.ajax({type:"GET", url: req_url})
         .fail(function(resp){
             console.log(resp.responseText);
         })
@@ -85,8 +89,33 @@ function getTableRecords(sectionName) {
             activeBtnState.sectionName = sectionName;
             activeBtnState.numOfRecords = resp.count;
             activeBtnState.results = resp.results;
+            activeBtnState.numOfPages = Math.ceil(activeBtnState.numOfRecords / maxResults);
+            activeBtnState.nextPage = resp.next;
+            activeBtnState.previous = resp.previous;
             addTableBody();
-     });
+            renderPagination();
+        });
+}
+
+function removeTableRecords() {
+    $('#contentBody tr').each(function(index, elem) {
+        $(elem).remove();
+    });
+}
+
+function renderPagination() {
+    var pagination = $('#pagination-ul'),
+        url = "/api/v1/" + getActiveSectionName();
+    pagination.find('li').each(function(index, elem) { $(elem).remove() });
+
+    for (var i = 1; i <= activeBtnState.numOfPages; i++) {
+        pagination.append('<li><a href="#">' + i +'</a></li>');
+    }
+
+    pagination.find("li a").click(function() {
+        removeTableRecords();
+        getTableRecords('', url + '/?page=' + $(this).text());
+    });
 }
 
 // gets the columns for the selected section
