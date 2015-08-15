@@ -251,12 +251,38 @@ function addNewRecord() {
 }
 
 function changeImgSrcToHover() {
-    console.log("in change img " + this);
-    $(this).attr("src", saveImgHoverSrc);
+    var imgClass = $(this).attr("class");
+    var newImgSrc;
+    switch (imgClass) {
+        case "saveRowImg":
+            newImgSrc = saveImgHoverSrc;
+            break;
+        case "updateRowImg":
+            newImgSrc = updateImgHoverSrc;
+            break;
+        case "deleteRowImg":
+            newImgSrc = deleteImgHoverSrc;
+            break;
+    }
+
+    $(this).attr("src", newImgSrc);
 }
 
 function changeImgSrcToNormal() {
-    $(this).attr("src", saveImgSrc);
+    var imgClass = $(this).attr("class");
+    var newImgSrc;
+    switch (imgClass) {
+        case "saveRowImg":
+            newImgSrc = saveImgSrc;
+            break;
+        case "updateRowImg":
+            newImgSrc = updateImgSrc;
+            break;
+        case "deleteRowImg":
+            newImgSrc = deleteImgSrc;
+            break;
+    }
+    $(this).attr("src", newImgSrc);
 }
 
 function appendSaveRowImg(parentElement){
@@ -279,14 +305,16 @@ function appendUpdateRowImg(parentElement) {
     $(parentElement).append($('<img>')
                         .attr("src", updateImgSrc)
                         .addClass("updateRowImg")
-                        .click(updateRecord));
+                        .click(updateRecord)
+                        .hover(changeImgSrcToHover, changeImgSrcToNormal));
 }
 
 function appendDeleteRowImg(parentElement) {
     $(parentElement).append($('<img>')
                     .attr("src", deleteImgSrc)
                     .addClass("deleteRowImg")
-                    .click(deleteRecord));
+                    .click(deleteRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
 }
 
 // adds an additional column that holds the save and delete row buttons
