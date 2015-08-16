@@ -937,3 +937,7 @@ input:-webkit-autofill {
 #dropDownMenuContent hr {
     margin-top: 5px;
 }
+
+.pagination {
+    display: none;
+}

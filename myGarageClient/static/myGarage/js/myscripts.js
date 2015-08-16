@@ -112,6 +112,7 @@ function renderPagination() {
     }
     pagination.find("li a").click(function() {
         removeTableRows();
+        $('.pagination').hide();
         getTableRecords(sectionName, url + '/?page=' + $(this).text());
         activeBtnState.page = $(this).text();
     });
@@ -220,6 +221,7 @@ function addTableBody() {
     $('#tableRecords').show();
     setAddNewRecordBtn();
     $("#addNewRecordBtn").prop('disabled', false);
+    $('.pagination').show();
 }
 
 function setTableCellsWidth(newRow, tableContainerWidth, isTableHead) {
