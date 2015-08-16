@@ -57,7 +57,8 @@ WSGI_APPLICATION = 'myGarage.wsgi.application'
 #AUTH_PROFILE_MODULE = 'myGarage.UserProfile'
 
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 10,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
     'PAGINATE_BY_PARAM': 'page_size',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
