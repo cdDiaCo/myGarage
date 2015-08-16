@@ -17,6 +17,7 @@ function getCookie(name) {
 }
 
 var activeBtnState = {};
+activeBtnState.newRowNeeded = false;
 
 // when one of the section buttons gets clicked
 function setButtonActive(elem) {
@@ -98,10 +99,13 @@ function getTableRecords(sectionName, url) {
         });
 }
 
+function getLastPaginationBtn() {
+    var lastBtn = $('.pagination').find('li').last().children();
+    return lastBtn;
+}
+
 function renderPagination() {
-    var pagination = $('#pagination-ul'),
-        sectionName = getActiveSectionName(),
-        url = "/api/v1/" + sectionName;
+    var pagination = $('#pagination-ul');
     pagination.find('li').each(function(index, elem) { $(elem).remove() });
 
     for (var i = 1; i <= activeBtnState.numOfPages; i++) {
@@ -110,13 +114,18 @@ function renderPagination() {
             pagination.find('li:nth-child(' + i + ')').addClass('active');
         }
     }
-    pagination.find("li a").click(function() {
-        removeTableRows();
-        $('.pagination').hide();
-        getTableRecords(sectionName, url + '/?page=' + $(this).text());
-        activeBtnState.page = $(this).text();
-    });
+    pagination.find("li a").click(paginationBtnClickHandler);
 }
+
+function paginationBtnClickHandler() {
+    var sectionName = getActiveSectionName(),
+        url = "/api/v1/" + sectionName;
+    removeTableRows();
+    $('.pagination').hide();
+    getTableRecords(sectionName, url + '/?page=' + $(this).text());
+    activeBtnState.page = $(this).text();
+}
+
 
 // gets the columns for the selected section
 function getTableColumns(sectionName) {
@@ -222,6 +231,10 @@ function addTableBody() {
     setAddNewRecordBtn();
     $("#addNewRecordBtn").prop('disabled', false);
     $('.pagination').show();
+    if(activeBtnState.newRowNeeded) {
+        // addTableBody() function was called because user requested a new record on a full pagination
+        addNewRecord();
+    }
 }
 
 function setTableCellsWidth(newRow, tableContainerWidth, isTableHead) {
@@ -270,26 +283,34 @@ function removeAddNewRecordBtn() {
 
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
-    disableAddNewRecordBtn();
-    removeNoRecordsTD();
-    $("#emptyBody").find("#emptySpaceRow").remove();
-    $('#contentBody').append($('<tr>'));
-    arrangeTableForMinHeight();
-    removeAddNewRecordBtn();
+    activeBtnState.newRowNeeded = false;
+    var numOfRowsOnPage = $('#contentBody > tr').length;
+    if(numOfRowsOnPage === 10) {
+        var lastPaginationBtn = getLastPaginationBtn();
+        activeBtnState.newRowNeeded = true;
+        paginationBtnClickHandler.call(lastPaginationBtn);
+    } else {
+        disableAddNewRecordBtn();
+        removeNoRecordsTD();
+        $("#emptyBody").find("#emptySpaceRow").remove();
+        $('#contentBody').append($('<tr>'));
+        arrangeTableForMinHeight();
+        removeAddNewRecordBtn();
 
-    for (var column in activeBtnState.columns) {
-        if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") { continue; }
-        $('#contentBody').find("tr").last().append($("<td>")
-                                                .append($('<input>')
-                                                .prop('type', 'text')
-                                                .attr('name', activeBtnState.columns[column])));
+        for (var column in activeBtnState.columns) {
+            if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") { continue; }
+            $('#contentBody').find("tr").last().append($("<td>")
+                                                    .append($('<input>')
+                                                    .prop('type', 'text')
+                                                    .attr('name', activeBtnState.columns[column])));
+        }
+
+        $('#contentBody').find("tr").last().addClass("temporaryRow");
+        addOperationsButtons($('.temporaryRow'));
+        setTableCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
+        $('#contentBody').find("tr").last().on('click', markSelectedRecord);
+        setAddNewRecordBtn();
     }
-
-    $('#contentBody').find("tr").last().addClass("temporaryRow");
-    addOperationsButtons($('.temporaryRow'));
-    setTableCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
-    $('#contentBody').find("tr").last().on('click', markSelectedRecord);
-    setAddNewRecordBtn();
 }
 
 function changeImgSrcToHover() {
@@ -438,7 +459,7 @@ function enableAddNewRecordBtn() {
 }
 
 function saveRecord() {
-    console.log("in save record");
+    //console.log("in save record");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var section = activeBtnState.sectionName;
     var dataObj = getSelectedRecordData();
@@ -460,7 +481,7 @@ function saveRecord() {
 }
 
 function updateRecord() {
-    console.log("in update");
+    //console.log("in update");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var section = activeBtnState.sectionName;
     var pk = getSelectedRecordPk();
