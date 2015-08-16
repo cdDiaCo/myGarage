@@ -195,7 +195,6 @@ function addTableBody() {
 }
 
 function setTableCellsWidth(newRow, tableContainerWidth, isTableHead) {
-    console.log("in set table cell width");
     var tableCell;
     if (isTableHead) {
         tableCell = $('th');
