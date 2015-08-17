@@ -22,7 +22,7 @@ time, mark, audio, video {
 	border: 0;
 	font-size: 100%;
 	font: inherit;
-	vertical-align: baseline;
+	vertical-align: middle;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
@@ -370,6 +370,8 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 	margin-top: 20px;
 	background-color: #E9EAEB;
     #border: 1px solid #babbbc;
+    background-color: #91999e;
+    padding: 0;
 }
 
 
@@ -748,20 +750,25 @@ input:-webkit-autofill {
 
 #tableRecords {
     table-layout: fixed;
-    width: 990px;
+    #width: 990px;
+    width: 100%;
+    height: 100%;
     padding: 0;
     margin: 0;
     color: #24343E;
     display: none;
     background-color: white;
-    border: 1px solid #24343E;
+    #border: 1px solid #24343E;
+    border: none;
 }
 
-/*
-#emptyBody tr {
-    border: 1px solid #24343E;
+#emptyBody {
+    display: none;
 }
-*/
+
+#contentBody {
+    display: none;
+}
 
 #tableRecords td {
     border: 1px solid #24343E;
@@ -771,6 +778,7 @@ input:-webkit-autofill {
 
 #tableRecords tr {
     height: 30px;
+    width:100%
     #background-color: white;
     border: 1px solid #24343E;
 }
@@ -785,6 +793,7 @@ input:-webkit-autofill {
 }
 
 #tableRecords th {
+    width: 100%;
     overflow: hidden;
     background-color: white;
     padding-top: 15px;
@@ -794,7 +803,7 @@ input:-webkit-autofill {
     border: 1px solid #24343E;
 }
 
-#emptyDiv {
+#emptySpaceRow {
     background-color: #E9EAEB;
 }
 
@@ -807,7 +816,7 @@ input:-webkit-autofill {
 
 
 #noRecordsMessage {
-    width: 982px;
+    width: 100%;
     height: 150px;
     text-align: center;
     padding-top: 40px;

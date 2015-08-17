@@ -68,7 +68,8 @@ function getUserCars() {
 // check what section button has the active class
 // generate table for that section
 function prepareTable() {
-    $('#tableRecords').css({'display': 'none'});
+    $('#contentBody').hide();
+    $('#emptyBody').hide();
     getTableColumns(getActiveSectionName());
 }
 
@@ -173,6 +174,7 @@ function addTableBody() {
              var pk;
              var tableContainerWidth = $('#garageContent').width();
              $('#contentBody').append($('<tr>'));
+
              var newRow = $('#contentBody').find('tr').last();
              for (var key in elem) {
                  if(key === "pk") {
@@ -203,6 +205,7 @@ function addTableBody() {
              addOperationsButtons(newRow);
 
              setTableCellsWidth(newRow, tableContainerWidth, false);
+
          });
 
         // here we remove the table row/rows added and not populated
@@ -216,6 +219,8 @@ function addTableBody() {
          if(!noRecordsMsg) { // we have records for the selected section and car
             arrangeTableForMinHeight();
          }
+         $('#contentBody').show();
+
     }
     else { // there are no records for this section
          $('#emptyBody').append($('<tr>'));
@@ -264,6 +269,7 @@ function arrangeTableForMinHeight() {
                                 .append($('<div>')
                                     .attr('id', 'emptyDiv'))));
         $("#emptyDiv").height(emptySpace);
+        $('#emptyBody').show();
     }
 }
 
@@ -274,7 +280,6 @@ function setAddNewRecordBtn() {
     $('#addNewRecordBtn').css({'top': marginTop});
     $('#addNewRecordBtn').css({'visibility': 'visible'});
     $("#coverDiv").css({'top': marginTop});
-
 }
 
 function removeAddNewRecordBtn() {
@@ -283,6 +288,8 @@ function removeAddNewRecordBtn() {
 
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
+    $('#contentBody').show();
+    $('#emptyBody').show();
     activeBtnState.newRowNeeded = false;
     var numOfRowsOnPage = $('#contentBody > tr').length;
     if(numOfRowsOnPage === 10) {
@@ -533,6 +540,7 @@ function setNoRecordsBody(newRow, message) {
         .append($('<div>')
             .attr('id', 'noRecordsMessage')
             .text(message)));
+    $("#emptyBody").show();
 }
 
 function removeNoRecordsTD() {
@@ -615,4 +623,3 @@ function onHoverTriangleBtn(elem) {
         $(this).css({"outline": "1px solid white"});
     });
 }
-
