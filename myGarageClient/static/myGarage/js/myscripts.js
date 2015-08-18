@@ -50,7 +50,7 @@ function getUserCars() {
         })
         .done(function(resp){
             carNum = resp.count;
-            var options = $('#userCars');
+            var options = $('#userCarsSelectBox');
             $.each(resp.results, function() {
                 options.append($("<option />").val(this.pk).text(this.manufacturer_name+" "+this.model_name));
             });
@@ -445,7 +445,7 @@ function getSelectedRecordData() {
 }
 
 function getSelectedCarURL() {
-    var selectedCar = $('#userCars').val();
+    var selectedCar = $('#userCarsSelectBox').val();
     return "/api/v1/cars/" + selectedCar + "/";
 }
 
@@ -566,7 +566,7 @@ function getTableHeadName(key) {
 function isSelectedCar(carUrl) {
     carUrl = String(carUrl);
     var carID = carUrl.charAt(carUrl.length - 2);
-    var selectedCar = $('#userCars').val();
+    var selectedCar = $('#userCarsSelectBox').val();
     return carID == selectedCar;
 }
 

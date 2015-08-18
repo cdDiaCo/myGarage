@@ -37,9 +37,8 @@
                      </div>
                  </div>
                  <div id="carOptions">
-                    <span id="carNum" style="margin-left:10px; "></span>
-                    <select onchange="selectCarHandler()" id="userCars" style="color:black; float:right;">
-
+                    <span id="carNum"></span>
+                    <select onchange="selectCarHandler()" id="userCarsSelectBox">
                     </select>
                  </div>
                  <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onclick="changeDropDownMenuVisibility(event);" onmouseover="onHoverTriangleBtn(this);">

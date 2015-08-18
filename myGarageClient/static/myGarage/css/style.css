@@ -200,10 +200,10 @@ h2{
 
 #carOptions  {
 	height: 50px;
-	width: 215px;
+	width: 205px;
 	position: absolute;
 	right:30px;
-	top: 44px;
+	top: 0px;
 	#margin: 5px 20px 0 0;
     color: white;
 }
@@ -949,4 +949,31 @@ input:-webkit-autofill {
 
 .pagination {
     display: none;
+}
+
+
+#userCarsSelectBox {
+    float: right;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    padding: 1px 3px;
+    margin-top:44px;
+    font-size: 14px;
+    width: 150px;
+    background-color: white;
+    background: #fff url("../img/selectBoxArrow.png") no-repeat 95% 50%;
+    color: black;
+    overflow: hidden;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+}
+
+
+#carNum {
+    float: left;
+    margin-top: 44px;
+    color: white;
+    width: 55px;
 }
