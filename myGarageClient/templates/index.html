@@ -11,6 +11,7 @@
 	  					
 			
 	  </script>
+      <script src='https://www.google.com/recaptcha/api.js'></script>
 {% endblock %}
 
 {% block title %}Home page{% endblock %}
@@ -78,7 +79,7 @@
 			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carModel }}" data-toggle="popover" data-content="{{ carErrorList.model_name }}" 
 			            	name="model_name" placeholder="Car model" maxlength=30 onkeypress="removeValidationAlert(this)">		             		           
 		            </div>      		            
-		                     
+		             <div class="g-recaptcha" data-sitekey="6LcrdwsTAAAAACnHpZeURmNEObqMT0wxQoRyE2jr" data-size="normal"></div>
 		            <input id="signUpBtn" type="submit" name="submit" value=" Sign up " />
 		        </form>
 		    {% endif %}

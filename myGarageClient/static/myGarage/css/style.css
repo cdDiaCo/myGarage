@@ -308,19 +308,19 @@ label {
 #registrationDiv{
     background-color: #f3f5f7;
 	width: 410px;
-	height: 390px;
+	height: 470px;
 	padding: 25px 55px;
 	margin: 0 auto;
 	position: relative;
-	top: 60px;
+	top: 50px;
 }
 
 .register_form > input[type=text], 
 .register_form > input[type=password], 
 #carRegister input[type=text] {
-	width:290px;
+	width:305px;
 	height: 40px;
-	margin:0 0 10px 0;	
+	margin:0 0 10px 0;
 	line-height: 20px;
 	padding: 8px 10px;
 	font-size: 18px;	
@@ -342,12 +342,16 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 }
 
 #carRegister input[type=text] {
-	width: 144px;
+	width: 150px;
+}
+
+#carRegister {
+    width: 305px;
 }
 
 #signUpBtn {
-	padding:10px 119px;
-	margin: 20px 0;	
+	padding:10px 122px;
+	margin: 10px 0;
 	border-radius:3px;
 	border: 1px solid #b76c00;
 	background-color: #E58700;
