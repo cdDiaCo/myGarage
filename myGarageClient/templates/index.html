@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block head %}	
+      {% load staticfiles %}
+	  <script type="text/javascript">		
+	  		$(document).ready(function () {
+
+	  			addValidation();
+	  			
+	  		 });	
+	  					
+			
+	  </script>
+{% endblock %}
+
+{% block title %}Home page{% endblock %}
+
+{% block content %}
+
+<div id="base">
+	<div id="header" >
+	    <div id="headerContentWrapper">
+            <!--
+		<h2 id="appMotto"> Enter<small style="color:white;">your online</small>Garage </h2> -->
+            <div id="logoDivContainer">
+            <div id="logoDiv">
+                 <div id="enterShape_top"></div>
+                 <div id="enterShape_bottom"></div>
+                 <div id="enterDiv">enter</div>
+                 <div id="garageDiv">Garage</div>
+             </div>
+            </div>
+		    <div id="login">	    
+			<form id="login_form" method="post" action="">
+		        {% csrf_token %}
+		        <div id="username_login">
+			         <input class="" id="loginUsername" type="text" name="loginUsername" maxlength=30 placeholder="Username">
+		        </div>
+		        
+		        <div id="password_login">
+			        <input class="" id="loginPassword" type="password" name="loginPassword" maxlength=30 placeholder="Password">
+			        
+		        </div>	
+		        <input id="login_button" type="submit" value="Log In" />
+		    </form>		    
+	    	</div>  
+	    </div>  
+	</div>	
+
+	
+
+
+	<div id="borderDiv" >
+        <div id="curtain">
+		<div id="registrationDiv">
+		   {% if registered %}
+		        <strong>thank you for registering!</strong> 	        
+		   {% else %}
+		        <h1 style="text-align: center; font-size:24px;">Sign up</h1>
+                <h2 style="text-align: center; font-size:20px;">it's fast and free</h2><br>
+		
+		        <form class="register_form" method="post" action=""
+		                enctype="multipart/form-data">
+		            {% csrf_token %}	            
+		            
+		            {{ user_form.non_field_errors }}
+		            	            
+         
+				    <input class="pop noValidationAlert" type="text" value="{{ tempFields.username }}" data-toggle="popover" data-content="{{ userErrorList.username }}" 
+			            	name="username" placeholder="Choose your username" maxlength=30 onkeypress="removeValidationAlert(this)">	
+		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password1 }}" data-toggle="popover" data-content="{{ userErrorList.password1 }}" 
+			            	name="password1" placeholder="New password" maxlength=30 onkeypress="removeValidationAlert(this)">			      		           
+		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password2 }}" data-toggle="popover" data-content="{{ userErrorList.password2 }}" 
+			            	name="password2" placeholder="Re-enter new password" maxlength=30 onkeypress="removeValidationAlert(this)">			            
+		            <div id=carRegister>	            
+			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carMake }}" data-toggle="popover" data-content="{{ carErrorList.manufacturer_name }}" 
+			            	data-placement="bottom" name="manufacturer_name" placeholder="Car make" maxlength=30 onkeypress="removeValidationAlert(this)">
+			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carModel }}" data-toggle="popover" data-content="{{ carErrorList.model_name }}" 
+			            	name="model_name" placeholder="Car model" maxlength=30 onkeypress="removeValidationAlert(this)">		             		           
+		            </div>      		            
+		                     
+		            <input id="signUpBtn" type="submit" name="submit" value=" Sign up " />
+		        </form>
+		    {% endif %}
+            </div>
+		</div>
+	</div>
+
+
+	<div id="footer">
+	    <span id="copyright_span">EnterGarage &copy; 2015</span>
+	</div>
+</div>
+
+{% endblock %}
+
+

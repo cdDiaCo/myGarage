@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block head %}
+	  {% load staticfiles %}
+	   <script type="text/javascript">
+          $(document).ready(function () {
+                getUserCars();
+          });
+
+       var saveImgSrc = "{% static 'myGarage/img/save.png' %}";
+       var saveImgHoverSrc = "{% static 'myGarage/img/save_hover.png' %}";
+       var deleteImgSrc = "{% static 'myGarage/img/delete.png' %}";
+       var deleteImgHoverSrc = "{% static 'myGarage/img/delete_hover.png' %}";
+       var updateImgSrc = "{% static 'myGarage/img/update.png' %}";
+       var updateImgHoverSrc = "{% static 'myGarage/img/update_hover.png' %}";
+       var triangleImgHoverSrc = "{% static 'myGarage/img/triangle_hover.png' %}";
+       var triangleImgSrc = "{% static 'myGarage/img/triangle.png' %}";
+	   
+	   </script>	 
+{% endblock %}
+
+{% block title %}Garage{% endblock %}
+
+{% block content %}
+
+	
+	
+<div id="base_garage" onclick="hideDropDownMenu();">
+         <div id="header">
+             <div id="headerContentWrapper_garage">
+                 <div id="logoDivContainer">
+                     <div id="logoDiv">
+                         <div id="enterShape_top"></div>
+                         <div id="enterShape_bottom"></div>
+                         <div id="enterDiv">enter</div>
+                         <div id="garageDiv">Garage</div>
+                     </div>
+                 </div>
+                 <div id="carOptions">
+                    <span id="carNum"></span>
+                    <select onchange="selectCarHandler()" id="userCarsSelectBox">
+                    </select>
+                 </div>
+                 <img src="{% static 'myGarage/img/triangle.png' %}" id="triangleBtn" onclick="changeDropDownMenuVisibility(event);" onmouseover="onHoverTriangleBtn(this);">
+             </div>
+
+
+	     </div>
+
+        <div id="borderDiv">
+
+            <div id="buttonsMenuContainer">
+                <div id="dropDownMenuContainer">
+                    <div id="dropDownMenu" onclick="doNotCloseDropDownMenu(event);">
+                        <div id="dropDownMenuContent">
+                            <div id="logoutLinkDiv" onmouseover="selectDropDownMenuElement(this);" onmouseleave="deselectDropDownMenuElement(this);">
+                                <a href="/logout/">Click here to logout</a>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                <div id="buttonsMenuAbsolutePos">
+                    <div id="buttonsMenu">
+                        <button type="button" id="refuellingsButton" class="sectionsButton" onclick="setButtonActive(this);">Refuellings</button>
+                        <button type="button" id="cleaningsButton" class="sectionsButton" onclick="setButtonActive(this);">Cleanings</button>
+                        <button type="button" id="servicesButton" class="sectionsButton" onclick="setButtonActive(this);">Services</button>
+                        <button type="button" id="revisionsButton" class="sectionsButton" onclick="setButtonActive(this);">Revisions</button>
+                        <button type="button" id="taxesButton" class="sectionsButton" onclick="setButtonActive(this);">Taxes</button>
+                        <button type="button" id="insurancesButton" class="sectionsButton" onclick="setButtonActive(this);">Insurances</button>
+                        <button type="button" id="tyresButton" class="sectionsButton" onclick="setButtonActive(this);">Tyres</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div id="garageContentContainer">
+
+                <div id="garageContent">
+                   <table id="tableRecords">
+                       <thead></thead>
+                       <tbody id="contentBody"></tbody>
+                       <tbody id="emptyBody"></tbody>
+                   </table>
+                    <nav style="float: right;">
+                        <ul id="pagination-ul" class="pagination"></ul>
+                    </nav>
+                    <div id="bottomGarageContent">
+                    <input type="button" id="addNewRecordBtn" alt="Add new record" value="Add new record" onclick="addNewRecord();"/>
+                    <div id="coverDiv"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="footer">
+            {% block footer %} {% endblock %}
+        </div>
+</div>
+	    
+	    
+
+{% endblock %}
+
+
