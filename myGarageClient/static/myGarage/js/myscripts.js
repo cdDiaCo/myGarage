@@ -19,6 +19,7 @@ function getCookie(name) {
 var activeBtnState = {};
 activeBtnState.newRowNeeded = false;
 
+
 // when one of the section buttons gets clicked
 function setButtonActive(elem) {
     if ($('.sectionsButton.active')[0] !== elem) {
@@ -70,6 +71,8 @@ function getUserCars() {
 function prepareTable() {
     $('#contentBody').hide();
     $('#emptyBody').hide();
+    $('.pagination').hide();
+    activeBtnState.page = 1;
     getTableColumns(getActiveSectionName());
 }
 
