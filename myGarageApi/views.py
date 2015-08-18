@@ -1,3 +1,4 @@
+from rest_framework import filters
 from rest_framework.decorators import api_view
 from .models import Car, Refuelling, Cleaning, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.models import User
@@ -45,6 +46,8 @@ class CarViewSet(viewsets.ModelViewSet):
 class RefuellingViewSet(viewsets.ModelViewSet):
     queryset = Refuelling.objects.all()
     serializer_class = RefuellingSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
     def get_queryset(self):
         user = self.request.user
@@ -54,6 +57,8 @@ class RefuellingViewSet(viewsets.ModelViewSet):
 class CleaningViewSet(viewsets.ModelViewSet):
     queryset = Cleaning.objects.all()
     serializer_class = CleaningSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
     def get_queryset(self):
         user = self.request.user
@@ -63,8 +68,11 @@ class CleaningViewSet(viewsets.ModelViewSet):
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
-    def get_queryset(self):
+
+def get_queryset(self):
         user = self.request.user
         return Service.objects.filter(car__user__username=user)
 
@@ -72,6 +80,8 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class RevisionViewSet(viewsets.ModelViewSet):
     queryset = Revision.objects.all()
     serializer_class = RevisionSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
     def get_queryset(self):
         user = self.request.user
@@ -81,6 +91,8 @@ class RevisionViewSet(viewsets.ModelViewSet):
 class TaxViewSet(viewsets.ModelViewSet):
     queryset = Tax.objects.all()
     serializer_class = TaxSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
     def get_queryset(self):
         user = self.request.user
@@ -90,6 +102,8 @@ class TaxViewSet(viewsets.ModelViewSet):
 class InsuranceViewSet(viewsets.ModelViewSet):
     queryset = Insurance.objects.all()
     serializer_class = InsuranceSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
     def get_queryset(self):
         user = self.request.user
@@ -99,6 +113,8 @@ class InsuranceViewSet(viewsets.ModelViewSet):
 class TyreViewSet(viewsets.ModelViewSet):
     queryset = Tyre.objects.all()
     serializer_class = TyreSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('car__id',)
 
     def get_queryset(self):
         user = self.request.user
