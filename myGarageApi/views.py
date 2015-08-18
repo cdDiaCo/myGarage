@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from .models import Car, Refuelling, Cleaning, Service, Revision, Tax, Insurance, Tyre
 from django.contrib.auth.models import User
+from django.db.models import ManyToOneRel
 
 from .serializers import CarSerializer, UserSerializer, RefuellingSerializer, CleaningSerializer, ServiceSerializer, \
     RevisionSerializer, TaxSerializer, InsuranceSerializer, TyreSerializer
@@ -15,7 +16,12 @@ def get_columns_meta(request, model_name):
     models = {'car': Car, 'refuelling': Refuelling, 'cleaning': Cleaning, 'service': Service, 'revision': Revision,
               'tax': Tax, 'insurance': Insurance, 'tyre': Tyre}
     if model in models:
-        columns = [f.name for f in models[model]._meta.get_fields()]
+        model_meta = models[model]._meta
+        for field in model_meta.get_fields():
+            if type(field) is not ManyToOneRel:
+                columns.append({
+                    field.name: model_meta.get_field(field.name).get_internal_type()
+                })
     return Response(columns)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
