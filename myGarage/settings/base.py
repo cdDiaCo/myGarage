@@ -19,7 +19,7 @@ def get_secret(setting, secrets=secrets_file):
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_secret("SECRET_KEY")
-RECAPTCHA_SECRET_KEY = '6LcrdwsTAAAAAMS6Ipt-s3ZVb4UD8i-J4nwMoVO2'
+RECAPTCHA_SECRET_KEY = get_secret("RECAPTCHA_SECRET_KEY")
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'myGarageApi/templates').replace('\\','/'),
