@@ -351,10 +351,11 @@ input[type=text].noValidationAlert, input[type=password].noValidationAlert {
 
 #signUpBtn {
 	padding:10px 122px;
-	margin: 10px 0;
+	margin: 10px auto;
 	border-radius:3px;
 	border: 1px solid #b76c00;
 	background-color: #E58700;
+	width: 100%;
 }
 
 .errorlist{
@@ -975,10 +976,16 @@ input:-webkit-autofill {
             appearance: none;
 }
 
-
 #carNum {
     float: left;
     margin-top: 44px;
     color: white;
     width: 55px;
+}
+
+#recaptchaContainer {
+    width:304px;
+    height:78px;
+    border: 1px solid #9fa6aa;
+    border-radius: 3px;
 }

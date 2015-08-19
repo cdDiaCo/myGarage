@@ -5,7 +5,12 @@
 	  <script type="text/javascript">		
 	  		$(document).ready(function () {
 
-	  			addValidation();
+	  			//addValidation();
+                var list = document.getElementsByClassName("pop");
+                //console.log(list);
+                for (var i=0; i<list.length; i++) {
+                    console.log(list[i].dataset.content);
+                }
 	  			
 	  		 });	
 	  					
@@ -78,8 +83,10 @@
 			            	data-placement="bottom" name="manufacturer_name" placeholder="Car make" maxlength=30 onkeypress="removeValidationAlert(this)">
 			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carModel }}" data-toggle="popover" data-content="{{ carErrorList.model_name }}" 
 			            	name="model_name" placeholder="Car model" maxlength=30 onkeypress="removeValidationAlert(this)">		             		           
-		            </div>      		            
-		             <div class="g-recaptcha" data-sitekey="6LcrdwsTAAAAACnHpZeURmNEObqMT0wxQoRyE2jr" data-size="normal"></div>
+		            </div>
+                    <div id="recaptchaContainer" class="pop noValidationAlert" data-content="{{ recaptchaValidationError }}">
+		                <div class="g-recaptcha" data-sitekey="6LcrdwsTAAAAACnHpZeURmNEObqMT0wxQoRyE2jr" data-size="normal"></div>
+                    </div>
 		            <input id="signUpBtn" type="submit" name="submit" value=" Sign up " />
 		        </form>
 		    {% endif %}

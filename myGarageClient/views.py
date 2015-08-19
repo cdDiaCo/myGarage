@@ -7,7 +7,18 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.conf import settings
+import requests
 
+
+# get the user's ip address
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 def first_page(request):
     if request.user.is_authenticated():
@@ -16,12 +27,37 @@ def first_page(request):
     context = RequestContext(request)    
     registered = False 
     carErrorList = {'manufacturer_name': "", 'model_name': ""}
-    userErrorList = {'username': "", 'password1': "", 'password2': ""}   
+    userErrorList = {'username': "", 'password1': "", 'password2': ""}
+    recaptchaValidationError = ""
+    recaptchaValidated = False
     tempFields = {}
      
     if request.method == 'POST':
         if 'manufacturer_name' in request.POST:
             #do register
+
+            # start recaptcha processing
+            response = {}
+            data = request.POST
+            captcha_rs = data.get('g-recaptcha-response')
+            url = "https://www.google.com/recaptcha/api/siteverify"
+            params = {
+                'secret': settings.RECAPTCHA_SECRET_KEY,
+                'response': captcha_rs,
+                'remoteip': get_client_ip(request)
+            }
+            verify_rs = requests.get(url, params=params, verify=True)
+            verify_rs = verify_rs.json()
+            response["status"] = verify_rs.get("success", False)
+            response['message'] = verify_rs.get('error-codes', None) or "Unspecified error."
+            print('status: ' + str(response["status"]))
+            print('message: ' + str(response["message"]))
+            if not response["status"]:
+                recaptchaValidationError = "RECAPTCHA validation failed, please try again"
+            else:
+                recaptchaValidated = True
+            # end recaptcha processing
+
             user_form = UserForm(data=request.POST)
             #profile_form = UserProfileForm(data=request.POST)
             car_form = CarForm(data=request.POST)
@@ -32,15 +68,15 @@ def first_page(request):
             tempFields['carMake'] = request.POST.get("manufacturer_name", "")
             tempFields['carModel'] = request.POST.get("model_name", "")                      
             
-            if user_form.is_valid() and car_form.is_valid():                
-                user = user_form.save()  
-                car = car_form.save(commit=False) 
+            if user_form.is_valid() and car_form.is_valid() and recaptchaValidated:
+                user = user_form.save()
+                car = car_form.save(commit=False)
                 car.user = user
-                car.save()               
+                car.save()
                 #profile = profile_form.save(commit=False)
-                #profile.user = user              
-                #profile.save()                
-                registered = True    
+                #profile.user = user
+                #profile.save()
+                registered = True
             else:                
                 print(user_form.errors, car_form.errors)
                 for key in car_form.getKeys():
@@ -51,7 +87,7 @@ def first_page(request):
                 for key in user_form.getRegisterFormKeys():                                       			 
                     if key in user_form.errors:                        
                         for error in user_form.errors[key]:                           								 		
-                            userErrorList[key] += error+" "                            
+                            userErrorList[key] += error+" "
         else:
             # do login  
             username = request.POST['loginUsername']
@@ -77,7 +113,8 @@ def first_page(request):
             'index.html',
             {'user_form': user_form, 'car_form': car_form, 
              'registered': registered, 'carErrorList': carErrorList, 
-             'userErrorList': userErrorList, 'tempFields': tempFields,}, context)  
+             'userErrorList': userErrorList, 'recaptchaValidationError': recaptchaValidationError,
+             'tempFields': tempFields,}, context)
     
     
 @login_required
