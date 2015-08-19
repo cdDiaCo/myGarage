@@ -85,7 +85,8 @@ function getActiveSectionName() {
 
 // gets the records for the selected section
 function getTableRecords(sectionName, url) {
-    var req_url = url ? url : "/api/v1/" + sectionName + "/";
+    var car_id = $('#userCarsSelectBox').val(),
+        req_url = url ? url : "/api/v1/" + sectionName + "/?car__id=" + car_id;
     $.ajax({type:"GET", url: req_url})
         .fail(function(resp){
             console.log(resp.responseText);
@@ -126,10 +127,9 @@ function paginationBtnClickHandler() {
         url = "/api/v1/" + sectionName;
     removeTableRows();
     $('.pagination').hide();
-    getTableRecords(sectionName, url + '/?page=' + $(this).text());
+    getTableRecords(sectionName, url + '/?page=' + $(this).text() + "&car__id=" + $('#userCarsSelectBox').val());
     activeBtnState.page = $(this).text();
 }
-
 
 // gets the columns for the selected section
 function getTableColumns(sectionName) {
@@ -156,8 +156,9 @@ function getTableColumns(sectionName) {
 function addTableHead() {
     $('#tableRecords thead').append($('<tr>'));
     var tableHead = $('#tableRecords thead').find('tr');
-    for(var column in activeBtnState.columns) {
-        var columnName = getTableHeadName(activeBtnState.columns[column]);
+    var columnNames = getColumnNames();
+    for(var i = 0; i < columnNames.length; i++) {
+        var columnName = getTableHeadName(columnNames[i]);
         if(columnName === "Id" || columnName === "Car") {
             continue;
         }
@@ -289,6 +290,19 @@ function removeAddNewRecordBtn() {
     $('#addNewRecordBtn').css({'visibility': 'hidden'});
 }
 
+function getColumnNames() {
+    var columnNames = [];
+    var columns = activeBtnState.columns;
+    for (var i = 0; i < columns.length; i++) {
+        for (var prop in columns[i]) {
+            if (columns[i].hasOwnProperty(prop)) {
+                columnNames.push(prop);
+            }
+        }
+    }
+    return columnNames;
+}
+
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
     $('#contentBody').show();
@@ -307,12 +321,13 @@ function addNewRecord() {
         arrangeTableForMinHeight();
         removeAddNewRecordBtn();
 
-        for (var column in activeBtnState.columns) {
-            if(activeBtnState.columns[column] == "id" || activeBtnState.columns[column] =="car") { continue; }
+        var columnNames = getColumnNames();
+        for (var column in columnNames) {
+            if(columnNames[column] == "id" || columnNames[column] =="car") { continue; }
             $('#contentBody').find("tr").last().append($("<td>")
                                                     .append($('<input>')
                                                     .prop('type', 'text')
-                                                    .attr('name', activeBtnState.columns[column])));
+                                                    .attr('name', columnNames[column])));
         }
 
         $('#contentBody').find("tr").last().addClass("temporaryRow");
