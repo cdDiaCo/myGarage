@@ -28,8 +28,8 @@ def first_page(request):
     registered = False 
     carErrorList = {'manufacturer_name': "", 'model_name': ""}
     userErrorList = {'username': "", 'password1': "", 'password2': ""}
-    recaptchaValidationError = ""
-    recaptchaValidated = False
+    recaptcha_validation_error = ""
+    recaptcha_validated = False
     tempFields = {}
      
     if request.method == 'POST':
@@ -53,9 +53,9 @@ def first_page(request):
             print('status: ' + str(response["status"]))
             print('message: ' + str(response["message"]))
             if not response["status"]:
-                recaptchaValidationError = "RECAPTCHA validation failed, please try again"
+                recaptcha_validation_error = "reCAPTCHA validation failed. Please try again."
             else:
-                recaptchaValidated = True
+                recaptcha_validated = True
             # end recaptcha processing
 
             user_form = UserForm(data=request.POST)
@@ -68,7 +68,7 @@ def first_page(request):
             tempFields['carMake'] = request.POST.get("manufacturer_name", "")
             tempFields['carModel'] = request.POST.get("model_name", "")                      
             
-            if user_form.is_valid() and car_form.is_valid() and recaptchaValidated:
+            if user_form.is_valid() and car_form.is_valid() and recaptcha_validated:
                 user = user_form.save()
                 car = car_form.save(commit=False)
                 car.user = user
@@ -77,7 +77,9 @@ def first_page(request):
                 #profile.user = user
                 #profile.save()
                 registered = True
-            else:                
+            else:
+                if recaptcha_validated:
+                    recaptcha_validation_error = "Don't forget to check the reCAPTCHA again."
                 print(user_form.errors, car_form.errors)
                 for key in car_form.getKeys():
                     if key in car_form.errors:                        
@@ -113,7 +115,7 @@ def first_page(request):
             'index.html',
             {'user_form': user_form, 'car_form': car_form, 
              'registered': registered, 'carErrorList': carErrorList, 
-             'userErrorList': userErrorList, 'recaptchaValidationError': recaptchaValidationError,
+             'userErrorList': userErrorList, 'recaptchaValidationError': recaptcha_validation_error,
              'tempFields': tempFields,}, context)
     
     

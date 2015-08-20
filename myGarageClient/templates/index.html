@@ -11,8 +11,38 @@
                 for (var i=0; i<list.length; i++) {
                     console.log(list[i].dataset.content);
                 }
+
+                //$('[data-toggle="popover"]').popover('show');
+                addValidation();
+
+                function addValidation() {
+                    var registrationElements = $('[data-toggle="popover"]');
+
+                    $.each(registrationElements, function(key, value) {
+                        if($(registrationElements[key]).attr('data-content') !== "") {
+                            $(registrationElements[key]).removeClass("noValidationAlert");
+                            $(registrationElements[key]).addClass("validationAlert");
+                            $(registrationElements[key]).click(function(){
+                                $(this).css({'background-image' :'none'});
+                            });
+                        }
+                    });
+
+                    $('[data-toggle="popover"]').popover({ trigger: 'hover', html: 'true'});
+                    //$('.validationAlert').filter(':visible:first').focus();
+                }
 	  			
-	  		 });	
+	  		 });
+
+	  		function recaptchaCallback() {
+	  		    console.log('aaaaaaaaaa');
+                $('#recaptchaContainer').removeClass('validationAlert');
+                $('#recaptchaContainer').addClass('validatedElement');
+            }
+
+            displayRecaptchaNecessity() {
+                
+            }
 	  					
 			
 	  </script>
@@ -73,19 +103,19 @@
 		            	            
          
 				    <input class="pop noValidationAlert" type="text" value="{{ tempFields.username }}" data-toggle="popover" data-content="{{ userErrorList.username }}" 
-			            	name="username" placeholder="Choose your username" maxlength=30 onkeypress="removeValidationAlert(this)">	
+			            	name="username" placeholder="Choose your username" maxlength=30>
 		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password1 }}" data-toggle="popover" data-content="{{ userErrorList.password1 }}" 
-			            	name="password1" placeholder="New password" maxlength=30 onkeypress="removeValidationAlert(this)">			      		           
+			            	name="password1" placeholder="New password" maxlength=30>
 		            <input class="pop noValidationAlert" type="password" value="{{ tempFields.password2 }}" data-toggle="popover" data-content="{{ userErrorList.password2 }}" 
-			            	name="password2" placeholder="Re-enter new password" maxlength=30 onkeypress="removeValidationAlert(this)">			            
+			            	name="password2" placeholder="Re-enter new password" maxlength=30>
 		            <div id=carRegister>	            
 			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carMake }}" data-toggle="popover" data-content="{{ carErrorList.manufacturer_name }}" 
-			            	data-placement="bottom" name="manufacturer_name" placeholder="Car make" maxlength=30 onkeypress="removeValidationAlert(this)">
+			            	data-placement="bottom" name="manufacturer_name" placeholder="Car make" maxlength=30>
 			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carModel }}" data-toggle="popover" data-content="{{ carErrorList.model_name }}" 
-			            	name="model_name" placeholder="Car model" maxlength=30 onkeypress="removeValidationAlert(this)">		             		           
+			            	name="model_name" placeholder="Car model" maxlength=30>
 		            </div>
-                    <div id="recaptchaContainer" class="pop noValidationAlert" data-content="{{ recaptchaValidationError }}">
-		                <div class="g-recaptcha" data-sitekey="6LeChAsTAAAAAAsgdG0grvq1XSI7UjcdoZxx3jFr" data-size="normal"></div>
+                    <div id="recaptchaContainer" class="pop noValidationAlert" data-toggle="popover" data-content="{{ recaptchaValidationError }}" onmouseover="displayRecaptchaNecessity">
+		                <div class="g-recaptcha" data-sitekey="6LeChAsTAAAAAAsgdG0grvq1XSI7UjcdoZxx3jFr"  data-callback="recaptchaCallback" data-size="normal"></div>
                     </div>
 		            <input id="signUpBtn" type="submit" name="submit" value=" Sign up " />
 		        </form>

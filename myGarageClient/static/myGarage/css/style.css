@@ -55,7 +55,13 @@ table {
     color: #FFFFFF;
     background-color: #c45d5b;
     border-radius: 5px;       
-    font-size: 15px;    
+    font-size: 16px;
+}
+
+.popover-content {
+    width: 160px;
+    padding: 4px;
+    text-align: center;
 }
 
 .popover.left .arrow:after,
@@ -329,11 +335,19 @@ label {
 }
 
 input[type=text].validationAlert, input[type=password].validationAlert {
-	border: 1px solid #c45d5b !important;	
-	background-image: url("../img/problemIcon.png");	
-    background-position: 99.99% 25%;
+	border: 1px solid #E33237 !important;
+	background-image: url("../img/problem.png");
+    background-position: 99.99% 50%;
     background-repeat: no-repeat;
-	
+    outline: none;
+}
+
+#recaptchaContainer.validationAlert {
+    border: 1px solid #E33237 !important;
+}
+
+.validatedElement {
+    border: 1px solid green !important;
 }
 
 input[type=text].noValidationAlert, input[type=password].noValidationAlert {
