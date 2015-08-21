@@ -4,44 +4,37 @@
       {% load staticfiles %}
 	  <script type="text/javascript">		
 	  		$(document).ready(function () {
-
-	  			//addValidation();
-                var list = document.getElementsByClassName("pop");
-                //console.log(list);
-                for (var i=0; i<list.length; i++) {
-                    console.log(list[i].dataset.content);
-                }
-
-                //$('[data-toggle="popover"]').popover('show');
                 addValidation();
-
-                function addValidation() {
-                    var registrationElements = $('[data-toggle="popover"]');
-
-                    $.each(registrationElements, function(key, value) {
-                        if($(registrationElements[key]).attr('data-content') !== "") {
-                            $(registrationElements[key]).removeClass("noValidationAlert");
-                            $(registrationElements[key]).addClass("validationAlert");
-                            $(registrationElements[key]).click(function(){
-                                $(this).css({'background-image' :'none'});
-                            });
-                        }
-                    });
-
-                    $('[data-toggle="popover"]').popover({ trigger: 'hover', html: 'true'});
-                    //$('.validationAlert').filter(':visible:first').focus();
-                }
-	  			
 	  		 });
 
+            function addValidation() {
+                var registrationElements = $('[data-toggle="popover"]');
+
+                $.each(registrationElements, function(key, value) {
+                    var elemID = $(registrationElements[key]).attr("id");
+                    if($(registrationElements[key]).attr('data-content') !== "") {
+                        $(registrationElements[key]).attr("data-template", "<div class='popover1' role='tooltip'><div class='arrow'></div><div class='popover-content'></div></div>");
+                        $(registrationElements[key]).removeClass("noValidationAlert");
+                        $(registrationElements[key]).addClass("validationAlert");
+                        $(registrationElements[key]).click(function(){
+                            $(this).css({'background-image' :'none'});
+                        });
+                    } else if (elemID === "recaptchaContainer") {
+                        $(registrationElements[key]).attr("data-content", "This is how we know you are a real user");
+                        displayRecaptchaNecessity();
+                    }
+                });
+
+                $('[data-toggle="popover"]').popover({ trigger: 'hover', html: 'true'});
+            }
+
 	  		function recaptchaCallback() {
-	  		    console.log('aaaaaaaaaa');
                 $('#recaptchaContainer').removeClass('validationAlert');
                 $('#recaptchaContainer').addClass('validatedElement');
             }
 
-            displayRecaptchaNecessity() {
-                
+            function displayRecaptchaNecessity() {
+                $("#recaptchaContainer").attr("data-template", "<div class='popover2' role='tooltip'><div class='arrow'></div><div class='popover-content'></div></div>");
             }
 	  					
 			
@@ -114,7 +107,7 @@
 			            <input class="pop noValidationAlert" type="text" value="{{ tempFields.carModel }}" data-toggle="popover" data-content="{{ carErrorList.model_name }}" 
 			            	name="model_name" placeholder="Car model" maxlength=30>
 		            </div>
-                    <div id="recaptchaContainer" class="pop noValidationAlert" data-toggle="popover" data-content="{{ recaptchaValidationError }}" onmouseover="displayRecaptchaNecessity">
+                    <div id="recaptchaContainer" class="pop noValidationAlert" data-toggle="popover" data-content="{{ recaptchaValidationError }}" onmouseover="">
 		                <div class="g-recaptcha" data-sitekey="6LeChAsTAAAAAAsgdG0grvq1XSI7UjcdoZxx3jFr"  data-callback="recaptchaCallback" data-size="normal"></div>
                     </div>
 		            <input id="signUpBtn" type="submit" name="submit" value=" Sign up " />

@@ -51,38 +51,175 @@ table {
 /*End RESET - Begin Full Width CSS*/
 
 /*override material design theme popover*/
-.popover{
-    color: #FFFFFF;
-    background-color: #c45d5b;
-    border-radius: 5px;       
-    font-size: 16px;
-}
-
+/*
 .popover-content {
     width: 160px;
     padding: 4px;
     text-align: center;
 }
+*/
 
-.popover.left .arrow:after,
-.popover.left .tooltip-arrow {
-	border-left-color: #c45d5b;
+.popover1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    display: none;
+    width: 180px !important;
+    padding: 1px;
+    text-align: left;
+    white-space: normal;
+    background-color: #c45d5b !important;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #9c4a48;
+    border-radius: 3px !important;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    color: white;
 }
 
-.popover.right .arrow:after,
-.popover.right .tooltip-arrow {
-	border-right-color: #c45d5b;
+.popover1.right {
+    margin-left:9px;
 }
 
-.popover.top .arrow:after,
-.popover.top .tooltip-arrow {
-	border-top-color: #c45d5b;
+.popover1.bottom {
+    margin-top: 9px;
 }
 
-.popover.bottom .arrow:after,
-.popover.bottom .tooltip-arrow  { 	
- 	border-bottom-color: #c45d5b;
+.popover1 > .arrow,
+.popover1 > .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
 }
+
+.popover1 > .arrow {
+    border-width: 11px;
+}
+.popover1 > .arrow:after {
+    content: "";
+    border-width: 10px;
+}
+
+.popover1.right > .arrow{
+    top: 50%;
+    left: -11px;
+    margin-top: -11px;
+    border-left-width: 0;
+    border-right-color: #c45d5b;
+}
+
+.popover1.bottom > .arrow {
+    left: 50%;
+    top: -11px;
+    margin-left: -11px;
+    border-top-width: 0;
+    border-bottom-color: #c45d5b;
+}
+
+.popover1.right > .arrow:after {
+    left: 1px;
+    bottom: -10px;
+    content: " ";
+    border-left-width: 0;
+    border-right-color: #c45d5b;
+}
+
+.popover1.bottom > .arrow:after {
+    top: 1px;
+    right: -10px;
+    content: " ";
+    border-top-width: 0;
+    border-bottom-color: #c45d5b;
+}
+
+/*-------------------------------------*/
+
+.popover2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    display: none;
+    width: 180px !important;
+    padding: 1px;
+    text-align: left;
+    white-space: normal;
+    background-color: #B4B4B4; !important;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #90a0d5;
+    border-radius: 3px !important;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    color: #213FA9;
+}
+
+.popover2.right {
+    margin-left:9px;
+}
+
+.popover2.bottom {
+    margin-top: 9px;
+}
+
+.popover2 > .arrow,
+.popover2 > .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.popover2 > .arrow {
+    border-width: 11px;
+}
+.popover2 > .arrow:after {
+    content: "";
+    border-width: 10px;
+}
+
+.popover2.right > .arrow{
+    top: 50%;
+    left: -11px;
+    margin-top: -11px;
+    border-left-width: 0;
+    border-right-color: #B4B4B4;
+}
+
+.popover2.bottom > .arrow {
+    left: 50%;
+    top: -11px;
+    margin-left: -11px;
+    border-top-width: 0;
+    border-bottom-color: #B4B4B4;
+}
+
+.popover2.right > .arrow:after {
+    left: 1px;
+    bottom: -10px;
+    content: " ";
+    border-left-width: 0;
+    border-right-color: #B4B4B4;
+}
+
+.popover2.bottom > .arrow:after {
+    top: 1px;
+    right: -10px;
+    content: " ";
+    border-top-width: 0;
+    border-bottom-color: #B4B4B4;
+}
+
+
+
+
 /* end of popover overriding style */
 
 
