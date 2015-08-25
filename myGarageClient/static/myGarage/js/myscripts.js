@@ -1,18 +1,29 @@
 
 /*
---------------------------------------------------------------------
-tableObj.prepare - check what section button has the active class
-                 - generate table for that section
---------------------------------------------------------------------
-tableObj.getColumns - gets the columns for the selected section
-*******************************************************************
-
-
+---------------------------------------------------------------------------------
+tableObj.prepare                  - check what section button has the active class
+                                  - generate table for that section
+-------------------------------------------------------------------------------
+tableObj.getColumns               - gets the columns for the selected section
+-------------------------------------------------------------------------------
+tableObj.getRecords               - gets the records for the selected section
+--------------------------------------------------------------------------------
+tableObj.addHead                  - this builds the table's head
+--------------------------------------------------------------------------------
+selectedSection.getName           - get the selected section's name
+--------------------------------------------------------------------------------
+paginationObj.pageBtnClickHandler - handles the pagination buttons when clicked
+---------------------------------------------------------------------------------
+paginationObj.getLastBtn          - returns the last pagination button
+---------------------------------------------------------------------------------
+paginationObj.render              - renders the pagination buttons
+---------------------------------------------------------------------------------
 
 */
 
 
 var tableObj = {};
+tableObj.newRowNeeded = false;
 
 // check what section button has the active class
 // generate table for that section
@@ -40,19 +51,87 @@ tableObj.getColumns = function () {
             console.log(resp.responseText);
         })
         .done(function(resp){
-            activeBtnState.numOfColumns = resp.length - 2;
-            activeBtnState.columns = resp;
-            addTableHead();
-            getTableRecords(sectionName);
+            tableObj.numOfColumns = resp.length - 2;
+            tableObj.columns = resp;
+            tableObj.addHead();
+            tableObj.getRecords();
     });
+};
+
+// gets the records for the selected section
+tableObj.getRecords = function (url) {
+    var sectionName = selectedSection.getName();
+    var car_id = $('#userCarsSelectBox').val(),
+        req_url = url ? url : "/api/v1/" + sectionName + "/?car__id=" + car_id;
+    $.ajax({type:"GET", url: req_url})
+        .fail(function(resp){
+            console.log(resp.responseText);
+        })
+        .done(function(resp){
+            tableObj.numOfRecords = resp.count;
+            tableObj.results = resp.results;
+            paginationObj.numOfPages = Math.ceil(tableObj.numOfRecords / paginationObj.maxResults);
+            paginationObj.nextPage = resp.next;
+            paginationObj.previous = resp.previous;
+            paginationObj.activePage = paginationObj.activePage || 1;
+            paginationObj.render;
+            addTableBody();
+        });
+};
+
+// this builds the table's head
+tableObj.addHead = function () {
+    $('#tableRecords thead').append($('<tr>'));
+    var tableHead = $('#tableRecords thead').find('tr');
+    var columnNames = getColumnNames();
+    for(var i = 0; i < columnNames.length; i++) {
+        var columnName = getTableHeadName(columnNames[i]);
+        if(columnName === "Id" || columnName === "Car") {
+            continue;
+        }
+        $(tableHead).append($('<th>').text(columnName));
+    }
+    $(tableHead).append($('<th>').css({'width': '70px'})); // this is the column that holds the operations buttons
+    setTableCellsWidth(tableHead,  $('#garageContent').width(), true);
 };
 
 var paginationObj = {};
 paginationObj.activePage = 1;
+paginationObj.maxResults = 10;
+
+paginationObj.pageBtnClickHandler = function () {
+    var sectionName = selectedSection.getName(),
+        url = "/api/v1/" + sectionName;
+    removeTableRows();
+    $('.pagination').hide();
+    tableObj.getRecords(url + '/?page=' + $(this).text() + "&car__id=" + $('#userCarsSelectBox').val());
+    paginationObj.activePage = $(this).text();
+};
+
+paginationObj.getLastBtn = function () {
+    var lastBtn = $('.pagination').find('li').last().children();
+    return lastBtn;
+};
+
+paginationObj.render = function () {
+    var pagination = $('#pagination-ul');
+    pagination.find('li').each(function(index, elem) { $(elem).remove() });
+    for (var i = 1; i <= paginationObj.numOfPages; i++) {
+        pagination.append('<li><a href="#">' + i +'</a></li>');
+        if (parseInt(paginationObj.activePage) === i) {
+            pagination.find('li:nth-child(' + i + ')').addClass('active');
+        }
+    }
+    pagination.find("li a").click(paginationObj.pageBtnClickHandler);
+}
 
 var selectedSection = {};
-selectedSection.getName = getName;
-
+selectedSection.getName = function () {
+    var sectionBtn = $('.sectionsButton.active');
+    var sectionID = $(sectionBtn).attr('id');
+    var index = sectionID.indexOf("Button");
+    return sectionID.substring(0, index).toLowerCase();
+};
 
 function getCookie(name) {
     var cookieValue = null;
@@ -118,94 +197,20 @@ function getUserCars() {
         });
 }
 
+//--------------------------------------------------------------------------
 
-function getName() {
-    var sectionBtn = $('.sectionsButton.active');
-    var sectionID = $(sectionBtn).attr('id');
-    var index = sectionID.indexOf("Button");
-    return sectionID.substring(0, index).toLowerCase();
-}
+//---------------------------------------------------------------------------
 
 
-//------------------------------------------------------------------------
-
-var activeBtnState = {};
-activeBtnState.newRowNeeded = false;
-var maxResults = 10;
-
-// gets the records for the selected section
-function getTableRecords(sectionName, url) {
-    var car_id = $('#userCarsSelectBox').val(),
-        req_url = url ? url : "/api/v1/" + sectionName + "/?car__id=" + car_id;
-    $.ajax({type:"GET", url: req_url})
-        .fail(function(resp){
-            console.log(resp.responseText);
-        })
-        .done(function(resp){
-            activeBtnState.sectionName = sectionName;
-            activeBtnState.numOfRecords = resp.count;
-            activeBtnState.results = resp.results;
-            activeBtnState.numOfPages = Math.ceil(activeBtnState.numOfRecords / maxResults);
-            activeBtnState.nextPage = resp.next;
-            activeBtnState.previous = resp.previous;
-            activeBtnState.page = activeBtnState.page || 1;
-            renderPagination();
-            addTableBody();
-        });
-}
-
-function getLastPaginationBtn() {
-    var lastBtn = $('.pagination').find('li').last().children();
-    return lastBtn;
-}
-
-function renderPagination() {
-    var pagination = $('#pagination-ul');
-    pagination.find('li').each(function(index, elem) { $(elem).remove() });
-
-    for (var i = 1; i <= activeBtnState.numOfPages; i++) {
-        pagination.append('<li><a href="#">' + i +'</a></li>');
-        if (parseInt(activeBtnState.page) === i) {
-            pagination.find('li:nth-child(' + i + ')').addClass('active');
-        }
-    }
-    pagination.find("li a").click(paginationBtnClickHandler);
-}
-
-function paginationBtnClickHandler() {
-    var sectionName = getActiveSectionName(),
-        url = "/api/v1/" + sectionName;
-    removeTableRows();
-    $('.pagination').hide();
-    getTableRecords(sectionName, url + '/?page=' + $(this).text() + "&car__id=" + $('#userCarsSelectBox').val());
-    activeBtnState.page = $(this).text();
-}
-
-
-
-// this builds the table's head
-function addTableHead() {
-    $('#tableRecords thead').append($('<tr>'));
-    var tableHead = $('#tableRecords thead').find('tr');
-    var columnNames = getColumnNames();
-    for(var i = 0; i < columnNames.length; i++) {
-        var columnName = getTableHeadName(columnNames[i]);
-        if(columnName === "Id" || columnName === "Car") {
-            continue;
-        }
-        $(tableHead).append($('<th>').text(columnName));
-    }
-    $(tableHead).append($('<th>').css({'width': '70px'})); // this is the column that holds the operations buttons
-    setTableCellsWidth(tableHead,  $('#garageContent').width(), true);
-}
 
 // this builds the table's body
 function addTableBody() {
+    var sectionName = selectedSection.getName();
     enableAddNewRecordBtn();
-    if(activeBtnState.numOfRecords > 0){ // there are records for this section
+    if(tableObj.numOfRecords > 0){ // there are records for this section
          var noRecordsMsg = "";
          var carHasRecords = false;
-         $.each(activeBtnState.results, function(index, elem) {
+         $.each(tableObj.results, function(index, elem) {
              var pk;
              var tableContainerWidth = $('#garageContent').width();
              $('#contentBody').append($('<tr>'));
@@ -219,9 +224,9 @@ function addTableBody() {
                  }
                  if(key === "car") {
                       if(!isSelectedCar(elem[key])) { // this record belongs to another car
-                          if(!carHasRecords && index === (activeBtnState.results.length - 1)) {
+                          if(!carHasRecords && index === (tableObj.results.length - 1)) {
                               // this combination of section and car doesn't have any records
-                              noRecordsMsg = 'You have no '+activeBtnState.sectionName+' added for this car!';
+                              noRecordsMsg = 'You have no '+sectionName+' added for this car!';
                               setNoRecordsBody(newRow, noRecordsMsg);
                           }
                           return; // skip to the next record
@@ -260,7 +265,7 @@ function addTableBody() {
     else { // there are no records for this section
          $('#emptyBody').append($('<tr>'));
          var newRow = $('#emptyBody').find('tr').last();
-         var message = 'You have no ' + activeBtnState.sectionName + ' added yet!';
+         var message = 'You have no ' + sectionName + ' added yet!';
          setNoRecordsBody(newRow, message);
     }
 
@@ -271,7 +276,7 @@ function addTableBody() {
     setAddNewRecordBtn();
     $("#addNewRecordBtn").prop('disabled', false);
     $('.pagination').show();
-    if(activeBtnState.newRowNeeded) {
+    if(tableObj.newRowNeeded) {
         // addTableBody() function was called because user requested a new record on a full pagination
         addNewRecord();
     }
@@ -288,7 +293,7 @@ function setTableCellsWidth(newRow, tableContainerWidth, isTableHead) {
     var leftPadding = tableCell.css('padding-left');
     var rightPadding = tableCell.css('padding-right');
     var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-    var cellWidth = (tableContainerWidth - 70)/activeBtnState.numOfColumns-(widthPadding + 1);
+    var cellWidth = (tableContainerWidth - 70)/tableObj.numOfColumns-(widthPadding + 1);
     $(newRow).find('input').css({"width": cellWidth});
 }
 
@@ -300,7 +305,7 @@ function arrangeTableForMinHeight() {
     if(contentBodyHeight < 150){
         var emptySpace = 150 - contentBodyHeight;
         $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
-                            .append($('<td>').attr('colspan', activeBtnState.numOfColumns + 1)
+                            .append($('<td>').attr('colspan', tableObj.numOfColumns + 1)
                                 .append($('<div>')
                                     .attr('id', 'emptyDiv'))));
         $("#emptyDiv").height(emptySpace);
@@ -323,7 +328,7 @@ function removeAddNewRecordBtn() {
 
 function getColumnNames() {
     var columnNames = [];
-    var columns = activeBtnState.columns;
+    var columns = tableObj.columns;
     for (var i = 0; i < columns.length; i++) {
         for (var prop in columns[i]) {
             if (columns[i].hasOwnProperty(prop)) {
@@ -338,12 +343,12 @@ function getColumnNames() {
 function addNewRecord() {
     $('#contentBody').show();
     $('#emptyBody').show();
-    activeBtnState.newRowNeeded = false;
+    tableObj.newRowNeeded = false;
     var numOfRowsOnPage = $('#contentBody > tr').length;
     if(numOfRowsOnPage === 10) {
         var lastPaginationBtn = getLastPaginationBtn();
-        activeBtnState.newRowNeeded = true;
-        paginationBtnClickHandler.call(lastPaginationBtn);
+        tableObj.newRowNeeded = true;
+        paginationObj.pageBtnClickHandler.call(lastPaginationBtn);
     } else {
         disableAddNewRecordBtn();
         removeNoRecordsTD();
@@ -515,9 +520,9 @@ function enableAddNewRecordBtn() {
 }
 
 function saveRecord() {
+    var section = selectedSection.getName();
     //console.log("in save record");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = activeBtnState.sectionName;
     var dataObj = getSelectedRecordData();
     dataObj["car"] = getSelectedCarURL();
 
@@ -539,7 +544,7 @@ function saveRecord() {
 function updateRecord() {
     //console.log("in update");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = activeBtnState.sectionName;
+    var section = selectedSection.getName();
     var pk = getSelectedRecordPk();
     var dataObj = getSelectedRecordData();
     dataObj["car"] = getSelectedCarURL();
@@ -568,7 +573,7 @@ function rearrangeTableAfterDeletingRecord() {
 
 function deleteRecord() {
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = activeBtnState.sectionName;
+    var section = selectedSection.getName();
     var pk = getSelectedRecordPk();
     ajaxSetup();
     $.ajax({
@@ -585,7 +590,7 @@ function deleteRecord() {
 function setNoRecordsBody(newRow, message) {
     $(newRow).append($('<td>')
         .attr("id", "noRecordsTD")
-        .attr('colspan', activeBtnState.numOfColumns+1)
+        .attr('colspan', tableObj.numOfColumns+1)
         .append($('<div>')
             .attr('id', 'noRecordsMessage')
             .text(message)));
