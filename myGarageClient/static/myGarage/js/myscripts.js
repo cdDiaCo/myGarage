@@ -1,4 +1,58 @@
-var maxResults = 10;
+
+/*
+--------------------------------------------------------------------
+tableObj.prepare - check what section button has the active class
+                 - generate table for that section
+--------------------------------------------------------------------
+tableObj.getColumns - gets the columns for the selected section
+*******************************************************************
+
+
+
+*/
+
+
+var tableObj = {};
+
+// check what section button has the active class
+// generate table for that section
+tableObj.prepare = function () {
+    $('#contentBody').hide();
+    $('#emptyBody').hide();
+    $('.pagination').hide();
+    //activeBtnState.page = 1;
+    paginationObj.activePage = 1;
+    tableObj.getColumns();
+};
+
+// gets the columns for the selected section
+tableObj.getColumns = function () {
+    var sectionName = selectedSection.getName();
+    var sectionSingular;
+    if(sectionName === "taxes") {
+        sectionSingular = sectionName.substring(0, sectionName.length - 2);
+    }
+    else {
+        sectionSingular = sectionName.substring(0, sectionName.length - 1);
+    }
+    $.ajax({type:"GET", url: "/api/v1/columns/"+sectionSingular+"/"})
+        .fail(function(resp){
+            console.log(resp.responseText);
+        })
+        .done(function(resp){
+            activeBtnState.numOfColumns = resp.length - 2;
+            activeBtnState.columns = resp;
+            addTableHead();
+            getTableRecords(sectionName);
+    });
+};
+
+var paginationObj = {};
+paginationObj.activePage = 1;
+
+var selectedSection = {};
+selectedSection.getName = getName;
+
 
 function getCookie(name) {
     var cookieValue = null;
@@ -16,18 +70,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-var activeBtnState = {};
-activeBtnState.newRowNeeded = false;
-
-
 // when one of the section buttons gets clicked
 function setButtonActive(elem) {
-    if ($('.sectionsButton.active')[0] !== elem) {
-        deactivateButtons();
-        $(elem).addClass('active');
-        removeTable();
-        prepareTable();
-    }
+    deactivateButtons();
+    $(elem).addClass('active');
+    //removeTable();
+    //prepareTable();
 }
 
 // before activating a new button, we have to deactivate the last one
@@ -43,6 +91,13 @@ function deactivateButtons() {
 
 // this gets called as soon as the page loads
 // and it populates the cars select box
+function init() {
+    getUserCars();
+    //$('#refuellingsButton').addClass('active');
+    setButtonActive($('#refuellingsButton'));
+    tableObj.prepare();
+}
+
 function getUserCars() {
     var carNum = 0;
     $.ajax({type:"GET", url: "/api/v1/cars/"})
@@ -60,28 +115,23 @@ function getUserCars() {
             } else {
                 $('#carNum').text('My car');
             }
-
-            $('#refuellingsButton').addClass('active');
-            prepareTable();
         });
 }
 
-// check what section button has the active class
-// generate table for that section
-function prepareTable() {
-    $('#contentBody').hide();
-    $('#emptyBody').hide();
-    $('.pagination').hide();
-    activeBtnState.page = 1;
-    getTableColumns(getActiveSectionName());
-}
 
-function getActiveSectionName() {
+function getName() {
     var sectionBtn = $('.sectionsButton.active');
     var sectionID = $(sectionBtn).attr('id');
     var index = sectionID.indexOf("Button");
     return sectionID.substring(0, index).toLowerCase();
 }
+
+
+//------------------------------------------------------------------------
+
+var activeBtnState = {};
+activeBtnState.newRowNeeded = false;
+var maxResults = 10;
 
 // gets the records for the selected section
 function getTableRecords(sectionName, url) {
@@ -131,26 +181,7 @@ function paginationBtnClickHandler() {
     activeBtnState.page = $(this).text();
 }
 
-// gets the columns for the selected section
-function getTableColumns(sectionName) {
-    var sectionSingular;
-    if(sectionName === "taxes") {
-        sectionSingular = sectionName.substring(0, sectionName.length - 2);
-    }
-    else {
-        sectionSingular = sectionName.substring(0, sectionName.length - 1);
-    }
-    $.ajax({type:"GET", url: "/api/v1/columns/"+sectionSingular+"/"})
-        .fail(function(resp){
-            console.log(resp.responseText);
-        })
-        .done(function(resp){
-            activeBtnState.numOfColumns = resp.length - 2;
-            activeBtnState.columns = resp;
-            addTableHead();
-            getTableRecords(sectionName);
-    });
-}
+
 
 // this builds the table's head
 function addTableHead() {
