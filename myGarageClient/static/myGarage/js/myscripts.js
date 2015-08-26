@@ -1,23 +1,38 @@
 
 /*
 ---------------------------------------------------------------------------------
-tableObj.prepare                  - check what section button has the active class
-                                  - generate table for that section
+tableObj.prepare                           - check what section button has the active class
+                                           - generate table for that section
 -------------------------------------------------------------------------------
-tableObj.getColumns               - gets the columns for the selected section
+tableObj.getColumns                        - gets the columns for the selected section
 -------------------------------------------------------------------------------
-tableObj.getRecords               - gets the records for the selected section
+tableObj.getRecords                        - gets the records for the selected section
 --------------------------------------------------------------------------------
-tableObj.addHead                  - this builds the table's head
+tableObj.addHead                           - this builds the table's head
 --------------------------------------------------------------------------------
-selectedSection.getName           - get the selected section's name
+tableObj.addBody                           - this builds the table's body
 --------------------------------------------------------------------------------
-paginationObj.pageBtnClickHandler - handles the pagination buttons when clicked
+tableObj.setCellsWidth                     - set the table's cells width
 ---------------------------------------------------------------------------------
-paginationObj.getLastBtn          - returns the last pagination button
+tableObj.setMinHeight                      - here we add an extra tbody that holds an 'empty space'
+                                           - the purpose is to make up for the difference between the min height of the table body (150px) and
+                                           - the height that the table would have with only 2-3 rows
+-------------------------------------------------------------------------------------------------------
+tableObj.getColumnNames                    - get columns names
+--------------------------------------------------------------------------------
+selectedSectionObj.getName                 - get the selected section's name
+----------------------------------------------------------------------------------------------
+selectedSectionObj.displayAddNewRecordBtn  - adds the button responsible for adding a new row
+-------------------------------------------------------------------------------------------------
+selectedSectionObj.removeAddNewRecordBtn   - removes the button responsible for adding a new row
+--------------------------------------------------------------------------------
+paginationObj.pageBtnClickHandler          - handles the pagination buttons when clicked
 ---------------------------------------------------------------------------------
-paginationObj.render              - renders the pagination buttons
+paginationObj.getLastBtn                   - returns the last pagination button
 ---------------------------------------------------------------------------------
+paginationObj.render                       - renders the pagination buttons
+---------------------------------------------------------------------------------
+
 
 */
 
@@ -38,7 +53,7 @@ tableObj.prepare = function () {
 
 // gets the columns for the selected section
 tableObj.getColumns = function () {
-    var sectionName = selectedSection.getName();
+    var sectionName = selectedSectionObj.getName();
     var sectionSingular;
     if(sectionName === "taxes") {
         sectionSingular = sectionName.substring(0, sectionName.length - 2);
@@ -60,7 +75,7 @@ tableObj.getColumns = function () {
 
 // gets the records for the selected section
 tableObj.getRecords = function (url) {
-    var sectionName = selectedSection.getName();
+    var sectionName = selectedSectionObj.getName();
     var car_id = $('#userCarsSelectBox').val(),
         req_url = url ? url : "/api/v1/" + sectionName + "/?car__id=" + car_id;
     $.ajax({type:"GET", url: req_url})
@@ -74,8 +89,8 @@ tableObj.getRecords = function (url) {
             paginationObj.nextPage = resp.next;
             paginationObj.previous = resp.previous;
             paginationObj.activePage = paginationObj.activePage || 1;
-            paginationObj.render;
-            addTableBody();
+            paginationObj.render();
+            tableObj.addBody();
         });
 };
 
@@ -83,7 +98,7 @@ tableObj.getRecords = function (url) {
 tableObj.addHead = function () {
     $('#tableRecords thead').append($('<tr>'));
     var tableHead = $('#tableRecords thead').find('tr');
-    var columnNames = getColumnNames();
+    var columnNames = tableObj.getColumnNames();
     for(var i = 0; i < columnNames.length; i++) {
         var columnName = getTableHeadName(columnNames[i]);
         if(columnName === "Id" || columnName === "Car") {
@@ -92,15 +107,118 @@ tableObj.addHead = function () {
         $(tableHead).append($('<th>').text(columnName));
     }
     $(tableHead).append($('<th>').css({'width': '70px'})); // this is the column that holds the operations buttons
-    setTableCellsWidth(tableHead,  $('#garageContent').width(), true);
+    tableObj.setCellsWidth(tableHead,  $('#garageContent').width(), true);
 };
+
+tableObj.addBody = function () {
+    var sectionName = selectedSectionObj.getName();
+    enableAddNewRecordBtn();
+    if(tableObj.numOfRecords > 0){ // there are records for this section
+         var noRecordsMsg = "";
+         var carHasRecords = false;
+         $.each(tableObj.results, function(index, elem) {
+             var pk;
+             var tableContainerWidth = $('#garageContent').width();
+             $('#contentBody').append($('<tr>'));
+
+             var newRow = $('#contentBody').find('tr').last();
+             for (var key in elem) {
+                 if(key === "pk") {
+                    pk = elem[key];
+                    //$(newRow).append($('<input>').attr("name", key).attr("id", "hiddenValue").val(pk));
+                    continue;
+                 }
+                 if(key === "car") {
+                      continue;
+                 }
+                 $(newRow).append($('<td>')
+                          .append($('<input>')
+                               .prop('type', 'text')
+                               .attr('name', key)
+                               .val(elem[key])
+                          ));
+             }
+             $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
+             addOperationsButtons(newRow);
+
+             tableObj.setCellsWidth(newRow, tableContainerWidth, false);
+
+         });
+
+         if(!noRecordsMsg) { // we have records for the selected section and car
+            tableObj.setMinHeight();
+         }
+         $('#contentBody').show();
+
+    }
+    else { // there are no records for this section
+         $('#emptyBody').append($('<tr>'));
+         var newRow = $('#emptyBody').find('tr').last();
+         var message = 'You have no ' + sectionName + ' added yet!';
+         setNoRecordsBody(newRow, message);
+    }
+
+    var rows = $('#contentBody>tr');
+    rows.on('click', markSelectedRecord);
+
+    $('#tableRecords').show();
+    selectedSectionObj.displayAddNewRecordBtn();
+    $("#addNewRecordBtn").prop('disabled', false);
+    $('.pagination').show();
+    if(tableObj.newRowNeeded) {
+        // function was called because user requested a new record on a full pagination
+        addNewRecord();
+    }
+};
+
+tableObj.setCellsWidth = function (newRow, tableContainerWidth, isTableHead) {
+    var tableCell;
+    if (isTableHead) {
+        tableCell = $('th');
+    } else {
+         tableCell = $('td');
+    }
+
+    var leftPadding = tableCell.css('padding-left');
+    var rightPadding = tableCell.css('padding-right');
+    var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
+    var cellWidth = (tableContainerWidth - 70)/tableObj.numOfColumns-(widthPadding + 1);
+    $(newRow).find('input').css({"width": cellWidth});
+};
+
+tableObj.setMinHeight = function () {
+    var contentBodyHeight = $("#contentBody tr").length * ($('#contentBody tr').height()+2); // 2 is the sum of tr's border-top + boder-bottom
+    if(contentBodyHeight < 150){
+        var emptySpace = 150 - contentBodyHeight;
+        $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
+                            .append($('<td>').attr('colspan', tableObj.numOfColumns + 1)
+                                .append($('<div>')
+                                    .attr('id', 'emptyDiv'))));
+        $("#emptyDiv").height(emptySpace);
+        $('#emptyBody').show();
+    }
+};
+
+tableObj.getColumnNames = function () {
+    var columnNames = [];
+    var columns = tableObj.columns;
+    for (var i = 0; i < columns.length; i++) {
+        for (var prop in columns[i]) {
+            if (columns[i].hasOwnProperty(prop)) {
+                columnNames.push(prop);
+            }
+        }
+    }
+    return columnNames;
+};
+
 
 var paginationObj = {};
 paginationObj.activePage = 1;
 paginationObj.maxResults = 10;
 
 paginationObj.pageBtnClickHandler = function () {
-    var sectionName = selectedSection.getName(),
+    var sectionName = selectedSectionObj.getName(),
         url = "/api/v1/" + sectionName;
     removeTableRows();
     $('.pagination').hide();
@@ -125,12 +243,24 @@ paginationObj.render = function () {
     pagination.find("li a").click(paginationObj.pageBtnClickHandler);
 }
 
-var selectedSection = {};
-selectedSection.getName = function () {
+var selectedSectionObj = {};
+selectedSectionObj.getName = function () {
     var sectionBtn = $('.sectionsButton.active');
     var sectionID = $(sectionBtn).attr('id');
     var index = sectionID.indexOf("Button");
     return sectionID.substring(0, index).toLowerCase();
+};
+
+selectedSectionObj.displayAddNewRecordBtn = function () {
+    var tableHeight = $('#tableRecords').height();
+    var marginTop = 15 + tableHeight + "px";
+    $('#addNewRecordBtn').css({'top': marginTop});
+    $('#addNewRecordBtn').css({'visibility': 'visible'});
+    $("#coverDiv").css({'top': marginTop});
+};
+
+selectedSectionObj.removeAddNewRecordBtn = function () {
+     $('#addNewRecordBtn').css({'visibility': 'hidden'});
 };
 
 function getCookie(name) {
@@ -203,142 +333,6 @@ function getUserCars() {
 
 
 
-// this builds the table's body
-function addTableBody() {
-    var sectionName = selectedSection.getName();
-    enableAddNewRecordBtn();
-    if(tableObj.numOfRecords > 0){ // there are records for this section
-         var noRecordsMsg = "";
-         var carHasRecords = false;
-         $.each(tableObj.results, function(index, elem) {
-             var pk;
-             var tableContainerWidth = $('#garageContent').width();
-             $('#contentBody').append($('<tr>'));
-
-             var newRow = $('#contentBody').find('tr').last();
-             for (var key in elem) {
-                 if(key === "pk") {
-                    pk = elem[key];
-                    //$(newRow).append($('<input>').attr("name", key).attr("id", "hiddenValue").val(pk));
-                    continue;
-                 }
-                 if(key === "car") {
-                      if(!isSelectedCar(elem[key])) { // this record belongs to another car
-                          if(!carHasRecords && index === (tableObj.results.length - 1)) {
-                              // this combination of section and car doesn't have any records
-                              noRecordsMsg = 'You have no '+sectionName+' added for this car!';
-                              setNoRecordsBody(newRow, noRecordsMsg);
-                          }
-                          return; // skip to the next record
-                      }
-                      carHasRecords = true;
-                      continue;
-                 }
-                 $(newRow).append($('<td>')
-                          .append($('<input>')
-                               .prop('type', 'text')
-                               .attr('name', key)
-                               .val(elem[key])
-                          ));
-             }
-             $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
-             addOperationsButtons(newRow);
-
-             setTableCellsWidth(newRow, tableContainerWidth, false);
-
-         });
-
-        // here we remove the table row/rows added and not populated
-        // because the corresponding record/records belong/s to another car (the user has more than one car)
-        $('#contentBody tr').each(function(index, elem){
-                if($(elem).children().length == 0) {
-                    $(elem).remove();
-                }
-        });
-
-         if(!noRecordsMsg) { // we have records for the selected section and car
-            arrangeTableForMinHeight();
-         }
-         $('#contentBody').show();
-
-    }
-    else { // there are no records for this section
-         $('#emptyBody').append($('<tr>'));
-         var newRow = $('#emptyBody').find('tr').last();
-         var message = 'You have no ' + sectionName + ' added yet!';
-         setNoRecordsBody(newRow, message);
-    }
-
-    var rows = $('#contentBody>tr');
-    rows.on('click', markSelectedRecord);
-
-    $('#tableRecords').show();
-    setAddNewRecordBtn();
-    $("#addNewRecordBtn").prop('disabled', false);
-    $('.pagination').show();
-    if(tableObj.newRowNeeded) {
-        // addTableBody() function was called because user requested a new record on a full pagination
-        addNewRecord();
-    }
-}
-
-function setTableCellsWidth(newRow, tableContainerWidth, isTableHead) {
-    var tableCell;
-    if (isTableHead) {
-        tableCell = $('th');
-    } else {
-         tableCell = $('td');
-    }
-
-    var leftPadding = tableCell.css('padding-left');
-    var rightPadding = tableCell.css('padding-right');
-    var widthPadding = parseInt(leftPadding.charAt(0)) + parseInt(rightPadding.charAt(0));
-    var cellWidth = (tableContainerWidth - 70)/tableObj.numOfColumns-(widthPadding + 1);
-    $(newRow).find('input').css({"width": cellWidth});
-}
-
-// here we add an extra tbody that holds an 'empty space'
-// the purpose is to make up for the difference between the min height of the table body (150px) and
-// the height that the table would have with only 2-3 rows
-function arrangeTableForMinHeight() {
-    var contentBodyHeight = $("#contentBody tr").length * ($('#contentBody tr').height()+2); // 2 is the sum of tr's border-top + boder-bottom
-    if(contentBodyHeight < 150){
-        var emptySpace = 150 - contentBodyHeight;
-        $("#emptyBody").append($('<tr>').attr('id', 'emptySpaceRow')
-                            .append($('<td>').attr('colspan', tableObj.numOfColumns + 1)
-                                .append($('<div>')
-                                    .attr('id', 'emptyDiv'))));
-        $("#emptyDiv").height(emptySpace);
-        $('#emptyBody').show();
-    }
-}
-
-// adds the button responsible for adding a new row
-function setAddNewRecordBtn() {
-    var tableHeight = $('#tableRecords').height();
-    var marginTop = 15 + tableHeight + "px";
-    $('#addNewRecordBtn').css({'top': marginTop});
-    $('#addNewRecordBtn').css({'visibility': 'visible'});
-    $("#coverDiv").css({'top': marginTop});
-}
-
-function removeAddNewRecordBtn() {
-    $('#addNewRecordBtn').css({'visibility': 'hidden'});
-}
-
-function getColumnNames() {
-    var columnNames = [];
-    var columns = tableObj.columns;
-    for (var i = 0; i < columns.length; i++) {
-        for (var prop in columns[i]) {
-            if (columns[i].hasOwnProperty(prop)) {
-                columnNames.push(prop);
-            }
-        }
-    }
-    return columnNames;
-}
-
 // this function is called when the user wants to add a new record to the table
 function addNewRecord() {
     $('#contentBody').show();
@@ -354,10 +348,10 @@ function addNewRecord() {
         removeNoRecordsTD();
         $("#emptyBody").find("#emptySpaceRow").remove();
         $('#contentBody').append($('<tr>'));
-        arrangeTableForMinHeight();
-        removeAddNewRecordBtn();
+        tableObj.setMinHeight();
+        selectedSectionObj.removeAddNewRecordBtn();
 
-        var columnNames = getColumnNames();
+        var columnNames = tableObj.getColumnNames();
         for (var column in columnNames) {
             if(columnNames[column] == "id" || columnNames[column] =="car") { continue; }
             $('#contentBody').find("tr").last().append($("<td>")
@@ -368,9 +362,9 @@ function addNewRecord() {
 
         $('#contentBody').find("tr").last().addClass("temporaryRow");
         addOperationsButtons($('.temporaryRow'));
-        setTableCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
+        tableObj.setCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
         $('#contentBody').find("tr").last().on('click', markSelectedRecord);
-        setAddNewRecordBtn();
+        selectedSectionObj.displayAddNewRecordBtn();
     }
 }
 
@@ -489,12 +483,10 @@ function getSelectedRecordData() {
     for (var i = 0; i<columns.length-1; i++){
         var cell = columns[i];
         var cellChildren = $(cell).children();
-        //console.log(cellChildren);
         var name = cellChildren.attr("name");
         var value = cellChildren.val();
         data[name] = value;
     }
-    //console.log(data);
     return data;
 }
 
@@ -520,7 +512,7 @@ function enableAddNewRecordBtn() {
 }
 
 function saveRecord() {
-    var section = selectedSection.getName();
+    var section = selectedSectionObj.getName();
     //console.log("in save record");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var dataObj = getSelectedRecordData();
@@ -542,9 +534,8 @@ function saveRecord() {
 }
 
 function updateRecord() {
-    //console.log("in update");
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = selectedSection.getName();
+    var section = selectedSectionObj.getName();
     var pk = getSelectedRecordPk();
     var dataObj = getSelectedRecordData();
     dataObj["car"] = getSelectedCarURL();
@@ -565,15 +556,15 @@ function updateRecord() {
 
 function rearrangeTableAfterDeletingRecord() {
       $("#selectedRecord").remove();
-      removeAddNewRecordBtn();
+      selectedSectionObj.removeAddNewRecordBtn();
       $("#emptyBody").find("#emptySpaceRow").remove();
-      arrangeTableForMinHeight();
-      setAddNewRecordBtn();
+      tableObj.setMinHeight();
+      selectedSectionObj.displayAddNewRecordBtn();
 }
 
 function deleteRecord() {
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = selectedSection.getName();
+    var section = selectedSectionObj.getName();
     var pk = getSelectedRecordPk();
     ajaxSetup();
     $.ajax({
@@ -627,7 +618,7 @@ function isSelectedCar(carUrl) {
 // this is called when the user selects a different car
 function selectCarHandler() {
     removeTable();
-    prepareTable();
+    tableObj.prepare();
 }
 
 function removeTableRows() {
