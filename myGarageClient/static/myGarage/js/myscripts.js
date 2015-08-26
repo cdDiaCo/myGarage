@@ -71,6 +71,26 @@ paginationObj.getLastBtn                   - returns the last pagination button
 --------------------------------------------------------------------------------------------------
 paginationObj.render                       - renders the pagination buttons
 ------------------------------------------------------------------------------------------------
+onHoverTriangleBtn(elem)
+selectDropDownMenuElement(elem)
+deselectDropDownMenuElement(elem)
+showDropDownMenu(event)
+hideDropDownMenu()
+doNotCloseDropDownMenu(event)
+changeDropDownMenuVisibility(event)
+selectCarHandler()
+isSelectedCar(carUrl)
+getSelectedCarURL()
+ajaxSetup()
+changeImgSrcToNormal()
+changeImgSrcToHover()
+init()
+getUserCars()
+setButtonActive(elem)
+deactivateButtons()
+getCookie(name)
+markSelectedRecord()
+unmarkSelectedRecord()
 */
 
 
@@ -627,7 +647,6 @@ function init() {
     getUserCars();
     //$('#refuellingsButton').addClass('active');
     setButtonActive($('#refuellingsButton'));
-    tableObj.prepare();
 }
 
 function getUserCars() {
@@ -654,8 +673,8 @@ function getUserCars() {
 function setButtonActive(elem) {
     deactivateButtons();
     $(elem).addClass('active');
-    //tableObj.remove();
-    //prepareTable();
+    tableObj.remove();
+    tableObj.prepare();
 }
 
 // before activating a new button, we have to deactivate the last one
