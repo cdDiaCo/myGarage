@@ -1,4 +1,3 @@
-
 /*
 ---------------------------------------------------------------------------------
 tableObj.prepare                           - check what section button has the active class
@@ -19,21 +18,59 @@ tableObj.setMinHeight                      - here we add an extra tbody that hol
                                            - the height that the table would have with only 2-3 rows
 -------------------------------------------------------------------------------------------------------
 tableObj.getColumnNames                    - get columns names
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+tableObj.addNewRecord                      - this function is called when the user wants to add a new record to the table
+--------------------------------------------------------------------------------------------------------------------
+tableObj.addOperationsButtons              - adds an additional column that holds the save and delete row buttons
+---------------------------------------------------------------------------------------------------------------------
+tableObj.appendSaveRowImg                  - append the saveRowImg button
+----------------------------------------------------------------------------------------------------------------------
+tableObj.replaceSaveRowImg                 - replace the saveRowImg button with the update button
+-------------------------------------------------------------------------------------------------------------------
+tableObj.appendUpdateRowImg                - append the updateRowImg button
+------------------------------------------------------------------------------------------------------------
+tableObj.appendDeleteRowImg                - append the deleteRowImg button
+---------------------------------------------------------------------------------------------------------------
+tableObj.getSelectedRecordPk               - returns the PK of the selected row
+-----------------------------------------------------------------------------------------------------------------
+tableObj.getSelectedRecordData             - returns the input data contained by the selected row
+------------------------------------------------------------------------------------------------------------------
+tableObj.makeRowPermanent                  - make the temporary row, permanent
+-----------------------------------------------------------------------------------------------------------------
+tableObj.updateRecord                       - update the record
+-------------------------------------------------------------------------------------------------------------------
+tableObj.saveRecord                        - save the record
+-----------------------------------------------------------------------------------------------------------------
+tableObj.rearrangeAfterDeletingRecord      - rearrange the table after deleting a record, if necessary
+--------------------------------------------------------------------------------------------------------------------
+tableObj.deleteRecord                      - delete the record
+-----------------------------------------------------------------------------------------------------------------------
+tableObj.setNoRecordsBody                  - this is called when the user has no records for a certain section and/or car
+-------------------------------------------------------------------------------------------------------------------
+tableObj.removeNoRecordsTD                 - remove the empty no records cell and its parent row
+--------------------------------------------------------------------------------------------------------------------
+tableObj.getHeadName                       - get table head columns names from the DB column names
+-----------------------------------------------------------------------------------------------------------------------
+tableObj.removeRows                        - remove the table rows
+-----------------------------------------------------------------------------------------------------------------------
+tableObj.remove                            - remove the entire table
+-----------------------------------------------------------------------------------------------------------------
 selectedSectionObj.getName                 - get the selected section's name
 ----------------------------------------------------------------------------------------------
 selectedSectionObj.displayAddNewRecordBtn  - adds the button responsible for adding a new row
 -------------------------------------------------------------------------------------------------
 selectedSectionObj.removeAddNewRecordBtn   - removes the button responsible for adding a new row
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+selectedSectionObj.disableAddNewRecordBtn  - disable the AddNewRecord button
+------------------------------------------------------------------------------------------------
+selectedSectionObj.enableAddNewRecordBtn   - enable the AddNewRecord button
+-------------------------------------------------------------------------------------------------
 paginationObj.pageBtnClickHandler          - handles the pagination buttons when clicked
----------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 paginationObj.getLastBtn                   - returns the last pagination button
----------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
 paginationObj.render                       - renders the pagination buttons
----------------------------------------------------------------------------------
-
-
+------------------------------------------------------------------------------------------------
 */
 
 
@@ -100,7 +137,7 @@ tableObj.addHead = function () {
     var tableHead = $('#tableRecords thead').find('tr');
     var columnNames = tableObj.getColumnNames();
     for(var i = 0; i < columnNames.length; i++) {
-        var columnName = getTableHeadName(columnNames[i]);
+        var columnName = tableObj.getHeadName(columnNames[i]);
         if(columnName === "Id" || columnName === "Car") {
             continue;
         }
@@ -112,7 +149,7 @@ tableObj.addHead = function () {
 
 tableObj.addBody = function () {
     var sectionName = selectedSectionObj.getName();
-    enableAddNewRecordBtn();
+    selectedSectionObj.enableAddNewRecordBtn();
     if(tableObj.numOfRecords > 0){ // there are records for this section
          var noRecordsMsg = "";
          var carHasRecords = false;
@@ -139,7 +176,7 @@ tableObj.addBody = function () {
                           ));
              }
              $(newRow).append($('<span>').attr('id', "hiddenValue").text(pk));
-             addOperationsButtons(newRow);
+             tableObj.addOperationsButtons(newRow);
 
              tableObj.setCellsWidth(newRow, tableContainerWidth, false);
 
@@ -155,7 +192,7 @@ tableObj.addBody = function () {
          $('#emptyBody').append($('<tr>'));
          var newRow = $('#emptyBody').find('tr').last();
          var message = 'You have no ' + sectionName + ' added yet!';
-         setNoRecordsBody(newRow, message);
+         tableObj.setNoRecordsBody(newRow, message);
     }
 
     var rows = $('#contentBody>tr');
@@ -167,7 +204,7 @@ tableObj.addBody = function () {
     $('.pagination').show();
     if(tableObj.newRowNeeded) {
         // function was called because user requested a new record on a full pagination
-        addNewRecord();
+        tableObj.addNewRecord();
     }
 };
 
@@ -212,6 +249,209 @@ tableObj.getColumnNames = function () {
     return columnNames;
 };
 
+tableObj.addNewRecord = function () {
+    $('#contentBody').show();
+    $('#emptyBody').show();
+    tableObj.newRowNeeded = false;
+    var numOfRowsOnPage = $('#contentBody > tr').length;
+    if(numOfRowsOnPage === 10) {
+        var lastPaginationBtn = getLastPaginationBtn();
+        tableObj.newRowNeeded = true;
+        paginationObj.pageBtnClickHandler.call(lastPaginationBtn);
+    } else {
+        selectedSectionObj.disableAddNewRecordBtn();
+        tableObj.removeNoRecordsTD();
+        $("#emptyBody").find("#emptySpaceRow").remove();
+        $('#contentBody').append($('<tr>'));
+        tableObj.setMinHeight();
+        selectedSectionObj.removeAddNewRecordBtn();
+
+        var columnNames = tableObj.getColumnNames();
+        for (var column in columnNames) {
+            if(columnNames[column] == "id" || columnNames[column] =="car") { continue; }
+            $('#contentBody').find("tr").last().append($("<td>")
+                                                    .append($('<input>')
+                                                    .prop('type', 'text')
+                                                    .attr('name', columnNames[column])));
+        }
+
+        $('#contentBody').find("tr").last().addClass("temporaryRow");
+        tableObj.addOperationsButtons($('.temporaryRow'));
+        tableObj.setCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
+        $('#contentBody').find("tr").last().on('click', markSelectedRecord);
+        selectedSectionObj.displayAddNewRecordBtn();
+    }
+};
+
+tableObj.addOperationsButtons = function (newRow ) {
+    $(newRow).append($('<td>')
+            .css({'width': '70px'})
+            .append($('<div>')
+                .addClass('rowButtons')));
+     if($(newRow).hasClass( "temporaryRow" )){
+        tableObj.appendSaveRowImg($(".rowButtons").last());
+     } else {
+        tableObj.appendUpdateRowImg($(".rowButtons").last());
+     }
+     tableObj.appendDeleteRowImg($(".rowButtons").last());
+};
+
+tableObj.appendSaveRowImg = function (parentElement) {
+    $(parentElement).append($('<img>')
+                    .attr("src", saveImgSrc)
+                    .addClass("saveRowImg")
+                    .click(tableObj.saveRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
+};
+
+tableObj.replaceSaveRowImg = function (parentElement) {
+    $(parentElement).find(".saveRowImg").remove();
+    $( ".temporaryRow .deleteRowImg" ).before( $('<img>')
+                        .attr("src", updateImgSrc)
+                        .addClass("updateRowImg")
+                        .click(tableObj.updateRecord));
+};
+
+tableObj.appendUpdateRowImg = function (parentElement) {
+    $(parentElement).append($('<img>')
+                    .attr("src", updateImgSrc)
+                    .addClass("updateRowImg")
+                    .click(tableObj.updateRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
+};
+
+tableObj.appendDeleteRowImg = function (parentElement) {
+    $(parentElement).append($('<img>')
+                    .attr("src", deleteImgSrc)
+                    .addClass("deleteRowImg")
+                    .click(tableObj.deleteRecord)
+                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
+};
+
+tableObj.getSelectedRecordPk = function () {
+    return $("#selectedRecord").find("#hiddenValue").text();
+};
+
+tableObj.getSelectedRecordData = function () {
+    var columns = $("#selectedRecord").find("td");
+    var data = {};
+    for (var i = 0; i<columns.length-1; i++){
+        var cell = columns[i];
+        var cellChildren = $(cell).children();
+        var name = cellChildren.attr("name");
+        var value = cellChildren.val();
+        data[name] = value;
+    }
+    return data;
+};
+
+tableObj.makeRowPermanent = function (objSaved) {
+    $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk));
+    tableObj.replaceSaveRowImg($(".temporaryRow").last());
+    $(".temporaryRow").removeClass("temporaryRow");
+};
+
+tableObj.saveRecord = function () {
+    var section = selectedSectionObj.getName();
+    //console.log("in save record");
+    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var dataObj = tableObj.getSelectedRecordData();
+    dataObj["car"] = getSelectedCarURL();
+
+    ajaxSetup();
+    $.ajax({
+              method: "POST",
+              url: "/api/v1/" + section + "/",
+              contentType : 'application/json',
+              data: JSON.stringify(dataObj)
+          })
+          .done(function( objSaved ) {
+              console.log( "Data Saved: " + JSON.stringify(objSaved));
+              unmarkSelectedRecord();
+              makeRowPermanent(objSaved);
+              selectedSectionObj.enableAddNewRecordBtn();
+          });
+};
+
+tableObj.updateRecord = function () {
+    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var section = selectedSectionObj.getName();
+    var pk = tableObj.getSelectedRecordPk();
+    var dataObj = tableObj.getSelectedRecordData();
+    dataObj["car"] = getSelectedCarURL();
+    console.log(dataObj);
+
+    ajaxSetup();
+    $.ajax({
+              method: "PUT",
+              contentType : 'application/json',
+              url: "/api/v1/" + section + "/" + pk + "/",
+              data: JSON.stringify(dataObj)
+          })
+          .done(function( msg ) {
+              console.log( "Data Saved: " + msg );
+              unmarkSelectedRecord();
+          });
+};
+
+tableObj.rearrangeAfterDeletingRecord = function () {
+      $("#selectedRecord").remove();
+      selectedSectionObj.removeAddNewRecordBtn();
+      $("#emptyBody").find("#emptySpaceRow").remove();
+      tableObj.setMinHeight();
+      selectedSectionObj.displayAddNewRecordBtn();
+};
+
+tableObj.deleteRecord = function () {
+    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
+    var section = selectedSectionObj.getName();
+    var pk = tableObj.getSelectedRecordPk;
+    ajaxSetup();
+    $.ajax({
+              method: "DELETE",
+              url: "/api/v1/" + section + "/" + pk + "/"
+           })
+          .done(function( msg ) {
+              console.log( "Data Saved: " + msg );
+              tableObj.rearrangeAfterDeletingRecord();
+          });
+};
+
+tableObj.setNoRecordsBody = function (newRow, message) {
+    $(newRow).append($('<td>')
+        .attr("id", "noRecordsTD")
+        .attr('colspan', tableObj.numOfColumns+1)
+        .append($('<div>')
+            .attr('id', 'noRecordsMessage')
+            .text(message)));
+    $("#emptyBody").show();
+};
+
+tableObj.removeNoRecordsTD = function () {
+    $("#noRecordsTD").closest("tr").remove();
+};
+
+tableObj.getHeadName = function (key) {
+    var res = key.split("_");
+    var name ="";
+    for (var i=0; i < res.length; i++) {
+        if(i === 0) {
+            name += res[i].charAt(0).toUpperCase() + res[i].slice(1);
+        } else {
+            name += " " + res[i];
+        }
+    }
+    return name;
+};
+
+tableObj.removeRows = function () {
+    $('#tableRecords tbody').find('tr').remove();
+};
+
+tableObj.remove = function () {
+    $('#tableRecords tbody').find('tr').remove();
+    $('#tableRecords thead').find('tr').remove();
+};
 
 var paginationObj = {};
 paginationObj.activePage = 1;
@@ -220,7 +460,7 @@ paginationObj.maxResults = 10;
 paginationObj.pageBtnClickHandler = function () {
     var sectionName = selectedSectionObj.getName(),
         url = "/api/v1/" + sectionName;
-    removeTableRows();
+    tableObj.removeRows();
     $('.pagination').hide();
     tableObj.getRecords(url + '/?page=' + $(this).text() + "&car__id=" + $('#userCarsSelectBox').val());
     paginationObj.activePage = $(this).text();
@@ -263,39 +503,122 @@ selectedSectionObj.removeAddNewRecordBtn = function () {
      $('#addNewRecordBtn').css({'visibility': 'hidden'});
 };
 
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+selectedSectionObj.disableAddNewRecordBtn = function () {
+    $("#addNewRecordBtn").prop('disabled', true);
+    $("#coverDiv").show();
+};
+
+selectedSectionObj.enableAddNewRecordBtn = function () {
+     $("#coverDiv").hide();
+     $("#addNewRecordBtn").prop('disabled', false);
+};
+
+/*
+other functions
+that don't belong to a certain object
+*/
+
+function onHoverTriangleBtn(elem) {
+    $(elem).attr("src", triangleImgHoverSrc);
+    $(elem).css({"outline": "1px solid orange"});
+    $(elem).mouseleave(function() {
+        $(this).attr("src", triangleImgSrc);
+        $(this).css({"outline": "1px solid white"});
+    });
+}
+
+function selectDropDownMenuElement(elem) {
+    $(elem).attr("class", "selectedDropDownMenuElement");
+}
+
+function deselectDropDownMenuElement(elem) {
+    $(elem).removeAttr("class");
+}
+
+function showDropDownMenu(event) {
+    doNotCloseDropDownMenu(event);
+    $("#dropDownMenu").show();
+}
+
+function hideDropDownMenu() {
+    $("#dropDownMenu").hide();
+}
+
+function doNotCloseDropDownMenu(event) {
+    event.stopPropagation();
+}
+
+function changeDropDownMenuVisibility(event){
+    var display = $("#dropDownMenu").css('display');
+    if(display === "none") {
+         showDropDownMenu(event);
+    } else {
+        hideDropDownMenu();
     }
-    return cookieValue;
 }
 
-// when one of the section buttons gets clicked
-function setButtonActive(elem) {
-    deactivateButtons();
-    $(elem).addClass('active');
-    //removeTable();
-    //prepareTable();
+// this is called when the user selects a different car
+function selectCarHandler() {
+    tableObj.remove();
+    tableObj.prepare();
 }
 
-// before activating a new button, we have to deactivate the last one
-function deactivateButtons() {
-    var buttons = $('.sectionsButton');
-    $.each(buttons, function(){
-        if($(this).hasClass("active")) {
-            $(this).removeClass("active");
-            return false;
+// this checks if the car selected by the user matches the current record's car
+function isSelectedCar(carUrl) {
+    carUrl = String(carUrl);
+    var carID = carUrl.charAt(carUrl.length - 2);
+    var selectedCar = $('#userCarsSelectBox').val();
+    return carID == selectedCar;
+}
+
+function getSelectedCarURL() {
+    var selectedCar = $('#userCarsSelectBox').val();
+    return "/api/v1/cars/" + selectedCar + "/";
+}
+
+// set the csrf token before making ajax call
+function ajaxSetup() {
+    var csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
     });
+}
+
+function changeImgSrcToNormal() {
+    var imgClass = $(this).attr("class");
+    var newImgSrc;
+    switch (imgClass) {
+        case "saveRowImg":
+            newImgSrc = saveImgSrc;
+            break;
+        case "updateRowImg":
+            newImgSrc = updateImgSrc;
+            break;
+        case "deleteRowImg":
+            newImgSrc = deleteImgSrc;
+            break;
+    }
+    $(this).attr("src", newImgSrc);
+}
+
+function changeImgSrcToHover() {
+    var imgClass = $(this).attr("class");
+    var newImgSrc;
+    switch (imgClass) {
+        case "saveRowImg":
+            newImgSrc = saveImgHoverSrc;
+            break;
+        case "updateRowImg":
+            newImgSrc = updateImgHoverSrc;
+            break;
+        case "deleteRowImg":
+            newImgSrc = deleteImgHoverSrc;
+            break;
+    }
+
+    $(this).attr("src", newImgSrc);
 }
 
 // this gets called as soon as the page loads
@@ -327,136 +650,39 @@ function getUserCars() {
         });
 }
 
-//--------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-
-
-
-// this function is called when the user wants to add a new record to the table
-function addNewRecord() {
-    $('#contentBody').show();
-    $('#emptyBody').show();
-    tableObj.newRowNeeded = false;
-    var numOfRowsOnPage = $('#contentBody > tr').length;
-    if(numOfRowsOnPage === 10) {
-        var lastPaginationBtn = getLastPaginationBtn();
-        tableObj.newRowNeeded = true;
-        paginationObj.pageBtnClickHandler.call(lastPaginationBtn);
-    } else {
-        disableAddNewRecordBtn();
-        removeNoRecordsTD();
-        $("#emptyBody").find("#emptySpaceRow").remove();
-        $('#contentBody').append($('<tr>'));
-        tableObj.setMinHeight();
-        selectedSectionObj.removeAddNewRecordBtn();
-
-        var columnNames = tableObj.getColumnNames();
-        for (var column in columnNames) {
-            if(columnNames[column] == "id" || columnNames[column] =="car") { continue; }
-            $('#contentBody').find("tr").last().append($("<td>")
-                                                    .append($('<input>')
-                                                    .prop('type', 'text')
-                                                    .attr('name', columnNames[column])));
-        }
-
-        $('#contentBody').find("tr").last().addClass("temporaryRow");
-        addOperationsButtons($('.temporaryRow'));
-        tableObj.setCellsWidth($(".temporaryRow"), $('#garageContent').width(), false);
-        $('#contentBody').find("tr").last().on('click', markSelectedRecord);
-        selectedSectionObj.displayAddNewRecordBtn();
-    }
+// when one of the section buttons gets clicked
+function setButtonActive(elem) {
+    deactivateButtons();
+    $(elem).addClass('active');
+    //tableObj.remove();
+    //prepareTable();
 }
 
-function changeImgSrcToHover() {
-    var imgClass = $(this).attr("class");
-    var newImgSrc;
-    switch (imgClass) {
-        case "saveRowImg":
-            newImgSrc = saveImgHoverSrc;
-            break;
-        case "updateRowImg":
-            newImgSrc = updateImgHoverSrc;
-            break;
-        case "deleteRowImg":
-            newImgSrc = deleteImgHoverSrc;
-            break;
-    }
-
-    $(this).attr("src", newImgSrc);
-}
-
-function changeImgSrcToNormal() {
-    var imgClass = $(this).attr("class");
-    var newImgSrc;
-    switch (imgClass) {
-        case "saveRowImg":
-            newImgSrc = saveImgSrc;
-            break;
-        case "updateRowImg":
-            newImgSrc = updateImgSrc;
-            break;
-        case "deleteRowImg":
-            newImgSrc = deleteImgSrc;
-            break;
-    }
-    $(this).attr("src", newImgSrc);
-}
-
-function appendSaveRowImg(parentElement){
-    $(parentElement).append($('<img>')
-                    .attr("src", saveImgSrc)
-                    .addClass("saveRowImg")
-                    .click(saveRecord)
-                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
-}
-
-function replaceSaveRowImg(parentElement) {
-    $(parentElement).find(".saveRowImg").remove();
-    $( ".temporaryRow .deleteRowImg" ).before( $('<img>')
-                        .attr("src", updateImgSrc)
-                        .addClass("updateRowImg")
-                        .click(updateRecord));
-}
-
-function appendUpdateRowImg(parentElement) {
-    $(parentElement).append($('<img>')
-                        .attr("src", updateImgSrc)
-                        .addClass("updateRowImg")
-                        .click(updateRecord)
-                        .hover(changeImgSrcToHover, changeImgSrcToNormal));
-}
-
-function appendDeleteRowImg(parentElement) {
-    $(parentElement).append($('<img>')
-                    .attr("src", deleteImgSrc)
-                    .addClass("deleteRowImg")
-                    .click(deleteRecord)
-                    .hover(changeImgSrcToHover, changeImgSrcToNormal));
-}
-
-// adds an additional column that holds the save and delete row buttons
-function addOperationsButtons(newRow ) {
-     $(newRow).append($('<td>')
-            .css({'width': '70px'})
-            .append($('<div>')
-                .addClass('rowButtons')));
-     if($(newRow).hasClass( "temporaryRow" )){
-        appendSaveRowImg($(".rowButtons").last());
-     } else {
-        appendUpdateRowImg($(".rowButtons").last());
-     }
-     appendDeleteRowImg($(".rowButtons").last());
-}
-
-// set the csrf token before making ajax call
-function ajaxSetup() {
-    var csrftoken = getCookie('csrftoken');
-    $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+// before activating a new button, we have to deactivate the last one
+function deactivateButtons() {
+    var buttons = $('.sectionsButton');
+    $.each(buttons, function(){
+        if($(this).hasClass("active")) {
+            $(this).removeClass("active");
+            return false;
         }
     });
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 // mark the record clicked by the user
@@ -470,201 +696,4 @@ function markSelectedRecord() {
 
 function unmarkSelectedRecord() {
      $("#selectedRecord").removeAttr("id");
-}
-
-function getSelectedRecordPk() {
-    return $("#selectedRecord").find("#hiddenValue").text();
-}
-
-// returns the input data contained by the selected row
-function getSelectedRecordData() {
-    var columns = $("#selectedRecord").find("td");
-    var data = {};
-    for (var i = 0; i<columns.length-1; i++){
-        var cell = columns[i];
-        var cellChildren = $(cell).children();
-        var name = cellChildren.attr("name");
-        var value = cellChildren.val();
-        data[name] = value;
-    }
-    return data;
-}
-
-function getSelectedCarURL() {
-    var selectedCar = $('#userCarsSelectBox').val();
-    return "/api/v1/cars/" + selectedCar + "/";
-}
-
-function makeRowPermanent(objSaved) {
-    $(".temporaryRow").append($('<span>').attr("id", "hiddenValue").text(objSaved.pk));
-    replaceSaveRowImg($(".temporaryRow").last());
-    $(".temporaryRow").removeClass("temporaryRow");
-}
-
-function disableAddNewRecordBtn() {
-    $("#addNewRecordBtn").prop('disabled', true);
-    $("#coverDiv").show();
-}
-
-function enableAddNewRecordBtn() {
-     $("#coverDiv").hide();
-     $("#addNewRecordBtn").prop('disabled', false);
-}
-
-function saveRecord() {
-    var section = selectedSectionObj.getName();
-    //console.log("in save record");
-    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var dataObj = getSelectedRecordData();
-    dataObj["car"] = getSelectedCarURL();
-
-    ajaxSetup();
-    $.ajax({
-              method: "POST",
-              url: "/api/v1/" + section + "/",
-              contentType : 'application/json',
-              data: JSON.stringify(dataObj)
-          })
-          .done(function( objSaved ) {
-              console.log( "Data Saved: " + JSON.stringify(objSaved));
-              unmarkSelectedRecord();
-              makeRowPermanent(objSaved);
-              enableAddNewRecordBtn();
-          });
-}
-
-function updateRecord() {
-    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = selectedSectionObj.getName();
-    var pk = getSelectedRecordPk();
-    var dataObj = getSelectedRecordData();
-    dataObj["car"] = getSelectedCarURL();
-    console.log(dataObj);
-
-    ajaxSetup();
-    $.ajax({
-              method: "PUT",
-              contentType : 'application/json',
-              url: "/api/v1/" + section + "/" + pk + "/",
-              data: JSON.stringify(dataObj)
-          })
-          .done(function( msg ) {
-              console.log( "Data Saved: " + msg );
-              unmarkSelectedRecord();
-          });
-}
-
-function rearrangeTableAfterDeletingRecord() {
-      $("#selectedRecord").remove();
-      selectedSectionObj.removeAddNewRecordBtn();
-      $("#emptyBody").find("#emptySpaceRow").remove();
-      tableObj.setMinHeight();
-      selectedSectionObj.displayAddNewRecordBtn();
-}
-
-function deleteRecord() {
-    $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
-    var section = selectedSectionObj.getName();
-    var pk = getSelectedRecordPk();
-    ajaxSetup();
-    $.ajax({
-              method: "DELETE",
-              url: "/api/v1/" + section + "/" + pk + "/"
-           })
-          .done(function( msg ) {
-              console.log( "Data Saved: " + msg );
-              rearrangeTableAfterDeletingRecord();
-          });
-}
-
-// this is called when the user has no records for a certain section and/or car
-function setNoRecordsBody(newRow, message) {
-    $(newRow).append($('<td>')
-        .attr("id", "noRecordsTD")
-        .attr('colspan', tableObj.numOfColumns+1)
-        .append($('<div>')
-            .attr('id', 'noRecordsMessage')
-            .text(message)));
-    $("#emptyBody").show();
-}
-
-function removeNoRecordsTD() {
-    $("#noRecordsTD").closest("tr").remove();
-}
-
-
-// get table head columns names from the DB column names
-function getTableHeadName(key) {
-    var res = key.split("_");
-    var name ="";
-    for (var i=0; i < res.length; i++) {
-        if(i === 0) {
-            name += res[i].charAt(0).toUpperCase() + res[i].slice(1);
-        } else {
-            name += " " + res[i];
-        }
-    }
-    return name;
-}
-
-// this checks if the car selected by the user matches the current record's car
-function isSelectedCar(carUrl) {
-    carUrl = String(carUrl);
-    var carID = carUrl.charAt(carUrl.length - 2);
-    var selectedCar = $('#userCarsSelectBox').val();
-    return carID == selectedCar;
-}
-
-// this is called when the user selects a different car
-function selectCarHandler() {
-    removeTable();
-    tableObj.prepare();
-}
-
-function removeTableRows() {
-    $('#tableRecords tbody').find('tr').remove();
-}
-
-function removeTable() {
-    $('#tableRecords tbody').find('tr').remove();
-    $('#tableRecords thead').find('tr').remove();
-}
-
-function changeDropDownMenuVisibility(event){
-    var display = $("#dropDownMenu").css('display');
-    if(display === "none") {
-         showDropDownMenu(event);
-    } else {
-        hideDropDownMenu();
-    }
-}
-
-function showDropDownMenu(event) {
-    doNotCloseDropDownMenu(event);
-    $("#dropDownMenu").show();
-}
-
-function hideDropDownMenu() {
-    $("#dropDownMenu").hide();
-}
-
-function doNotCloseDropDownMenu(event) {
-    event.stopPropagation();
-}
-
-function selectDropDownMenuElement(elem) {
-    $(elem).attr("class", "selectedDropDownMenuElement");
-}
-
-function deselectDropDownMenuElement(elem) {
-    $(elem).removeAttr("class");
-}
-
-function onHoverTriangleBtn(elem) {
-    $(elem).attr("src", triangleImgHoverSrc);
-    $(elem).css({"outline": "1px solid orange"});
-    $(elem).mouseleave(function() {
-        $(this).attr("src", triangleImgSrc);
-        $(this).css({"outline": "1px solid white"});
-    });
 }
