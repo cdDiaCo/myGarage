@@ -275,9 +275,24 @@ tableObj.addNewRecord = function () {
     tableObj.newRowNeeded = false;
     var numOfRowsOnPage = $('#contentBody > tr').length;
     if(numOfRowsOnPage === 10) {
-        var lastPaginationBtn = getLastPaginationBtn();
         tableObj.newRowNeeded = true;
-        paginationObj.pageBtnClickHandler.call(lastPaginationBtn);
+        if(parseInt(paginationObj.numOfPages) === parseInt(paginationObj.activePage)) {
+            var newPageNum = parseInt(paginationObj.numOfPages) + 1;
+            paginationObj.numOfPages ++;
+            paginationObj.activePage = parseInt(paginationObj.activePage) + 1;
+            paginationObj.emptyPage = true;
+            tableObj.numOfRecords = 0;
+            paginationObj.render();
+            var lastPaginationBtn = paginationObj.getLastBtn();
+            paginationObj.pageBtnClickHandler.call(lastPaginationBtn);
+        }
+        else {
+            var lastPaginationBtn = paginationObj.getLastBtn();
+            tableObj.newRowNeeded = true;
+            paginationObj.pageBtnClickHandler.call(lastPaginationBtn);
+        }
+
+
     } else {
         selectedSectionObj.disableAddNewRecordBtn();
         tableObj.removeNoRecordsTD();
@@ -388,7 +403,7 @@ tableObj.saveRecord = function () {
           .done(function( objSaved ) {
               console.log( "Data Saved: " + JSON.stringify(objSaved));
               unmarkSelectedRecord();
-              makeRowPermanent(objSaved);
+              tableObj.makeRowPermanent(objSaved);
               selectedSectionObj.enableAddNewRecordBtn();
           });
 };
@@ -425,7 +440,7 @@ tableObj.rearrangeAfterDeletingRecord = function () {
 tableObj.deleteRecord = function () {
     $(this).closest("tr").attr("id", "selectedRecord"); // mark this row as selected
     var section = selectedSectionObj.getName();
-    var pk = tableObj.getSelectedRecordPk;
+    var pk = tableObj.getSelectedRecordPk();
     ajaxSetup();
     $.ajax({
               method: "DELETE",
@@ -482,7 +497,13 @@ paginationObj.pageBtnClickHandler = function () {
         url = "/api/v1/" + sectionName;
     tableObj.removeRows();
     $('.pagination').hide();
-    tableObj.getRecords(url + '/?page=' + $(this).text() + "&car__id=" + $('#userCarsSelectBox').val());
+    if(! paginationObj.emptyPage) {
+        tableObj.getRecords(url + '/?page=' + $(this).text() + "&car__id=" + $('#userCarsSelectBox').val());
+    }else {
+        paginationObj.render();
+        tableObj.addBody();
+    }
+    paginationObj.emptyPage = false;
     paginationObj.activePage = $(this).text();
 };
 
@@ -715,4 +736,8 @@ function markSelectedRecord() {
 
 function unmarkSelectedRecord() {
      $("#selectedRecord").removeAttr("id");
+}
+
+function addNewRecordListener() {
+    tableObj.addNewRecord();
 }
